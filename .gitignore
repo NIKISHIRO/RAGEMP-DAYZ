@@ -1,0 +1,9 @@
+/bridge
+/client_packages
+.idea
+*.dat
+*.dll
+node_modules/
+package-lock.json
+packages/
+server.exe

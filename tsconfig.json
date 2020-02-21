@@ -1,0 +1,26 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
+    "module": "commonjs",                     /* Specify module code generation: 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
+    "resolveJsonModule": true,                /* needed to read json*/
+    "esModuleInterop": true,                  /* needed to read json*/
+    "outDir": "./packages/GM",          /* Redirect output structure to the directory. */
+    "strict": true                            /* Enable all strict type-checking options. */
+  },
+  "files": [
+    "./node_modules/@types/ragemp-s/index.d.ts",
+    "./node_modules/@types/ragemp-s/vehicle_hashes.d.ts",
+    "./node_modules/@types/ragemp-s/weapon_hashes.d.ts",
+    "./node_modules/@types/ragemp-s/ped_hashes.d.ts",
+    "./node_modules/@types/ragemp-s/enums.d.ts"
+  ],
+  "include": [
+    "src/server/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}
