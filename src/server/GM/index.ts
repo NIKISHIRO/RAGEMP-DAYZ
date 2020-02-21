@@ -1,5 +1,5 @@
-import './commands';
-import '../inventory-api';
-import {events} from './events';
+import 'module-alias/register'; // Для работы alias-путей.
+import '@libs/inventory-api';
 
-mp.events.add(events);
+mp.events.add('playerJoin', (p: PlayerMp) => {
+});
