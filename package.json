@@ -9,14 +9,16 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "@types/ragemp-s": "github:CocaColaBear/types-ragemp-s#master"
-  },
+  "devDependencies": {},
   "dependencies": {
     "@types/node": "^13.5.3",
     "module-alias": "^2.2.2"
   },
   "_moduleAliases": {
-    "@libs": "src/ANY/libs"
-  } 
+    "@s_modules": "src/server/libs/modules",
+    "@s_types/*": "src/server/libs/types",
+
+    "@c_modules": "src/client/libs/modules",
+    "@c_types/*": "src/client/libs/types"
+  }
 }
