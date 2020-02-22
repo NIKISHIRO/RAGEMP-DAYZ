@@ -1,0 +1,2 @@
+require("./syncedComponents");
+require("./exampleCommands");
