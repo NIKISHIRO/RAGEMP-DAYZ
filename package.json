@@ -15,10 +15,7 @@
     "module-alias": "^2.2.2"
   },
   "_moduleAliases": {
-    "@s_modules": "src/server/libs/modules",
-    "@s_types/*": "src/server/libs/types",
-
-    "@c_modules": "src/client/libs/modules",
-    "@c_types/*": "src/client/libs/types"
+    "@modules": "src/server/libs/modules",
+    "@types/*": "src/server/libs/types"
   }
 }
