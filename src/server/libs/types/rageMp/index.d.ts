@@ -113,7 +113,7 @@ interface PickupMp extends EntityMp {
 	pickupHash: number;
 }
 
-interface PlayerMp extends EntityMp, PlayerMp_InvApi {
+interface PlayerMp extends EntityMp, PlayerMp_InvApi, PlayerMp_SyncPlrComp {
 	armour: number;
 	eyeColor: number;
 	heading: number;

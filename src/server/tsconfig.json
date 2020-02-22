@@ -22,7 +22,9 @@
     "./libs/types/rageMp/ped_hashes.d.ts",
     "./libs/types/rageMp/enums.d.ts",
     // INVAPI
-    "./libs/types/invApi/index.d.ts"
+    "./libs/types/invApi/index.d.ts",
+    // SyncedPlayerComponent
+    "./libs/types/SyncedPlayerComponent/index.d.ts"
   ],
   "include": [
     "project/**/*"

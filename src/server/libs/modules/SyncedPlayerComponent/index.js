@@ -1,2 +1,1 @@
 require("./syncedComponents");
-require("./exampleCommands");
