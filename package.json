@@ -12,10 +12,11 @@
   "devDependencies": {},
   "dependencies": {
     "@types/node": "^13.5.3",
+    "colors": "^1.4.0",
     "module-alias": "^2.2.2"
   },
   "_moduleAliases": {
     "@modules": "src/server/libs/modules",
-    "@types/*": "src/server/libs/types"
+    "@types": "src/server/libs/types"
   }
 }

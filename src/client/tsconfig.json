@@ -8,7 +8,8 @@
     "resolveJsonModule": true,                /* needed to read json*/
     "esModuleInterop": true,                  /* needed to read json*/
     "outDir": "../../client_packages",   /* Redirect output structure to the directory. */
-    "strict": true                            /* Enable all strict type-checking options. */
+    "strict": true,                            /* Enable all strict type-checking options. */
+    "strictPropertyInitialization": false
   },
   "files": [
     // RAGEMP

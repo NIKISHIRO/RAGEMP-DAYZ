@@ -14,7 +14,7 @@ interface PlayerMp_InvApi {
     getItemAmount(itemKey: string): number;
     getItemAmountWithData(itemKey: string, data: object): number;
     getTotalItemAmount(): number;
-    giveItem(itemKey: string, amount: number, data: object): boolean;
+    giveItem(itemKey: string, amount: number, data?: object): boolean;
     useItem(itemIdx: number): boolean;
     removeItem(itemIdx: number, amount?: number): boolean;
 }

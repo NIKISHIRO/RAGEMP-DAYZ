@@ -12,7 +12,9 @@
     "resolveJsonModule": true,                /* needed to read json*/
     "esModuleInterop": true,                  /* needed to read json*/
     "outDir": "../../packages/DAYZ",                /* Redirect output structure to the directory. */
-    "strict": true                            /* Enable all strict type-checking options. */
+    "strict": true,                            /* Enable all strict type-checking options. */
+    "strictPropertyInitialization": false
+
   },
   "files": [
     // RAGEMP
@@ -22,9 +24,9 @@
     "./libs/types/rageMp/ped_hashes.d.ts",
     "./libs/types/rageMp/enums.d.ts",
     // INVAPI
-    "./libs/types/invApi/index.d.ts",
+    "libs/types/inventoryApi.d.ts",
     // SyncedPlayerComponent
-    "./libs/types/SyncedPlayerComponent/index.d.ts"
+    "libs/types/syncedPlayerComponent.d.ts"
   ],
   "include": [
     "project/**/*"
@@ -32,5 +34,5 @@
   "exclude": [
     "node_modules",
     "**/*.spec.ts"
-  ]
+  ],
 }
