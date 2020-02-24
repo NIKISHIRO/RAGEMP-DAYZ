@@ -1,0 +1,38 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    /* Basic Options */
+    "baseUrl": "./",
+    "paths": {
+      "@modules/*": ["libs/modules"],
+      "@types/*": ["libs/types"]
+    },
+    "target": "es5",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
+    "module": "commonjs",                     /* Specify module code generation: 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
+    "resolveJsonModule": true,                /* needed to read json*/
+    "esModuleInterop": true,                  /* needed to read json*/
+    "outDir": "../../packages/DAYZ",                /* Redirect output structure to the directory. */
+    "strict": true,                            /* Enable all strict type-checking options. */
+    "strictPropertyInitialization": false
+
+  },
+  "files": [
+    // RAGEMP
+    "./libs/types/rageMp/index.d.ts",
+    "./libs/types/rageMp/vehicle_hashes.d.ts",
+    "./libs/types/rageMp/weapon_hashes.d.ts",
+    "./libs/types/rageMp/ped_hashes.d.ts",
+    "./libs/types/rageMp/enums.d.ts",
+    // INVAPI
+    "libs/types/inventoryApi.d.ts",
+    // SyncedPlayerComponent
+    "libs/types/syncedPlayerComponent.d.ts"
+  ],
+  "include": [
+    "project/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
+}
