@@ -8,16 +8,16 @@ export interface VehicleCoord {
     color?: string;
     description?: string; // Описание, которое можно вывести потом через ф-ю.
 }
-mp.events.addCommand('pos',() => {
-    Car.saveCar("g65amg", new mp.Vector3(111,111,111), new mp.Vector3(0,0,111), [255,255,255,0,0,0], 'spawn tachka');
+
+mp.events.addCommand('pos', () => {
+    Car.saveCar("turismor", new mp.Vector3(111,111,111), new mp.Vector3(0,0,111), [255,255,255,0,0,0], 'spawn tachka');
 })
 
 mp.events.addCommand('sc', ()=>{
     vehicleCoords.forEach(car =>{
-        Car.spawnCar(car.hash,new mp.Vector3(car.position.x,car.position.y,car.position.z), new mp.Vector3(car.rotation.x,car.rotation.y,car.rotation.z),[car.color[0],car.color[1],car.color[2],car.color[3],car.color[4],car.color[5]]);
+        Car.spawnCar(car.hash, new mp.Vector3(car.position.x,car.position.y,car.position.z), new mp.Vector3(car.rotation.x,car.rotation.y,car.rotation.z),[car.color[0],car.color[1],car.color[2],car.color[3],car.color[4],car.color[5]]);
     })
 })
-
 
 
 // Спавнит кар по хэшу.
