@@ -1,7 +1,7 @@
 let fs = require('fs');
 
 export class Car {
-    static spawnCar(hash: string, position: Vector3Mp, rotation?: Vector3Mp, color?: number[], description?: string): VehicleMp {
+    static spawnCar(hash: string, position: Vector3Mp, rotation?: Vector3Mp, color?: number[]): VehicleMp {
         let veh: VehicleMp = mp.vehicles.new(mp.joaat(hash), position);
 
         if (rotation) veh.rotation = rotation;
@@ -12,6 +12,7 @@ export class Car {
         return veh;
     }
 
+    // Добавляет объект машины в файл vehicleCoords.json.
     static saveCar(hash: string, position: Vector3Mp, rotation?: Vector3Mp, color?: number[], description?: string): void {
         if(!rotation) rotation = new mp.Vector3(0, 0, Car.random(1,360))
         if(!color) color = [Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255)];
@@ -24,13 +25,13 @@ export class Car {
             
             objFile.push({hash, position, rotation, color, description});
             
-            fs.writeFile(path, JSON.stringify(objFile), (err: string) => {
+            fs.writeFile(path, JSON.stringify(objFile, null, 2), (err: string) => {
                 if(err) {
                     return console.log(err);
                 }
                 console.log(`Файл был сохранен: '${path}'`);
             });
-        })
+        });
     }
 
     // Функция возвращает рандомное число.
