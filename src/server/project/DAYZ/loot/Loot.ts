@@ -3,11 +3,11 @@
     У игрока вставшего на "точку" должна быть возможность взять лут с этой точки.
 */
 
-enum LootSpawn {
+export enum LootSpawn {
     SPAWN = 'SPAWN'
 }
 
-interface LootShapeInfo {
+export interface LootShapeInfo {
     type: LootSpawn
 }
 
@@ -40,18 +40,9 @@ export class Loot {
     public addItem(items: Item[]): void {
         if (!items.length) return;
 
-        const itemList = this.shape.getVariable('itemList');
+        const itemList: Item[] = this.shape.getVariable('itemList');
         itemList.push(...items);
+        
         this.shape.setVariable('itemList', itemList);
     }
 }
-
-/*
-
-Игрок
--> IF: в пределах точки.
-    -> Дать возможность взять предмет. /take [id]
--> IF предметы в пределах игрока. 
-    -> Вывести список доступных предметов.
-    -> 
-*/

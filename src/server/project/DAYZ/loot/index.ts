@@ -38,3 +38,7 @@ const item: Item = {
 const colshape: ColshapeMp = mp.colshapes.newSphere(x, y, z, range);
 const loot = new Loot(colshape);
 loot.addItem([item]);
+
+const colshape2: ColshapeMp = mp.colshapes.newSphere(x, y, z, range);
+const loot2 = new Loot(colshape2);
+loot.addItem([item]);

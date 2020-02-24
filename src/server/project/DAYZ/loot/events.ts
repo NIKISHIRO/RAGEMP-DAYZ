@@ -1,5 +1,5 @@
 import { logger } from "../shared/logger";
-import { Loot } from "./Loot";
+import { Loot, LootShapeInfo, LootSpawn } from "./Loot";
 import { Player } from "../player/Player";
 
 mp.events.add({
@@ -9,11 +9,17 @@ mp.events.add({
     },
 
     'playerEnterColshape': (player: PlayerMp, shape: ColshapeMp) => {
+        const lootShapeInfo: LootShapeInfo = shape.getVariable('lootShapeInfo');
+        if (lootShapeInfo.type !== LootSpawn.SPAWN) return;
+
         const playerInstance = new Player(player);
         playerInstance.addItemPoint(shape.id);
     },
 
     'playerExitColshape': (player: PlayerMp, shape: ColshapeMp) => {
+        const lootShapeInfo: LootShapeInfo = shape.getVariable('lootShapeInfo');
+        if (lootShapeInfo.type !== LootSpawn.SPAWN) return;
+
         const playerInstance = new Player(player);
         playerInstance.removeItemPoint(shape.id);
     }

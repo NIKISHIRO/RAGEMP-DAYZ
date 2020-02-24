@@ -40,4 +40,30 @@ export class Player {
         const itemPoints: number[] = this.getItemPoints();
         return itemPoints.map(shapeId => mp.colshapes.at(shapeId));
     }
+
+    // return: Item[] || FALSE. Получает itemList колшипа по ИД в массиве "доступных точек"(itemPoints) игрока.
+    public getItemListById(id: number) {
+        if (isNaN(id) || !Number.isInteger(id)) return false;
+
+        const lootShapes: ColshapeMp[] = this.getLootShapes();
+
+        if (!lootShapes[id]) {
+            return false;
+        }
+        
+        const itemList: Item[] = lootShapes[id].getVariable('itemList');
+        return itemList;
+    }
+
+    // cellId - Индекс элемента в itemPoints игрока для получения колшипа.
+    // itemId - Индекс предмета в itemList полученного колшипа.
+    public getItem(cellId: number, itemId: number) {
+        console.log('getItem');
+        const itemList = this.getItemListById(cellId);
+
+        if (!itemList) return;
+
+        const item: Item = itemList[itemId];
+        console.log('getItem -> item', item);
+    }
 }
