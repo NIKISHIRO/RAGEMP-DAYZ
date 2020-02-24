@@ -6,8 +6,7 @@ import '@modules/SyncedPlayerComponent'; // Синхронизация комп�
 
 import {events} from './events';
 import './commands';
+
 import './loot';
 
-// Выполнение событий событий.
 mp.events.add(events);
-

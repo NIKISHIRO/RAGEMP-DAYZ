@@ -1,34 +1,57 @@
 /*
-    Лут - класс, который создает на указаных коорд. точку.
-    У игрока вставшего на "точку" должна появиться возможность взять лут с этой точки.
+    Лут - класс, который создает на указаных коорд. точку для взятия лута.
+    У игрока вставшего на "точку" должна быть возможность взять лут с этой точки.
 */
-export class Loot {
-    // Объект колшипа.
-    private shape: ColshapeMp;
 
-    // ИД колшипа.
-    private _shapeId: number;
-
-    constructor() {
-    }
-
-    public setShape(x: number, y: number, z: number, range: number) {
-        console.log(' -> setShape');
-        this.shape = mp.colshapes.newSphere(x, y, z, range);
-        this._shapeId = this.shape.id;
-    }
-
-    public set shapeId(value: number) {
-        console.log(' -> set shapeId');
-        this.shapeId = value;
-    }
-
-    public get shapeId() {
-        console.log(' -> get shapeId');
-        return this._shapeId;
-    }
-
-    
+enum LootSpawn {
+    SPAWN = 'SPAWN'
 }
 
+interface LootShapeInfo {
+    type: LootSpawn
+}
 
+export class Loot {
+    private shape: ColshapeMp;
+
+    constructor(colshape: ColshapeMp) {
+        this.shape = colshape;
+
+        const lootShapeInfo: LootShapeInfo = {
+            type: LootSpawn.SPAWN
+        };
+        this.shape.setVariable('lootShapeInfo', lootShapeInfo);
+        this.shape.setVariable('itemList', []);
+    }
+
+    public getItemList(): Item[] {
+        return this.shape.getVariable('itemList');
+    }
+
+    public getShape(): ColshapeMp {
+        return this.shape;
+    }
+    
+    public shapeDestroy() {
+        console.log(' -> shape destroy');
+        this.shape.destroy();
+    }
+
+    public addItem(items: Item[]): void {
+        if (!items.length) return;
+
+        const itemList = this.shape.getVariable('itemList');
+        itemList.push(...items);
+        this.shape.setVariable('itemList', itemList);
+    }
+}
+
+/*
+
+Игрок
+-> IF: в пределах точки.
+    -> Дать возможность взять предмет. /take [id]
+-> IF предметы в пределах игрока. 
+    -> Вывести список доступных предметов.
+    -> 
+*/
