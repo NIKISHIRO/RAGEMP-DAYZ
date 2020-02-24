@@ -8,5 +8,6 @@ import {events} from './events';
 import './commands';
 
 import './loot';
+import './car';
 
 mp.events.add(events);
