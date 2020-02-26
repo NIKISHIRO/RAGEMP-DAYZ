@@ -37,6 +37,31 @@ export class Car {
     // Функция возвращает рандомное число.
     static random(Minimal: number, Maximum: number): number {
         let random = Math.floor((Math.random() * Maximum) + Minimal);
-        return random;
+        return random
     }    
+
+    static getDistCar() {
+        let getVehiclesNearbyMe = (player: PlayerMp) => {
+            const returnVehicles: any[] = [];
+    
+            mp.vehicles.forEachInRange(player.position, 10, (vehicle) => {
+                    returnVehicles.push(player.dist(vehicle.position));
+                }
+            );
+            return returnVehicles;
+        };
+    
+        let vehiclesNearbyMe = getVehiclesNearbyMe(mp.players.at(0));
+        return vehiclesNearbyMe;
+    };
+    static getCar(player:PlayerMp) {
+        const returnVehicles: any[] = [];
+
+        mp.vehicles.forEachInRange(player.position, 10, (vehicle) => {
+                returnVehicles.push(vehicle);
+            }
+        );
+        return returnVehicles;
+    
+    };
 }
