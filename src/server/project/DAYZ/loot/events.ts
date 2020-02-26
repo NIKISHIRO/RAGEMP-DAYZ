@@ -8,6 +8,10 @@ mp.events.add({
         player.setVariable('itemPoints', []);
     },
 
+    'playerDeath': () => {
+        
+    },
+
     'playerEnterColshape': (player: PlayerMp, shape: ColshapeMp) => {
         const lootShapeInfo: LootShapeInfo = shape.getVariable('lootShapeInfo');
         if (lootShapeInfo.type !== LootSpawn.RELOAD) return;

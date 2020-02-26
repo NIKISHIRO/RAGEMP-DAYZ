@@ -76,21 +76,24 @@ export class Player {
     // и берет из массива itemList предмет под индексом itemId
     public takeItem(cellId: number, itemId: number): ReturnInformation {
         const returnInformation = {
-            info: 'Поблизости нет точки!',
+            info: '!{#DA3060}Такого предмета или точки здесь нет!',
             result: false
         };
 
         const item = this.getItem(cellId, itemId);
-        
-        console.log('takeItem -->');
-        console.log('cellId', cellId);
-        console.log('itemId', itemId);
         
         if (item) {
             const colshapes: ColshapeMp[] = this.getLootShapes();
             const colshape: ColshapeMp = colshapes[cellId];
             const itemPoints: number[] = this.getItemPoints();
             const itemListOrFalse = this.getItemListByIndex(cellId);
+
+            // Проверка - находится ли игрок в пределах колшипа.
+            if (!colshape.isPointWithin(this.player.position)) {
+                returnInformation.info = '!{#DA3060}Поблизости нет точки с лутом';
+                returnInformation.result = false;
+                return returnInformation;
+            }
 
             // Если у игрока есть такой колшип, удалить его ид из массива
             // и сам колшип с карты.

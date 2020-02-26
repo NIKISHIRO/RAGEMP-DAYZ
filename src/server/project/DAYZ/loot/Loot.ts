@@ -18,7 +18,7 @@ export class Loot {
     constructor(colshape: ColshapeMp, marker: MarkerMp) {
         this.shape = colshape;
         this.marker = marker;
-
+        
         const lootShapeInfo: LootShapeInfo = {
             type: LootSpawn.RELOAD
         };
