@@ -1,6 +1,6 @@
 import { Loot } from './Loot';
 import { logger } from '../shared/logger';
-import { Player } from '../player/Player';
+import { Player, ReturnInformation } from '../player/Player';
 
 // Выводит инвентарь игрока.
 mp.events.addCommand('inv', (player: PlayerMp, ft: string) => {
@@ -41,39 +41,43 @@ mp.events.addCommand('items', (player: PlayerMp, ft: string) => {
     player.outputChatBox(`!{#20db63}---------------------------`);
 });
 
-mp.events.addCommand('item', (player: PlayerMp, ft: string, cellId: string, itemId: string) => {
+mp.events.addCommand('item', (player: PlayerMp, ft: string, srcCellId: string, srcItemId: string) => {
     if (!ft) {
         player.outputChatBox('/item [ИД ячейки] - содержимое ячейки.');
         player.outputChatBox('/item [ИД ячейки] [ИД предмета] - получить предмет ячейки.');
         return;
     }
 
-    if (cellId) {
-        
-    }
+    const cellId = parseInt(srcCellId);
+    const itemId = parseInt(srcItemId);
 
     const playerInstance = new Player(player);
-    const itemList = playerInstance.getItemListById(parseInt(cellId));
+    const itemList = playerInstance.getItemListByIndex(cellId);
 
     console.log('-> item ->', itemList);
-    if (itemList) {
+    if (!itemList) {
+        player.outputChatBox(`Такой ячейки нету!`);
+    } else {
         if (!itemList.length) {
             player.outputChatBox('!{#BC3C00}Это пустая ячейка!');
             return;
         }
         
-        player.outputChatBox('!{#97CC24}Предметы в этой ячейке:');
-        itemList.forEach(item => {
-            console.log(' -> item -> ', item);
-            player.outputChatBox(`!{#97CC24}${item.key} | ${item.amount} |`);
-        });
-    } else {
-        player.outputChatBox(`Такой ячейки нету!`);
+        // Если не передан 2 аргумент, вывести содержимое ячейки.
+        if (!itemId && !Number.isInteger(itemId)) {
+            player.outputChatBox('!{#97CC24}Предметы в этой ячейке:');
+
+            itemList.forEach((item: Item, idx: number) => {
+                console.log(' -> item -> ', item);
+                player.outputChatBox(`!{#97CC24}[${idx}] ${item.key} | ${item.amount} |`);
+            });
+        }
     }
 
-    // Если игрок передал второй аргумент команды.
-    if (itemId) {
-        playerInstance.getItem(parseInt(cellId), parseInt(itemId));
+    // Если игрок передал 2 аргумент.
+    if (Number.isInteger(itemId)) {
+        const returnInformation: ReturnInformation = playerInstance.takeItem(cellId, itemId);
+        player.outputChatBox(returnInformation.info);
     }
 });
 

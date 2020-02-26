@@ -1,4 +1,10 @@
+
 import { logger } from "../shared/logger";
+
+export interface ReturnInformation {
+    result: boolean;
+    info: string;
+}
 
 export class Player {
     private player: PlayerMp;
@@ -42,28 +48,76 @@ export class Player {
     }
 
     // return: Item[] || FALSE. Получает itemList колшипа по ИД в массиве "доступных точек"(itemPoints) игрока.
-    public getItemListById(id: number) {
+    public getItemListByIndex(id: number) {
         if (isNaN(id) || !Number.isInteger(id)) return false;
 
-        const lootShapes: ColshapeMp[] = this.getLootShapes();
+        const colshapes: ColshapeMp[] = this.getLootShapes();
 
-        if (!lootShapes[id]) {
+        if (!colshapes[id]) {
             return false;
         }
         
-        const itemList: Item[] = lootShapes[id].getVariable('itemList');
+        const itemList: Item[] = colshapes[id].getVariable('itemList');
         return itemList;
     }
 
     // cellId - Индекс элемента в itemPoints игрока для получения колшипа.
     // itemId - Индекс предмета в itemList полученного колшипа.
     public getItem(cellId: number, itemId: number) {
-        console.log('getItem');
-        const itemList = this.getItemListById(cellId);
+        const itemList = this.getItemListByIndex(cellId);
 
-        if (!itemList) return;
+        if (!itemList) return false;
 
         const item: Item = itemList[itemId];
-        console.log('getItem -> item', item);
+        return item;
+    }
+
+    // Из itemPoints берет itemList из колшипа под индексом = cellId 
+    // и берет из массива itemList предмет под индексом itemId
+    public takeItem(cellId: number, itemId: number): ReturnInformation {
+        const returnInformation = {
+            info: 'Поблизости нет точки!',
+            result: false
+        };
+
+        const item = this.getItem(cellId, itemId);
+        
+        console.log('takeItem -->');
+        console.log('cellId', cellId);
+        console.log('itemId', itemId);
+        
+        if (item) {
+            const colshapes: ColshapeMp[] = this.getLootShapes();
+            const colshape: ColshapeMp = colshapes[cellId];
+            const itemPoints: number[] = this.getItemPoints();
+            const itemListOrFalse = this.getItemListByIndex(cellId);
+
+            // Если у игрока есть такой колшип, удалить его ид из массива
+            // и сам колшип с карты.
+            const idx = itemPoints.findIndex(i => i === colshape.id);
+            if (idx !== -1) {
+                // Если массив предметов в колшипе больше нуля, удалить выбранный предмет.
+                if (itemListOrFalse && itemListOrFalse.length > 0) {
+                    itemListOrFalse.splice(itemId, 1);
+                    colshape.setVariable('itemList', itemListOrFalse);
+                    
+                    returnInformation.info = `Предмет был удален из этой точки. Осталось всего: ${itemListOrFalse.length} предметов.`;
+                    returnInformation.result = true;
+                } 
+                // Если массив пуст, то удалить сам колшип.
+                if (itemListOrFalse && !itemListOrFalse.length) {
+                    itemPoints.splice(idx, 1);
+                    this.player.setVariable('itemPoints', itemPoints);
+                    colshape.destroy();
+                    
+                    returnInformation.info = `Эта точка была удалена.`;
+                    returnInformation.result = true;
+                }
+
+                this.player.giveItem(item.key, item.amount, item.data);                
+            }
+        }
+     
+        return returnInformation;
     }
 }

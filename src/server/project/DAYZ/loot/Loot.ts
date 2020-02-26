@@ -4,7 +4,7 @@
 */
 
 export enum LootSpawn {
-    SPAWN = 'SPAWN'
+    RELOAD = 'RELOAD'
 }
 
 export interface LootShapeInfo {
@@ -12,13 +12,15 @@ export interface LootShapeInfo {
 }
 
 export class Loot {
+    private marker: MarkerMp;
     private shape: ColshapeMp;
 
-    constructor(colshape: ColshapeMp) {
+    constructor(colshape: ColshapeMp, marker: MarkerMp) {
         this.shape = colshape;
+        this.marker = marker;
 
         const lootShapeInfo: LootShapeInfo = {
-            type: LootSpawn.SPAWN
+            type: LootSpawn.RELOAD
         };
         this.shape.setVariable('lootShapeInfo', lootShapeInfo);
         this.shape.setVariable('itemList', []);
