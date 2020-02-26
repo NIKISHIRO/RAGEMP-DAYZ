@@ -5,3 +5,8 @@ mp.events.addCommand('data', (player: PlayerMp, ft: string) => {
     player.setVariable('testdata', 'valuetestikusikal');
     console.log(player.getVariable('testdata'));
 });
+
+mp.events.addCommand('kill', (player: PlayerMp) => {
+    player.health = 0;
+    console.log(player.health);
+})
