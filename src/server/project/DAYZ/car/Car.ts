@@ -1,8 +1,15 @@
+import { Player } from "../player/Player";
+
 let fs = require('fs');
 
 export class Car {
     static spawnCar(hash: string, position: Vector3Mp, rotation?: Vector3Mp, color?: number[]): VehicleMp {
         let veh: VehicleMp = mp.vehicles.new(mp.joaat(hash), position);
+
+        const items: Item[] = [];
+        veh.setVariable('vehInventory', items);
+        veh.getVariable('vehInventory');
+        
 
         if (rotation) veh.rotation = rotation;
         else veh.rotation = new mp.Vector3(0, 0, Car.random(1,360))
@@ -84,7 +91,7 @@ export class Car {
         })
     }
 
-    static TakeItem(vehicle:VehicleMp){
-
+    static takeItem(vehicle: VehicleMp) {
+        
     }
 }

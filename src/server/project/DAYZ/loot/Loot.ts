@@ -1,34 +1,50 @@
 /*
-    Лут - класс, который создает на указаных коорд. точку.
-    У игрока вставшего на "точку" должна появиться возможность взять лут с этой точки.
+    Лут - класс, который создает на указаных коорд. точку для взятия лута.
+    У игрока вставшего на "точку" должна быть возможность взять лут с этой точки.
 */
-export class Loot {
-    // Объект колшипа.
-    private shape: ColshapeMp;
 
-    // ИД колшипа.
-    private _shapeId: number;
-
-    constructor() {
-    }
-
-    public setShape(x: number, y: number, z: number, range: number) {
-        console.log(' -> setShape');
-        this.shape = mp.colshapes.newSphere(x, y, z, range);
-        this._shapeId = this.shape.id;
-    }
-
-    public set shapeId(value: number) {
-        console.log(' -> set shapeId');
-        this.shapeId = value;
-    }
-
-    public get shapeId() {
-        console.log(' -> get shapeId');
-        return this._shapeId;
-    }
-
-    
+export enum LootSpawn {
+    RELOAD = 'RELOAD'
 }
 
+export interface LootShapeInfo {
+    type: LootSpawn
+}
 
+export class Loot {
+    private marker: MarkerMp;
+    private shape: ColshapeMp;
+
+    constructor(colshape: ColshapeMp, marker: MarkerMp) {
+        this.shape = colshape;
+        this.marker = marker;
+        
+        const lootShapeInfo: LootShapeInfo = {
+            type: LootSpawn.RELOAD
+        };
+        this.shape.setVariable('lootShapeInfo', lootShapeInfo);
+        this.shape.setVariable('itemList', []);
+    }
+
+    public getItemList(): Item[] {
+        return this.shape.getVariable('itemList');
+    }
+
+    public getShape(): ColshapeMp {
+        return this.shape;
+    }
+    
+    public shapeDestroy() {
+        console.log(' -> shape destroy');
+        this.shape.destroy();
+    }
+
+    public addItem(items: Item[]): void {
+        if (!items.length) return;
+
+        const itemList: Item[] = this.shape.getVariable('itemList');
+        itemList.push(...items);
+        
+        this.shape.setVariable('itemList', itemList);
+    }
+}

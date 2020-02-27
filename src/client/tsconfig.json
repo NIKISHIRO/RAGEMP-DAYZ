@@ -9,7 +9,8 @@
     "esModuleInterop": true,                  /* needed to read json*/
     "outDir": "../../client_packages",   /* Redirect output structure to the directory. */
     "strict": true,                            /* Enable all strict type-checking options. */
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false
   },
   "files": [
     // RAGEMP
@@ -17,7 +18,7 @@
     "./libs/types/rageMp/vehicle_hashes.d.ts",
     "./libs/types/rageMp/weapon_hashes.d.ts",
     "./libs/types/rageMp/ped_hashes.d.ts",
-    "./libs/types/rageMp/enums.d.ts",
+    "./libs/types/rageMp/enums.d.ts"
   ],
   "include": [
     "project/**/*"
