@@ -106,21 +106,35 @@ export class Player {
                     
                     returnInformation.info = `Предмет был удален из этой точки. Осталось всего: ${itemListOrFalse.length} предметов.`;
                     returnInformation.result = true;
-                } 
+                }
                 // Если массив пуст, то удалить сам колшип.
                 if (itemListOrFalse && !itemListOrFalse.length) {
-                    itemPoints.splice(idx, 1);
+                    // itemPoints.splice(idx, 1);
                     this.player.setVariable('itemPoints', itemPoints);
+
+                    mp.players.forEach(p => {
+                        const itemPoints = p.getVariable('itemPoints');
+                        
+                        if (itemPoints.length) {
+                            const idx = itemPoints.findIndex(id => id === colshape.id);
+                            
+                            if (idx !== -1) {
+                                itemPoints.splice(idx, 1);
+                                p.setVariable('itemPoints', itemPoints);
+                            }   
+                        }
+                    });
+
                     colshape.destroy();
                     
                     returnInformation.info = `Эта точка была удалена.`;
                     returnInformation.result = true;
                 }
 
-                this.player.giveItem(item.key, item.amount, item.data);                
+                this.player.giveItem(item.key, item.amount, item.data);          
             }
         }
-     
+
         return returnInformation;
     }
 }

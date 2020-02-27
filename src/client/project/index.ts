@@ -4,3 +4,5 @@ import './DAYZ';
 import './modules/syncedPlayerComponent';
 import './DAYZ/events/render';
 import './DAYZ';
+import './DAYZ/peds';
+import './DAYZ/keypress';
