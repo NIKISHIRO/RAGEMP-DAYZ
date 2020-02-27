@@ -40,11 +40,11 @@ export class Car {
         return random
     }    
 
-    static getDistCar() {
+    static getDistCar(vehicle:VehicleMp) {
         let getVehiclesNearbyMe = (player: PlayerMp) => {
             const returnVehicles: any[] = [];
     
-            mp.vehicles.forEachInRange(player.position, 10, (vehicle) => {
+            mp.vehicles.forEachInRange(player.position, 10, () => {
                     returnVehicles.push(player.dist(vehicle.position));
                 }
             );

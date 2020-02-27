@@ -13,33 +13,24 @@ const items: Item[] = [
     }
 ];
     vehicleCoords.forEach(car =>{
-        Car.spawnCar(car.hash, new mp.Vector3(car.position.x,car.position.y,car.position.z), new mp.Vector3(car.rotation.x,car.rotation.y,car.rotation.z),[car.color[0],car.color[1],car.color[2],car.color[3],car.color[4],car.color[5]])
-        .setVariable('carInventory', items);
+        let carObj = Car.spawnCar(car.hash, new mp.Vector3(car.position.x,car.position.y,car.position.z), new mp.Vector3(car.rotation.x,car.rotation.y,car.rotation.z),[car.color[0],car.color[1],car.color[2],car.color[3],car.color[4],car.color[5]]);
+        carObj.setVariable('carInventory', items);
     })
 });
 
 
-mp.events.addCommand('carobj', () => {
-});
-
-mp.events.addCommand('carexplode', () => {
-
-});
-
-mp.events.addCommand('cardestroy', () => {
-
-});
-
-mp.events.addCommand('carloot',(p:PlayerMp)=>{
-
-})
-
-mp.events.addCommand('carinv',(p:PlayerMp)=>{
-    const vehicles: any[] = [];
+mp.events.add('carinv',(p:PlayerMp)=>{
+    let vehicles: any[] = [];
     let car = Car.getCar(p);
-    car.forEach((elem, i) => {
-            vehicles.push(elem.getVariable('carInventory'))
-            p.outputChatBox('Инвентарь: ')
-            p.outputChatBox('Вам доступен инвентарь машины');
+    car.forEach((elem) => {
+        vehicles.push({
+                    'inventory' : elem.getVariable('carInventory'),
+                    'distance' : p.dist(elem.position),
+                    'objCar' : elem
+        })
     });
+    console.log(vehicles)
+    vehicles.forEach((elem, i) =>{
+        console.log(elem.distance)
+    })
 })
