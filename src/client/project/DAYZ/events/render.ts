@@ -4,7 +4,6 @@ mp.events.addDataHandler("itemPoints", (entity: EntityMp, value: number[], oldVa
   if (entity.type === 'player') {
     if (entity === mp.players.local) {
       itemPoints = value;
-      mp.gui.chat.push('ЭТО ВЫВОДИТСЯ ТОЛЬКО ДЛЯ ТЕБЯ');
     }
   }
 });

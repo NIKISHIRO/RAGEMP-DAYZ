@@ -76,7 +76,7 @@ mp.events.addCommand('item', (player: PlayerMp, ft: string, srcCellId: string, s
 
     // Если игрок передал 2 аргумент.
     if (Number.isInteger(itemId)) {
-        const returnInformation: ReturnInformation = playerInstance.takeItem(cellId, itemId);
+        const returnInformation: ReturnInformation = playerInstance.takeColshapeItem(cellId, itemId);
         player.outputChatBox(returnInformation.info);
     }
 });

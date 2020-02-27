@@ -74,7 +74,7 @@ export class Player {
 
     // Из itemPoints берет itemList из колшипа под индексом = cellId 
     // и берет из массива itemList предмет под индексом itemId
-    public takeItem(cellId: number, itemId: number): ReturnInformation {
+    public takeColshapeItem(cellId: number, itemId: number): ReturnInformation {
         const returnInformation = {
             info: '!{#DA3060}Такого предмета или точки здесь нет!',
             result: false
@@ -112,6 +112,7 @@ export class Player {
                     // itemPoints.splice(idx, 1);
                     this.player.setVariable('itemPoints', itemPoints);
 
+                    // Если у игрока есть ИД такого колшипа - удалить его из массива ТОЧЕК.
                     mp.players.forEach(p => {
                         const itemPoints = p.getVariable('itemPoints');
                         
