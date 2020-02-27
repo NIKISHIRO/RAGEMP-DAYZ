@@ -14,11 +14,11 @@ export class Car {
 
     // Добавляет объект машины в файл vehicleCoords.json.
     static saveCar(hash: string, position: Vector3Mp, rotation?: Vector3Mp, color?: number[], description?: string): void {
-        if(!rotation) rotation = new mp.Vector3(0, 0, Car.random(1,360))
+        if(!rotation) rotation = new mp.Vector3(Car.random(1,360), Car.random(1,360), 90)
         if(!color) color = [Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255)];
         if(!description) description = "Машина была добавлена без описания";
         
-        const path: string = "src/server/project/DAYZ/carspawn/vehicleCoords.json";
+        const path: string = "src/server/project/DAYZ/car/vehicleCoords.json";
         fs.readFile(path, 'utf-8', (err: any, result: any) => {
             if(err) return console.log(err)
             let objFile = JSON.parse(result);
@@ -38,8 +38,10 @@ export class Car {
     static random(Minimal: number, Maximum: number): number {
         let random = Math.floor((Math.random() * Maximum) + Minimal);
         return random
-    }    
-    static getCar(player:PlayerMp) {
+    } 
+    
+    // Возвращаем массив машин в 10 метрах
+    static getCar(player: PlayerMp) {
         const returnVehicles: any[] = [];
 
         mp.vehicles.forEachInRange(player.position, 10, (vehicle) => {
@@ -47,6 +49,42 @@ export class Car {
             }
         );
         return returnVehicles;
-    
     };
+    
+    // Массив обьектов машин с ключами сортированными по дистанции от меньшего к большему
+    static arrayCars(player: PlayerMp){
+        let vehicles: any[] = [];
+        let cars = Car.getCar(player);
+
+        cars.forEach((elem) => {
+            vehicles.push({
+                'distance' : player.dist(elem.position),
+                'objCar' : elem
+            })
+        });
+
+        vehicles.sort((a, b) => a.distance-b.distance)
+        
+        return vehicles;
+    }
+    static putItem(player:PlayerMp ,vehicle:VehicleMp, index: number){
+        const carInventory = vehicle.getVariable('carInventory');
+        const playerInventory: Item[] = player.getInventory();
+        if(!playerInventory || !playerInventory[index]){
+            return player.outputChatBox('У вас нет такого предмета в инвентаре')
+        }
+        const itemKey = playerInventory[index].key;
+
+        playerInventory.forEach(item => {
+            if(item.key === itemKey){
+                carInventory.push(item);
+                vehicle.setVariable('carInventory',carInventory)
+                player.removeItem(player.getItemIndex(itemKey), 1)
+            }
+        })
+    }
+
+    static TakeItem(vehicle:VehicleMp){
+
+    }
 }
