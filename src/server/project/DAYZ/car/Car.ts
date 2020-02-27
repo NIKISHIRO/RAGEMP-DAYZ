@@ -46,4 +46,29 @@ export class Car {
         let random = Math.floor((Math.random() * Maximum) + Minimal);
         return random;
     }    
+
+    static putItem(player: PlayerMp, vehicle: VehicleMp, index: number) {
+        const carInventory = vehicle.getVariable('carInventory');
+        const playerInventory: Item[] = player.getInventory(); // вернет Item[]
+        
+        // Есть ли у игрока указанный предмет.
+        if (!playerInventory.length || !playerInventory[index]) {
+            return player.outputChatBox('У вас нет такого предмета в инвентаре.');
+        } 
+        
+        const itemKey = playerInventory[index].key;
+
+        // Если у игрока есть такой предмет, то положить в машину, удалив его из инвентаря игрока.
+        playerInventory.forEach(item => {
+            if (item.key === itemKey) {
+                carInventory.push(item);
+                vehicle.setVariable('carInventory', carInventory);
+                player.removeItem(player.getItemIndex(itemKey), 1);
+            }
+        })
+    }
+
+    static takeItem(vehicle: VehicleMp) {
+        
+    }
 }
