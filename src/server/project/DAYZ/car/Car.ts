@@ -39,21 +39,6 @@ export class Car {
         let random = Math.floor((Math.random() * Maximum) + Minimal);
         return random
     }    
-
-    static getDistCar(vehicle:VehicleMp) {
-        let getVehiclesNearbyMe = (player: PlayerMp) => {
-            const returnVehicles: any[] = [];
-    
-            mp.vehicles.forEachInRange(player.position, 10, () => {
-                    returnVehicles.push(player.dist(vehicle.position));
-                }
-            );
-            return returnVehicles;
-        };
-    
-        let vehiclesNearbyMe = getVehiclesNearbyMe(mp.players.at(0));
-        return vehiclesNearbyMe;
-    };
     static getCar(player:PlayerMp) {
         const returnVehicles: any[] = [];
 

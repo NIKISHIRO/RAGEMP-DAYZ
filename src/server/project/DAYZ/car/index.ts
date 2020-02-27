@@ -8,8 +8,4 @@ export interface VehicleCoord {
     color?: string;
     description?: string; // Описание, которое можно вывести потом через ф-ю.
 }
-export interface vehicle {
-    inventory: number[],
-    distance: Float32Array,
-    obj: object
-}
+
