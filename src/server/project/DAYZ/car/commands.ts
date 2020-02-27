@@ -29,8 +29,4 @@ mp.events.add('carinv',(p:PlayerMp)=>{
                     'objCar' : elem
         })
     });
-    console.log(vehicles)
-    vehicles.forEach((elem, i) =>{
-        console.log(elem.distance)
-    })
 })
