@@ -2,7 +2,8 @@ import './handlers';
 import './commands';
 import './events';
 import { Loot } from './Loot';
-import { Colshape } from './Colshape';
+import { Colshape } from './entities/Colshape';
+import { CreateItemParams, LootSpawn } from '../interfaces';
 
 const invAPI = require('@modules/inventory-api');
 
@@ -46,12 +47,7 @@ const item_ak47Weapon: Item = {
     }
 };
 
-const loot = new Loot();
-loot.createLootShape(new mp.Vector3(-1855, 2984, 32), 3, 'ANY LOOT');
-const colshape: ColshapeMp = loot.getColshape();
-Colshape.addItem(colshape, [item_bodyarmor, item_ak47Ammo, item_ak47Weapon]);
+const createItemParams: CreateItemParams = {pos: new mp.Vector3(-1850, 2984, 32), range: 3, labelText: LootSpawn.RELOAD, objectHash: 'gr_prop_gr_offchair_01a'}
 
-const loot2 = new Loot();
-loot2.createLootShape(new mp.Vector3(-1850, 2984, 32), 3, 'ANY LOOT_2');
-const colshape2: ColshapeMp = loot2.getColshape();
-Colshape.addItem(colshape2, [item_bodyarmor, item_ak47Weapon, item_ak47Ammo, item_ak47Weapon]);
+const loot = new Loot();
+loot.createItemPoint([item_bodyarmor, item_ak47Ammo, item_ak47Weapon], createItemParams);

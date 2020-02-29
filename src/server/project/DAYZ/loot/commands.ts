@@ -1,7 +1,7 @@
 import { Loot } from './Loot';
 import { logger } from '../shared/logger';
 import { Player } from '../player/Player';
-import { ReturnInformation } from 'project/interfaces';
+import { ReturnInformation } from '../interfaces';
 
 // Выводит инвентарь игрока.
 mp.events.addCommand('inv', (player: PlayerMp, ft: string) => {

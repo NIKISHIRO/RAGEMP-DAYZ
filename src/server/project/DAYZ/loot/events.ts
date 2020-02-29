@@ -1,6 +1,5 @@
-import { logger } from "../shared/logger";
-import { Loot, LootShapeInfo, LootSpawn } from "./Loot";
 import { Player } from "../player/Player";
+import { LootShapeInfo, LootSpawn } from "../interfaces";
 
 mp.events.add({
     'playerJoin': (player: PlayerMp) => {
