@@ -1,6 +1,7 @@
 import { Loot } from './Loot';
 import { logger } from '../shared/logger';
-import { Player, ReturnInformation } from '../player/Player';
+import { Player } from '../player/Player';
+import { ReturnInformation } from 'project/interfaces';
 
 // Выводит инвентарь игрока.
 mp.events.addCommand('inv', (player: PlayerMp, ft: string) => {
@@ -31,8 +32,7 @@ mp.events.addCommand('use', (player: PlayerMp, ft: string, idx: string) => {
 
 // Выводит места для лута (ИДЫ КОЛШИПОВ).
 mp.events.addCommand('items', (player: PlayerMp, ft: string) => {
-    const playerInstance = new Player(player);
-    const itemPoints = playerInstance.getItemPoints();
+    const itemPoints = Player.getItemPoints(player);
 
     player.outputChatBox(`!{#20db63}Item Points: [${itemPoints.length}]`);
     itemPoints.forEach((shapeId, idx) => {
@@ -41,20 +41,19 @@ mp.events.addCommand('items', (player: PlayerMp, ft: string) => {
     player.outputChatBox(`!{#20db63}---------------------------`);
 });
 
-mp.events.addCommand('item', (player: PlayerMp, ft: string, srcCellId: string, srcItemId: string) => {
+mp.events.addCommand('item', (player: PlayerMp, ft: string, srcCellId: string, srcItemId: string, srcAmount: string) => {
     if (!ft) {
         player.outputChatBox('/item [ИД ячейки] - содержимое ячейки.');
-        player.outputChatBox('/item [ИД ячейки] [ИД предмета] - получить предмет ячейки.');
+        player.outputChatBox('/item [ИД ячейки] [ИД предмета] [Кол-во]- получить предмет ячейки.');
         return;
     }
 
-    const cellId = parseInt(srcCellId);
-    const itemId = parseInt(srcItemId);
+    const cellId: number = parseInt(srcCellId);
+    const itemId: number = parseInt(srcItemId);
+    const amount: number = parseInt(srcAmount);
 
-    const playerInstance = new Player(player);
-    const itemList = playerInstance.getItemListByIndex(cellId);
+    const itemList = Player.getItemListByIndex(player, cellId);
 
-    console.log('-> item ->', itemList);
     if (!itemList) {
         player.outputChatBox(`Такой ячейки нету!`);
     } else {
@@ -68,7 +67,6 @@ mp.events.addCommand('item', (player: PlayerMp, ft: string, srcCellId: string, s
             player.outputChatBox('!{#97CC24}Предметы в этой ячейке:');
 
             itemList.forEach((item: Item, idx: number) => {
-                console.log(' -> item -> ', item);
                 player.outputChatBox(`!{#97CC24}[${idx}] ${item.key} | ${item.amount} |`);
             });
         }
@@ -76,11 +74,19 @@ mp.events.addCommand('item', (player: PlayerMp, ft: string, srcCellId: string, s
 
     // Если игрок передал 2 аргумент.
     if (Number.isInteger(itemId)) {
-        const returnInformation: ReturnInformation = playerInstance.takeColshapeItem(cellId, itemId);
+        const returnInformation: ReturnInformation = Player.takeColshapeItem(player, cellId, itemId, amount);
         player.outputChatBox(returnInformation.info);
     }
 });
 
+mp.events.addCommand('drop', (player: PlayerMp, ft: string, id: string, amount: string) => {
+    if (!ft) return player.outputChatBox('/drop [ИД Предмета из инвентаря] (/inv)');
 
+    const returnInformation: ReturnInformation = Player.dropItem(player, parseInt(id), parseInt(amount));
 
-
+    if (returnInformation.result) {
+        player.outputChatBox(`!{#97CC24}${returnInformation.info}`);
+    } else {
+        player.outputChatBox(`!{#BC3C00}${returnInformation.info}`);
+    }
+});
