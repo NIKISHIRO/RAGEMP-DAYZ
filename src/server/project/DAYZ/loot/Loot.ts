@@ -1,6 +1,8 @@
 /*
     Лут - класс, который создает на указаных коорд. точку для взятия лута.
     У игрока вставшего на "точку" должна быть возможность взять лут с этой точки.
+
+    Через этот класс идет регистрация сущностей, как предметов. 
 */
 
 export enum LootSpawn {
@@ -8,43 +10,40 @@ export enum LootSpawn {
 }
 
 export interface LootShapeInfo {
-    type: LootSpawn
+    type: LootSpawn,
+    labelId: number
 }
 
 export class Loot {
-    private marker: MarkerMp;
-    private shape: ColshapeMp;
+    private colshape: ColshapeMp;
+    private label: TextLabelMp;
 
-    constructor(colshape: ColshapeMp, marker: MarkerMp) {
-        this.shape = colshape;
-        this.marker = marker;
-        
+    private init(colshape: ColshapeMp, label: TextLabelMp) {
         const lootShapeInfo: LootShapeInfo = {
-            type: LootSpawn.RELOAD
+            type: LootSpawn.RELOAD,
+            labelId: label.id
         };
-        this.shape.setVariable('lootShapeInfo', lootShapeInfo);
-        this.shape.setVariable('itemList', []);
-    }
-
-    public getItemList(): Item[] {
-        return this.shape.getVariable('itemList');
-    }
-
-    public getShape(): ColshapeMp {
-        return this.shape;
-    }
-    
-    public shapeDestroy() {
-        console.log(' -> shape destroy');
-        this.shape.destroy();
-    }
-
-    public addItem(items: Item[]): void {
-        if (!items.length) return;
-
-        const itemList: Item[] = this.shape.getVariable('itemList');
-        itemList.push(...items);
         
-        this.shape.setVariable('itemList', itemList);
+        colshape.setVariable('lootShapeInfo', lootShapeInfo);
+        colshape.setVariable('itemList', []);
+
+        this.colshape = colshape;
+        this.label = label;
+    }
+
+    public getColshape(): ColshapeMp {
+        return this.colshape;
+    }
+
+    public getLabel(): TextLabelMp {
+        return this.label;
+    }
+
+    public createLootShape(pos: Vector3Mp, dist: number, labelText: string = 'No name') {
+        const colshape: ColshapeMp = mp.colshapes.newSphere(pos.x, pos.y, pos.z, dist);
+        const label: TextLabelMp = mp.labels.new(labelText, pos, {drawDistance: dist});
+
+        // Инициализация сущностей как предметов для лута.
+        this.init(colshape, label);
     }
 }

@@ -16,8 +16,7 @@ mp.events.add({
         const lootShapeInfo: LootShapeInfo = shape.getVariable('lootShapeInfo');
         if (lootShapeInfo.type !== LootSpawn.RELOAD) return;
 
-        const playerInstance = new Player(player);
-        playerInstance.addItemPoint(shape.id);
+        Player.addItemPoint(player, shape.id);
 
         player.outputChatBox('event -> playerEnterColshape');
     },
@@ -26,8 +25,7 @@ mp.events.add({
         const lootShapeInfo: LootShapeInfo = shape.getVariable('lootShapeInfo');
         if (lootShapeInfo.type !== LootSpawn.RELOAD) return;
 
-        const playerInstance = new Player(player);
-        playerInstance.removeItemPoint(shape.id);
+        Player.removeItemPoint(player, shape.id);
 
         player.outputChatBox('event -> playerExitColshape');
     }

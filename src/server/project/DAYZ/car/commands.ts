@@ -18,3 +18,8 @@ mp.events.addCommand('carput', (player:PlayerMp) =>{
     console.log(car.getVariable('carInventory'))
     Car.putItem(player, car,0)
 })
+
+mp.events.addCommand('tp', (player: PlayerMp, ft, x: string, y: string, z: string) => {
+    player.position = new mp.Vector3(parseInt(x), parseInt(y), parseInt(z));
+
+});

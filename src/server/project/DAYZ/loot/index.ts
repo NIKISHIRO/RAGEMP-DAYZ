@@ -2,6 +2,7 @@ import './handlers';
 import './commands';
 import './events';
 import { Loot } from './Loot';
+import { Colshape } from './Colshape';
 
 const invAPI = require('@modules/inventory-api');
 
@@ -23,9 +24,9 @@ invAPI.addItem("item_ak47Ammo", "AK-47 AMMO", "ammo......",
 
 const item_bodyarmor: Item = {
     key: 'item_bodyarmor',
-    amount: 1,
+    amount: 100,
     data: {
-        testdata: 'test'
+        level: 3
     }
 };
 
@@ -33,21 +34,24 @@ const item_ak47Ammo: Item = {
     key: 'item_ak47Ammo',
     amount: 1,
     data: {
-        testdata: 'test'
+        ammo: 30
     }
 };
 
-const marker: MarkerMp = mp.markers.new(42, new mp.Vector3(111, 119, 113), 1);
-const colshape: ColshapeMp = mp.colshapes.newSphere(111, 119, 113, 5);
-const loot = new Loot(colshape, marker);
-loot.addItem([item_bodyarmor, item_ak47Ammo]);
+const item_ak47Weapon: Item = {
+    key: 'item_ak47Weapon',
+    amount: 5,
+    data: {
+        health: 100
+    }
+};
 
-const marker2: MarkerMp = mp.markers.new(42, new mp.Vector3(94, 112, 109), 1);
-const colshape2: ColshapeMp = mp.colshapes.newSphere(94, 112, 109, 5);
-const loot2 = new Loot(colshape2, marker2);
-loot2.addItem([item_bodyarmor]);
+const loot = new Loot();
+loot.createLootShape(new mp.Vector3(-1855, 2984, 32), 3, 'ANY LOOT');
+const colshape: ColshapeMp = loot.getColshape();
+Colshape.addItem(colshape, [item_bodyarmor, item_ak47Ammo, item_ak47Weapon]);
 
-const marker3: MarkerMp = mp.markers.new(42, new mp.Vector3(92, 112, 109), 1);
-const colshape3: ColshapeMp = mp.colshapes.newSphere(92, 112, 109, 5);
-const loot3 = new Loot(colshape3, marker3);
-loot3.addItem([item_ak47Ammo]);
+const loot2 = new Loot();
+loot2.createLootShape(new mp.Vector3(-1850, 2984, 32), 3, 'ANY LOOT_2');
+const colshape2: ColshapeMp = loot2.getColshape();
+Colshape.addItem(colshape2, [item_bodyarmor, item_ak47Weapon, item_ak47Ammo, item_ak47Weapon]);

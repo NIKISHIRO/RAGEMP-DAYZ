@@ -8,5 +8,4 @@ mp.events.addCommand('data', (player: PlayerMp, ft: string) => {
 
 mp.events.addCommand('kill', (player: PlayerMp) => {
     player.health = 0;
-    console.log(player.health);
 })
