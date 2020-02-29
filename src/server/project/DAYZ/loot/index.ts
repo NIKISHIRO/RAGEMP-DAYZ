@@ -34,7 +34,7 @@ const item_ak47Ammo: Item = {
     key: 'item_ak47Ammo',
     amount: 1,
     data: {
-        ammo: 30
+        ammo: 10 // 
     }
 };
 

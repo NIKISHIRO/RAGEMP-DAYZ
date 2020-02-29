@@ -77,6 +77,10 @@ export class Player {
         return item;
     }
 
+    static takeVehicleItem() {
+        // пример в takeColshapeItem.
+    }
+
     // Из itemPoints берет itemList из колшипа под индексом = cellId 
     // и берет из массива itemList предмет под индексом itemId
     static takeColshapeItem(player: PlayerMp, cellId: number, itemId: number, amount: number): ReturnInformation {
@@ -130,10 +134,6 @@ export class Player {
                         itemList.splice(itemId, 1);   
                     }
 
-                    console.log('-----> amount', amount)
-                    console.log('-----> item', item);
-                    console.log('-----> itemList', itemList);
-
                     colshape.setVariable('itemList', itemList);
                     
                     returnInformation.info = `Предмет был удален из этой точки. Осталось всего: ${itemList.length} предметов.`;
@@ -178,8 +178,12 @@ export class Player {
                 }
 
                 if (player.giveItem(item.key, amount, item.data)) {
-                    player.outputChatBox(`!{#97CC24}Вы подобрали ${amount}шт. '${item.key}'`);
-                }          
+                    returnInformation.info = `!{#97CC24}Вы подобрали ${amount}шт. '${item.key}'`;
+                    returnInformation.result = true;
+                } else {
+                    returnInformation.info = `!{#DA3060}ОШИБКА ВЗЯТИЯ ПРЕДМЕТА. '${item.key}' не зарегистрирован!`;
+                    returnInformation.result = false;
+                } 
             }
         } else { // Если item = false.
             returnInformation.info = '!{#DA3060}Такого предмета или точки здесь нет!';
