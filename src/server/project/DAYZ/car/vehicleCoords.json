@@ -1,1 +1,71 @@
-[{"hash":"g65amg","position":{"x":111,"y":111,"z":111},"rotation":{"x":0,"y":0,"z":111},"color":[255,255,255,0,0,0],"description":"spawn tachka"},{"hash":"g65amg","position":{"x":111,"y":111,"z":111},"rotation":{"x":0,"y":0,"z":111},"color":[255,255,255,0,0,0],"description":"spawn tachka"},{"hash":"g65amg","position":{"x":111,"y":111,"z":111},"rotation":{"x":0,"y":0,"z":111},"color":[255,255,255,0,0,0],"description":"spawn tachka"},{"hash":"g65amg","position":{"x":111,"y":111,"z":111},"rotation":{"x":0,"y":0,"z":111},"color":[255,255,255,0,0,0],"description":"spawn tachka"},{"hash":"g65amg","position":{"x":111,"y":111,"z":111},"rotation":{"x":0,"y":0,"z":111},"color":[255,255,255,0,0,0],"description":"spawn tachka"},{"hash":"turismor","position":{"x":111,"y":111,"z":111},"rotation":{"x":0,"y":0,"z":111},"color":[255,255,255,0,0,0],"description":"spawn tachka"}]
+[
+  {
+    "hash": "g65amg",
+    "position": {
+      "x": -1848,
+      "y": 2989,
+      "z": 32
+    },
+    "rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 90
+    },
+    "color": [
+      101,
+      165,
+      114,
+      186,
+      27,
+      30
+    ],
+    "description": "Машина была добавлена без описания",
+    "isExplode": true
+  },
+  {
+    "hash": "turismor",
+    "position": {
+      "x": -1848,
+      "y": 3003,
+      "z": 32
+    },
+    "rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 180
+    },
+    "color": [
+      2,
+      198,
+      236,
+      64,
+      133,
+      117
+    ],
+    "description": "Машина была добавлена без описания",
+    "isExplode": true
+  },
+  {
+    "hash": "g65amg",
+    "position": {
+      "x": -1844,
+      "y": 2977,
+      "z": 32
+    },
+    "rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 257
+    },
+    "color": [
+      254,
+      141,
+      8,
+      217,
+      40,
+      43
+    ],
+    "description": "Машина была добавлена без описания",
+    "isExplode": true
+  }
+]

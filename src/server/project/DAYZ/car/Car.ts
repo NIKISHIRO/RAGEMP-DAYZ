@@ -21,16 +21,18 @@ export class Car {
 
     // Добавляет объект машины в файл vehicleCoords.json.
     static saveCar(hash: string, position: Vector3Mp, rotation?: Vector3Mp, color?: number[], description?: string): void {
-        if(!rotation) rotation = new mp.Vector3(Car.random(1,360), Car.random(1,360), 90)
+        if(!rotation) rotation = new mp.Vector3(0, 0, Car.random(1,360))
         if(!color) color = [Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255)];
         if(!description) description = "Машина была добавлена без описания";
-        
+
+        let isExplode = true;
         const path: string = "src/server/project/DAYZ/car/vehicleCoords.json";
+
         fs.readFile(path, 'utf-8', (err: any, result: any) => {
             if(err) return console.log(err)
             let objFile = JSON.parse(result);
             
-            objFile.push({hash, position, rotation, color, description});
+            objFile.push({hash, position, rotation, color, description, isExplode});
             
             fs.writeFile(path, JSON.stringify(objFile, null, 2), (err: string) => {
                 if(err) {
@@ -74,7 +76,7 @@ export class Car {
         
         return vehicles;
     }
-    static putItem(player:PlayerMp ,vehicle:VehicleMp, index: number){
+    static putItemInCar(player:PlayerMp ,vehicle:VehicleMp, index: number){
         const carInventory = vehicle.getVariable('carInventory');
         const playerInventory: Item[] = player.getInventory();
         if(!playerInventory || !playerInventory[index]){
@@ -91,7 +93,24 @@ export class Car {
         })
     }
 
-    static takeItem(vehicle: VehicleMp) {
-        
+    static takeItemInCar(player:PlayerMp ,vehicle:VehicleMp, index: number) {
+        const carInventory = vehicle.getVariable('carInventory');
+        const playerInventory: Item[] = player.getInventory();
+        if(!carInventory || !carInventory[index]){
+            return player.outputChatBox('У вас нет такого предмета в инвентаре')
+        }
+        const itemKey = carInventory[index].key;
+
+        carInventory.forEach(item => {
+            if(item.key === itemKey){
+                console.log('item ==>',item)
+                playerInventory.push(item);
+                player.setInventory(playerInventory);
+                let index = carInventory.findIndex((item) => item.key === itemKey);
+
+                carInventory.splice(index, 1);
+            }
+        })
+        return carInventory
     }
 }
