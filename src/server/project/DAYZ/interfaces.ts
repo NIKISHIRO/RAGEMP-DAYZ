@@ -3,20 +3,25 @@ export interface ReturnInformation {
     info: string;
 }
 
+// Тип созданного колшипа.
 export enum LootSpawn {
     RELOAD = 'RELOAD',
     DROPPED = 'DROPPED',
 }
 
 export interface LootShapeInfo {
-    type: LootSpawn,
-    labelId: number,
-    objectId: number,
+    type: LootSpawn;
+    labelId: number;
+    objectId: number;
+    blipId: number;
 }
 
 export interface CreateItemParams {
-    pos: Vector3Mp; 
+    colshapePosition: Vector3Mp; 
+    objectPosition: Vector3Mp; 
+    labelPosition: Vector3Mp; 
     range: number;
     labelText: string;
     objectHash: string;
 }
+

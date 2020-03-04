@@ -3,8 +3,10 @@ import { logger } from "../shared/logger";
 import { Colshape } from "../loot/entities/Colshape";
 import { Label } from "../loot/entities/Label";
 import { EObject } from "../loot/entities/Object";
-import { Loot } from "../loot/Loot";
+import { Loot } from "../loot/Loot/Loot";
 import { ReturnInformation, LootShapeInfo, CreateItemParams, LootSpawn } from "../interfaces";
+import { Blip } from "../loot/entities/Blip";
+import { EItem } from "../loot/Item/Item";
 
 /*
     itemPoints - Массив идов колшипов.
@@ -162,18 +164,27 @@ export class Player {
                         console.log('lootShapeInfo', lootShapeInfo);
                         const labelId = lootShapeInfo.labelId;
                         const objId = lootShapeInfo.objectId;
+                        const blipId = lootShapeInfo.blipId;
 
                         // Если label с таким ИД на серваке нету - вывести в консоль об этом.
                         if (!mp.labels.exists(labelId)) {
                             logger('red', 'Player', 'takeItem', 'mp.labels.exists', 'Такого Label не существует.');
-                        } else { // ИНАЧЕ - удалить его.
+                        } else { // Уничтожить..
                             Label.destroy(labelId);
                         }
 
+                        // Если object с таким ИД на серваке нету - вывести в консоль об этом.
                         if (!mp.objects.exists(objId)) {
                             logger('red', 'Player', 'takeItem', 'mp.objects.exists', 'Такого Object не существует.');
-                        } else {
+                        } else { // Уничтожить.
                             EObject.destroy(objId);
+                        }
+
+                        // Если object с таким ИД на серваке нету - вывести в консоль об этом.
+                        if (!mp.blips.exists(blipId)) {
+                            logger('red', 'Player', 'takeItem', 'mp.objects.exists', 'Такого Object не существует.');
+                        } else { // Уничтожить.
+                            Blip.destroy(blipId);
                         }
 
                         returnInformation.info = `Эта точка была удалена.`;
@@ -201,13 +212,18 @@ export class Player {
     }
 
     // Выкидывает предмет из инвентаря.
-    static dropItem(player: PlayerMp, itemIdx: number, amount: number): ReturnInformation {
+    static dropItem(player: PlayerMp, itemIdx: number, amount: number, cellId?: number): ReturnInformation {
         const inventory = player.getInventory();
+        const pos = player.position;
 
         const returnInformation: ReturnInformation = {
             result: false,
             info: 'Введите корректные целые числа' 
         };
+
+        console.log('itemIdx', itemIdx);
+        console.log('amount', amount);
+        console.log('cellId', cellId);
 
         // Если пришло не число или не целое число, то return.
         if (isNaN(itemIdx) || isNaN(amount) || !Number.isInteger(itemIdx) || !Number.isInteger(amount)) {
@@ -236,15 +252,54 @@ export class Player {
             return returnInformation;
         }
 
-        const pos = player.position;
-    
-        // Создает предмет на координатах его выброса.
-        const createItemParams: CreateItemParams = {pos: pos, range: 3, labelText: LootSpawn.DROPPED, objectHash: 'bkr_prop_duffel_bag_01a'};
-        const loot = new Loot();
-        loot.createItemPoint([Loot.createItem(item.key, amount)], createItemParams);
+        // Если указана ячейка (индекс колшипа) и он целое число.
+        if (cellId !== undefined && Number.isInteger(cellId)) {
+            const itemPoints = Player.getItemPoints(player);
+            console.log('0 --->', 'itemPoints', itemPoints);
+            console.log('0 --->', 'itemPoints[cellId]', itemPoints[cellId]);
 
-        returnInformation.result = true;
-        returnInformation.info = `Вы выбросили ${amount}шт. '${item.key}'`;
+            if (itemPoints && itemPoints[cellId] !== undefined) {
+                const colshapeId = itemPoints[cellId];
+                const colshape = mp.colshapes.at(colshapeId);
+
+                console.log('1 --->');
+                
+                if (!mp.colshapes.exists(colshape)) {
+                    console.log('2 --->');
+                    returnInformation.result = false;
+                    returnInformation.info = `Не существует ячейки с ИД = ${cellId} `;
+                    return returnInformation;
+                }
+                console.log('3 --->');
+
+                Colshape.addItem(colshape, [EItem.createItem(item.key, amount)]);
+                returnInformation.result = true;
+                returnInformation.info = `Вы положили предмет в колшип с ИД = ${colshape.id}!`;
+                return returnInformation;
+            }
+
+            returnInformation.result = false;
+            returnInformation.info = `Такой точки(${cellId}) с лутом здесь нет!`;
+            return returnInformation;
+        } else { // Если не указана - создать новый КОЛШИП С ПРЕДМЕТАМИ.
+            // Создает предмет на координатах его выброса.
+            const createItemParams: CreateItemParams = {
+                colshapePosition: pos,
+                objectPosition: pos,
+                labelPosition: pos,
+                range: 3, 
+                labelText: LootSpawn.DROPPED, 
+                objectHash: 'bkr_prop_duffel_bag_01a',
+            };
+            const loot = new Loot();
+
+            console.log('createItemParams', createItemParams);
+
+            loot.createLootPoint([EItem.createItem(item.key, amount)], createItemParams);
+    
+            returnInformation.result = true;
+            returnInformation.info = `Вы выбросили ${amount}шт. '${item.key}'`;
+        }
 
         return returnInformation;
     }

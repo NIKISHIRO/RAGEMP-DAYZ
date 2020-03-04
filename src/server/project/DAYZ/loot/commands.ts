@@ -1,4 +1,4 @@
-import { Loot } from './Loot';
+import { Loot } from './Loot/Loot';
 import { logger } from '../shared/logger';
 import { Player } from '../player/Player';
 import { ReturnInformation } from '../interfaces';
@@ -34,17 +34,18 @@ mp.events.addCommand('use', (player: PlayerMp, ft: string, idx: string) => {
 mp.events.addCommand('items', (player: PlayerMp, ft: string) => {
     const itemPoints = Player.getItemPoints(player);
 
-    player.outputChatBox(`!{#20db63}Item Points: [${itemPoints.length}]`);
+    player.outputChatBox(`!{#20db63}(ItemPoints): [${itemPoints.length}]`);
+    player.outputChatBox(`!{#20db63}Смотреть содержимое через /take.`);
     itemPoints.forEach((shapeId, idx) => {
         player.outputChatBox(`!{#20db63}-> [${idx}]: ID - ${shapeId}`);
     });
     player.outputChatBox(`!{#20db63}---------------------------`);
 });
 
-mp.events.addCommand('item', (player: PlayerMp, ft: string, srcCellId: string, srcItemId: string, srcAmount: string) => {
+mp.events.addCommand('take', (player: PlayerMp, ft: string, srcCellId: string, srcItemId: string, srcAmount: string) => {
     if (!ft) {
-        player.outputChatBox('/item [ИД ячейки] - содержимое ячейки.');
-        player.outputChatBox('/item [ИД ячейки] [ИД предмета] [Кол-во]- получить предмет ячейки.');
+        player.outputChatBox('/take [ИД ячейки] - содержимое ячейки.');
+        player.outputChatBox('/take [ИД ячейки] [ИД предмета] [Кол-во]- получить предмет ячейки.');
         return;
     }
 
@@ -79,10 +80,13 @@ mp.events.addCommand('item', (player: PlayerMp, ft: string, srcCellId: string, s
     }
 });
 
-mp.events.addCommand('drop', (player: PlayerMp, ft: string, id: string, amount: string) => {
-    if (!ft) return player.outputChatBox('/drop [ИД Предмета из инвентаря] (/inv)');
-
-    const returnInformation: ReturnInformation = Player.dropItem(player, parseInt(id), parseInt(amount));
+mp.events.addCommand('drop', (player: PlayerMp, ft: string, id: string, amount: string, cellId: string) => {
+    if (!ft) { 
+        player.outputChatBox('/drop [ИД Предмета из инвентаря] [кол-во]');
+        player.outputChatBox('/drop [ИД Предмета из инвентаря] [кол-во] [ИД Ячейки]');
+        return;
+    }
+    const returnInformation: ReturnInformation = Player.dropItem(player, parseInt(id), parseInt(amount), parseInt(cellId));
 
     if (returnInformation.result) {
         player.outputChatBox(`!{#97CC24}${returnInformation.info}`);
