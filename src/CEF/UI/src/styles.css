@@ -1,0 +1,20 @@
+@font-face {
+    font-family: "Base02Cyrillic2-Regular"; /* Имя шрифта */
+    src: url('src/assets/fonts/Base02Cyrillic2-Regular.ttf'); /* Путь к файлу со шрифтом */
+}
+
+* {
+    box-sizing: border-box;
+    user-select: none;  
+    }
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;padding: 0;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+}
