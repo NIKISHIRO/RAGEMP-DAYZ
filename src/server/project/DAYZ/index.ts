@@ -9,5 +9,7 @@ import './commands';
 
 import './loot';
 import './car';
+import './lessons';
+import './db';
 
 mp.events.add(events);

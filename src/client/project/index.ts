@@ -7,3 +7,4 @@ import './DAYZ';
 import './DAYZ/peds';
 import './DAYZ/keypress';
 import './DAYZ/loot';
+import './DAYZ/CEF';

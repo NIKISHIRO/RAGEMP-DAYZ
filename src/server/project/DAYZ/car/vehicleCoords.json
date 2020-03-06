@@ -19,6 +19,28 @@
     "isExplode": true
   },
   {
+    "hash": "frogger2",
+    "position": {
+      "x": -1135,
+      "y": 4969,
+      "z": 220
+    },
+    "rotation": {
+      "x": 245,
+      "y": 26,
+      "z": 90
+    },
+    "color": [
+      4,
+      196,
+      237,
+      160,
+      167,
+      114
+    ],
+    "description": "Машина была добавлена без описания"
+  },
+  {
     "hash": "turismor",
     "position": {
       "x": -1855,

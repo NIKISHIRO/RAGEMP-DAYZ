@@ -1,8 +1,9 @@
 import './handlers';
 import './commands';
 import './events';
-import { Loot } from './Loot';
-import { Colshape } from './Colshape';
+import { Loot } from './Loot/Loot';
+import { Colshape } from './entities/Colshape';
+import { CreateItemParams, LootSpawn } from '../interfaces';
 
 const invAPI = require('@modules/inventory-api');
 
@@ -46,12 +47,30 @@ const item_ak47Weapon: Item = {
     }
 };
 
+/// Создание точки для лута.
+const createItemParams: CreateItemParams = {
+    colshapePosition: new mp.Vector3(-1144, 4909, 220),
+    objectPosition: new mp.Vector3(-1144, 4909, 220),
+    labelPosition: new mp.Vector3(-1144, 4909, 220),
+    range: 3,
+    labelText: LootSpawn.RELOAD, 
+    objectHash: 'gr_prop_gr_offchair_01a',
+};
+
 const loot = new Loot();
-loot.createLootShape(new mp.Vector3(-1855, 2984, 32), 3, 'ANY LOOT');
-const colshape: ColshapeMp = loot.getColshape();
-Colshape.addItem(colshape, [item_bodyarmor, item_ak47Ammo, item_ak47Weapon]);
+loot.createLootPoint([item_bodyarmor, item_ak47Ammo, item_ak47Weapon], createItemParams);
+///
+
+/// Создание точки для лута.
+const createItemParams2: CreateItemParams = {
+    colshapePosition: new mp.Vector3(110, 6627, 31),
+    objectPosition: new mp.Vector3(110, 6627, 31),
+    labelPosition: new mp.Vector3(110, 6627, 31),
+    range: 3,
+    labelText: LootSpawn.RELOAD,
+    objectHash: 'gr_prop_gr_offchair_01a',
+};
 
 const loot2 = new Loot();
-loot2.createLootShape(new mp.Vector3(-1850, 2984, 32), 3, 'ANY LOOT_2');
-const colshape2: ColshapeMp = loot2.getColshape();
-Colshape.addItem(colshape2, [item_bodyarmor, item_ak47Weapon, item_ak47Ammo, item_ak47Weapon]);
+loot2.createLootPoint([item_bodyarmor, item_ak47Ammo, item_ak47Weapon], createItemParams2);
+///

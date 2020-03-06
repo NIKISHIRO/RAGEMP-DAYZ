@@ -1,9 +1,12 @@
 
 import { logger } from "../shared/logger";
-import { Loot, LootShapeInfo } from "../loot/Loot";
-import { Colshape } from "../loot/Colshape";
-import { ReturnInformation } from "project/interfaces";
-import { Label } from "../loot/Label";
+import { Colshape } from "../loot/entities/Colshape";
+import { Label } from "../loot/entities/Label";
+import { EObject } from "../loot/entities/Object";
+import { Loot } from "../loot/Loot/Loot";
+import { ReturnInformation, LootShapeInfo, CreateItemParams, LootSpawn } from "../interfaces";
+import { Blip } from "../loot/entities/Blip";
+import { EItem } from "../loot/Item/Item";
 
 /*
     itemPoints - Массив идов колшипов.
@@ -32,8 +35,6 @@ export class Player {
     static removeItemPoint(player: PlayerMp, shapeId: number) {
         const itemPoints = Player.getItemPoints(player);
         const idx = itemPoints.findIndex(idx => shapeId === idx);
-
-        console.log('removeitempoint -> idx', idx);
 
         if (idx === -1) return;
 
@@ -85,7 +86,7 @@ export class Player {
     // и берет из массива itemList предмет под индексом itemId
     static takeColshapeItem(player: PlayerMp, cellId: number, itemId: number, amount: number): ReturnInformation {
         const returnInformation = {
-            info: '!{#DA3060}Число должно быть целое!',
+            info: '!{#DA3060}Ввелите корректное, целое число!',
             result: false
         };
 
@@ -162,12 +163,28 @@ export class Player {
                     if (Colshape.destroy(colshape)) {
                         console.log('lootShapeInfo', lootShapeInfo);
                         const labelId = lootShapeInfo.labelId;
+                        const objId = lootShapeInfo.objectId;
+                        const blipId = lootShapeInfo.blipId;
 
                         // Если label с таким ИД на серваке нету - вывести в консоль об этом.
                         if (!mp.labels.exists(labelId)) {
                             logger('red', 'Player', 'takeItem', 'mp.labels.exists', 'Такого Label не существует.');
-                        } else { // ИНАЧЕ - удалить его.
+                        } else { // Уничтожить..
                             Label.destroy(labelId);
+                        }
+
+                        // Если object с таким ИД на серваке нету - вывести в консоль об этом.
+                        if (!mp.objects.exists(objId)) {
+                            logger('red', 'Player', 'takeItem', 'mp.objects.exists', 'Такого Object не существует.');
+                        } else { // Уничтожить.
+                            EObject.destroy(objId);
+                        }
+
+                        // Если object с таким ИД на серваке нету - вывести в консоль об этом.
+                        if (!mp.blips.exists(blipId)) {
+                            logger('red', 'Player', 'takeItem', 'mp.objects.exists', 'Такого Object не существует.');
+                        } else { // Уничтожить.
+                            Blip.destroy(blipId);
                         }
 
                         returnInformation.info = `Эта точка была удалена.`;
@@ -181,7 +198,7 @@ export class Player {
                     returnInformation.info = `!{#97CC24}Вы подобрали ${amount}шт. '${item.key}'`;
                     returnInformation.result = true;
                 } else {
-                    returnInformation.info = `!{#DA3060}ОШИБКА ВЗЯТИЯ ПРЕДМЕТА. '${item.key}' не зарегистрирован!`;
+                    returnInformation.info = `!{#DA3060}ОШИБКА ВЗЯТИЯ ПРЕДМЕТА. '${item.key}' не зарегистрирован (он был удален)!`;
                     returnInformation.result = false;
                 } 
             }
@@ -195,13 +212,18 @@ export class Player {
     }
 
     // Выкидывает предмет из инвентаря.
-    static dropItem(player: PlayerMp, itemIdx: number, amount: number): ReturnInformation {
+    static dropItem(player: PlayerMp, itemIdx: number, amount: number, cellId?: number): ReturnInformation {
         const inventory = player.getInventory();
+        const pos = player.position;
 
         const returnInformation: ReturnInformation = {
             result: false,
             info: 'Введите корректные целые числа' 
         };
+
+        console.log('itemIdx', itemIdx);
+        console.log('amount', amount);
+        console.log('cellId', cellId);
 
         // Если пришло не число или не целое число, то return.
         if (isNaN(itemIdx) || isNaN(amount) || !Number.isInteger(itemIdx) || !Number.isInteger(amount)) {
@@ -224,10 +246,60 @@ export class Player {
         }
 
         // Минус 'amount' предметов.
-        player.removeItem(itemIdx, amount);
-        
-        returnInformation.result = true;
-        returnInformation.info = `Вы выбросили ${amount}шт. '${item.key}'`;
+        if(!player.removeItem(itemIdx, amount)) {
+            returnInformation.result = false;
+            returnInformation.info = `Ошибка удаления предмета из инвентаря.`;
+            return returnInformation;
+        }
+
+        // Если указана ячейка (индекс колшипа) и он целое число.
+        if (cellId !== undefined && Number.isInteger(cellId)) {
+            const itemPoints = Player.getItemPoints(player);
+            console.log('0 --->', 'itemPoints', itemPoints);
+            console.log('0 --->', 'itemPoints[cellId]', itemPoints[cellId]);
+
+            if (itemPoints && itemPoints[cellId] !== undefined) {
+                const colshapeId = itemPoints[cellId];
+                const colshape = mp.colshapes.at(colshapeId);
+
+                console.log('1 --->');
+                
+                if (!mp.colshapes.exists(colshape)) {
+                    console.log('2 --->');
+                    returnInformation.result = false;
+                    returnInformation.info = `Не существует ячейки с ИД = ${cellId} `;
+                    return returnInformation;
+                }
+                console.log('3 --->');
+
+                Colshape.addItem(colshape, [EItem.createItem(item.key, amount)]);
+                returnInformation.result = true;
+                returnInformation.info = `Вы положили предмет в колшип с ИД = ${colshape.id}!`;
+                return returnInformation;
+            }
+
+            returnInformation.result = false;
+            returnInformation.info = `Такой точки(${cellId}) с лутом здесь нет!`;
+            return returnInformation;
+        } else { // Если не указана - создать новый КОЛШИП С ПРЕДМЕТАМИ.
+            // Создает предмет на координатах его выброса.
+            const createItemParams: CreateItemParams = {
+                colshapePosition: pos,
+                objectPosition: pos,
+                labelPosition: pos,
+                range: 3, 
+                labelText: LootSpawn.DROPPED, 
+                objectHash: 'bkr_prop_duffel_bag_01a',
+            };
+            const loot = new Loot();
+
+            console.log('createItemParams', createItemParams);
+
+            loot.createLootPoint([EItem.createItem(item.key, amount)], createItemParams);
+    
+            returnInformation.result = true;
+            returnInformation.info = `Вы выбросили ${amount}шт. '${item.key}'`;
+        }
 
         return returnInformation;
     }

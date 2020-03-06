@@ -1,4 +1,7 @@
-mp.keys.bind(0x71, true, function() {
-    mp.events.callRemote('car'); 
-    mp.gui.chat.push('F2 key is pressed.');
+mp.keys.bind(0x47, true, function() {
+    mp.events.callRemote('keypress:G');
 });
+
+function testFunction(a, b) {
+    mp.gui.chat.push(b);
+}
