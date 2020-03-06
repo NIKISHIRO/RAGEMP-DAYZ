@@ -35,6 +35,6 @@ export const events = {
 
         const currentVeh = vehicles[0];
         const vehInventory = currentVeh.getVariable('vehInventory');
-    },
+    }
 /////////////////////////////////////////////////////////////////
 };
