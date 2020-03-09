@@ -1,48 +1,61 @@
-import { Player } from "../player/Player";
-import { ReturnInformation } from "project/interfaces";
-
-let fs = require('fs');
+import { ReturnInformation } from "../interfaces";
+import {VehicleSpawn} from '../db/schema';
 
 export class Car {
-    static spawnCar(hash: string, position: Vector3Mp, rotation?: Vector3Mp, color?: number[]): VehicleMp {
+    static spawnCar(hash: string, position: Vector3Mp, rotation: Vector3Mp, color: number[]): VehicleMp {
         let veh: VehicleMp = mp.vehicles.new(mp.joaat(hash), position);
-
         const items: Item[] = [];
+        
+        if(!rotation.x) rotation.x = 0;
+        if(!rotation.y) rotation.x = 0;
+        if(!rotation.z) rotation.z = Car.random(1,360)
+        
+        
+        color.map((n, i) => {
+            if(!n) color[i] = Car.random(1,255)
+        })
 
-        if (rotation) veh.rotation = rotation;
-        else veh.rotation = new mp.Vector3(0, 0, Car.random(1,360))
-        if(color) veh.setColorRGB(color[0],color[1],color[2],color[3],color[4],color[5]);
-        else veh.setColorRGB(Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255));
+        veh.rotation = new mp.Vector3(rotation.x, rotation.y, rotation.z)
+        veh.setColorRGB(color[0], color[1], color[2], color[3], color[4], color[5]);
 
         veh.setVariable('carInventory', items);
+        veh.setVariable('isExplode', false);
 
         return veh;
     }
-
+    
     // Добавляет объект машины в файл vehicleCoords.json.
-    static saveCar(hash: string, position: Vector3Mp, description?: string): ReturnInformation {
+    static saveCar(hash: string, position: Vector3Mp,rotation: Vector3Mp, color: number[], description?: string): ReturnInformation {
         const returnInformation: ReturnInformation = {
             info: '!{#DA3060} должно быть число',
             result: false
         };
 
+        if(!rotation.x) rotation.x = 0;
+        if(!rotation.y) rotation.x = 0;
+        if(!rotation.z) rotation.z = Car.random(1,360)
+        color.map((n, i) => {
+            if(isNaN(n)) color[i] = Car.random(1,255)
+        })
         if(!description) description = "Машина была добавлена без описания";
 
-        const path: string = "src/server/project/DAYZ/car/vehicleCoords.json";
-
-        fs.readFile(path, 'utf-8', (err: any, result: any) => {
-            if(err) return console.log(err)
-            let objFile = JSON.parse(result);
-            
-            objFile.push({hash, position, description});
-            
-            fs.writeFile(path, JSON.stringify(objFile, null, 2), (err: string) => {
-                if(err) {
-                    return console.log(err);
-                }
-                console.log(`Файл был сохранен: '${path}'`);
-            });
+        let car = new VehicleSpawn({
+            hash: hash,
+            description: description,
+            color: [color[0], color[1], color[2], color[3], color[4], color[5]],
+            position: {
+                x: position.x,
+                y: position.y,
+                z: position.z,
+            },
+            rotation: {
+                x: rotation.x,
+                y: rotation.y,
+                z: rotation.z,
+            },
+            isExplode: false
         });
+        Car.VehicleCreate(car)
         returnInformation.info = 'Машина успешно сохранена';
         returnInformation.result = true;
         return returnInformation
@@ -81,4 +94,9 @@ export class Car {
         
         return vehicles;
     };
+    static async VehicleCreate(vehicle) {
+        await vehicle.save()
+            .catch(error => console.log(error)) // Если ошибка есть, он её выведет.
+            .then(result => console.log(result)) // Выводит результат, если ошибок нет.
+    }
 }

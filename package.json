@@ -16,6 +16,7 @@
     "fs": "0.0.1-security",
     "guid": "0.0.12",
     "module-alias": "^2.2.2",
+    "mongoose": "^5.9.3",
     "path": "^0.12.7"
   },
   "_moduleAliases": {

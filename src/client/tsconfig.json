@@ -18,7 +18,9 @@
     "./libs/types/rageMp/vehicle_hashes.d.ts",
     "./libs/types/rageMp/weapon_hashes.d.ts",
     "./libs/types/rageMp/ped_hashes.d.ts",
-    "./libs/types/rageMp/enums.d.ts"
+    "./libs/types/rageMp/enums.d.ts",
+    // any
+    "./libs/types/common/globals.d.ts"
   ],
   "include": [
     "project/**/*"

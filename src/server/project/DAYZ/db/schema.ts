@@ -15,6 +15,7 @@ interface VehicleSpawnProp extends Document {
         y: number,
         z: number,
     },
+    isExplode: boolean
 }
 
 // Создание схем.
@@ -32,6 +33,7 @@ const VehicleSpawnSchema = new Schema({
         y: Number,
         z: Number,
     },
+    isExplode: Boolean
 });
 
 // Экспорты моделей.
