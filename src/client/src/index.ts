@@ -1,6 +1,6 @@
 // Библиотеки расширяющие функционал.
-import './modules/syncedPlayerComponent';
-
+import './syncedPlayerComponent';
+import './_rage-console';
 // Подключения наших модулей.
 import './CEF';
 import './DAYZ/events/render';

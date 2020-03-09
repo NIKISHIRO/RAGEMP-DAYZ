@@ -1,3 +1,4 @@
+// Устанавливает Х-ячеек в инвентаре.
 function setInventoryBlockItem(count) {
     // Обнуляет
     $('.inventory-items').text('');
@@ -45,14 +46,25 @@ function createItemOrFalse(key) {
     </div>`.trim();
 }
 
-//<img src="images/${image}" style="width: ${width}; height: ${height}">
+// Добавляет предмет в первую пустую ячейку. ЕСЛИ пустых нет, то не добавит.
+function addItemInFirstEmptyCell(key) {
+    let $blockItems = $('.inventory-block-item');
+
+    // console.log($blockItems);
+    $blockItems.each((idx, cell) => {
+        if (cell.childElementCount == 0) {
+            addItemInBlockItem(key, idx);
+            return false;
+        }
+    });
+}
 
 // Добавляет предмет внутрь ячейки inventory-block-item.
 function addItemInBlockItem(key, index) {
     let $blockItems = $('.inventory-block-item');
     
-    if (index >= $blockItems.length - 1) {
-        return console.log(`addItemInBlockItem -> Не получилось получить элемент по индексу ${index}.`);
+    if (index > $blockItems.length - 1) {
+        return console.log(`addItemInBlockItem -> Не получилось добавить предмет в ячейку по индексу ${index}.`);
     }
 
     const item = findItemByItemKeyOrFalse(key);

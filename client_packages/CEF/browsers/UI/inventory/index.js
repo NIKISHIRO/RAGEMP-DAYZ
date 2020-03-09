@@ -1,15 +1,20 @@
-import {register} from 'rage-rpc';
-
-
 // Устанавливает 12 ячеек.
 setInventoryBlockItem(5);
 
 // Добавляет предмет в ячейку по индексу.
-addItemInBlockItem('item_baseball', 4);
-addItemInBlockItem('item_baseball', 2);
-addItemInBlockItem('item_baseball', 1);
-addItemInBlockItem('item_baseball', 7);
-addItemInBlockItem('item_ak47', 0);
+// addItemInBlockItem('item_baseball', 4);
+// addItemInBlockItem('item_baseball', 2);
+// addItemInBlockItem('item_baseball', 1);
+// addItemInBlockItem('item_baseball', 7);
+// addItemInBlockItem('item_ak47', 0);
+
+addItemInFirstEmptyCell('item_ak47'); 
+addItemInFirstEmptyCell('item_ak47');
+addItemInFirstEmptyCell('item_ak47'); 
+addItemInFirstEmptyCell('item_ak47');
+addItemInFirstEmptyCell('item_ak47');
+addItemInFirstEmptyCell('item_ak47');
+
 
 // Инициал. переменных.
 let $ui = $('.ui');
@@ -34,6 +39,7 @@ $items.draggable({
   // PROPS:
   revert: true,
   containment: '.ui-center',
+  stack: $items,
   // EVENTS:
   create: function(event, ui) {
     console.log('draggable -> create', ui);
