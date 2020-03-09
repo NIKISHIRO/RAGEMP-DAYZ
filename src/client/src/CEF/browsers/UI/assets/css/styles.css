@@ -1,0 +1,54 @@
+@font-face {
+    font-family: ChakraPetch-Bold; /* Имя шрифта */
+    src: url(../fonts/ChakraPetch-Bold.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+    font-family: ChakraPetch-Regular; /* Имя шрифта */
+    src: url(../fonts/ChakraPetch-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+
+/* img { pointer-events: none;} */
+
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ui {
+    width: 54vw;
+    height: 52vh;
+    background-color: rgba(34, 36, 37, .9);
+    color: rgba(248, 50, 76, 1);
+    font-family: "ChakraPetch-Regular";
+}
+
+.ui-top {
+    /* background-color: rgba(0, 0, 0, 1); */
+    border-bottom: 1px solid rgba(47, 49, 50);
+    padding: 10px 0;
+    width: 100%;
+    font-family: "ChakraPetch-Bold";
+    text-align: center;
+}
+
+.ui-center {
+    overflow: auto;
+    height: 86%;   
+    padding: 5px;
+}
+
+.ui-center::-webkit-scrollbar { width: 3px; height: 3px;}
+.ui-center::-webkit-scrollbar-button {  background-color: rgba(248, 50, 76, 1); }
+.ui-center::-webkit-scrollbar-track {  background-color: #999;}
+.ui-center::-webkit-scrollbar-track-piece { background-color: #ffffff;}
+.ui-center::-webkit-scrollbar-thumb { height: 50px; background-color: rgba(248, 50, 76, 1); border-radius: 3px;}
+.ui-center::-webkit-scrollbar-corner { background-color: #999;}
+.ui-center::-webkit-resizer { background-color: #666;}

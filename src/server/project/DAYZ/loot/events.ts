@@ -1,15 +1,18 @@
 import { Player } from "../player/Player";
-import { LootShapeInfo, LootSpawn } from "../interfaces";
+import { LootShapeInfo, LootSpawn, InventoryInfo } from "../interfaces";
 
 mp.events.add({
     'playerJoin': (player: PlayerMp) => {
-        // -itemPoints - массив ИД-ов колшипов.
+        // itemPoints - массив ИД-ов колшипов.
         player.setVariable('itemPoints', []);
+
+        const inventoryInfo: InventoryInfo = {
+            maxSlots: 12,
+        };
+        player.setVariable('inventoryInfo', inventoryInfo);
     },
 
-    'playerDeath': () => {
-        
-    },
+    'playerDeath': () => {},
 
     'playerEnterColshape': (player: PlayerMp, shape: ColshapeMp) => {
         const lootShapeInfo: LootShapeInfo = shape.getVariable('lootShapeInfo');

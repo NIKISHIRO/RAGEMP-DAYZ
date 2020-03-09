@@ -1,0 +1,10 @@
+{
+    "defaultSeverity": "error",
+    "extends": "tslint:latest",
+    "rules": {
+      "object-literal-sort-keys": false,
+      "ordered-imports": false,
+      "forin": false,
+      "max-classes-per-file": [true, 5]
+    }
+}

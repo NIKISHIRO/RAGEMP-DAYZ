@@ -1,0 +1,3 @@
+interface terminal {
+    activate: boolean;
+}

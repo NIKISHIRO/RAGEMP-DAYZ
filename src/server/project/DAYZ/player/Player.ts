@@ -221,10 +221,6 @@ export class Player {
             info: 'Введите корректные целые числа' 
         };
 
-        console.log('itemIdx', itemIdx);
-        console.log('amount', amount);
-        console.log('cellId', cellId);
-
         // Если пришло не число или не целое число, то return.
         if (isNaN(itemIdx) || isNaN(amount) || !Number.isInteger(itemIdx) || !Number.isInteger(amount)) {
             logger('red', 'dropItem', 'itemIdx', String(itemIdx), ', amount', String(amount));
@@ -255,22 +251,17 @@ export class Player {
         // Если указана ячейка (индекс колшипа) и он целое число.
         if (cellId !== undefined && Number.isInteger(cellId)) {
             const itemPoints = Player.getItemPoints(player);
-            console.log('0 --->', 'itemPoints', itemPoints);
-            console.log('0 --->', 'itemPoints[cellId]', itemPoints[cellId]);
 
             if (itemPoints && itemPoints[cellId] !== undefined) {
                 const colshapeId = itemPoints[cellId];
                 const colshape = mp.colshapes.at(colshapeId);
 
-                console.log('1 --->');
                 
                 if (!mp.colshapes.exists(colshape)) {
-                    console.log('2 --->');
                     returnInformation.result = false;
                     returnInformation.info = `Не существует ячейки с ИД = ${cellId} `;
                     return returnInformation;
                 }
-                console.log('3 --->');
 
                 Colshape.addItem(colshape, [EItem.createItem(item.key, amount)]);
                 returnInformation.result = true;

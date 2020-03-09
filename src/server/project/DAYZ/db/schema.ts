@@ -1,7 +1,7 @@
 import { Schema, model, Model, Document } from 'mongoose';
 
 // Интерфейсы.
-interface VehicleSpawnProp extends Document {
+export interface VehicleSpawnProp extends Document {
     hash: string;
     description: string;
     color: number[];
@@ -37,5 +37,4 @@ const VehicleSpawnSchema = new Schema({
 });
 
 // Экспорты моделей.
-
 export const VehicleSpawn: Model<VehicleSpawnProp> = model('VehicleSpawn', VehicleSpawnSchema);
