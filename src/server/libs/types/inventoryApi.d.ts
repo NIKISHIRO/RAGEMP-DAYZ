@@ -5,6 +5,8 @@ interface Item {
 }
 
 interface PlayerMp_InvApi {
+    _inventory: Item[];
+
     // Возврашает массив инвентаря.
     getInventory(): Item[];
     // Заменяет массив инвентаря на новый.   

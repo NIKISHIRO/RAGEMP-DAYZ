@@ -1,3 +1,7 @@
+export interface InventoryInfo {
+    maxSlots: number;
+}
+
 export interface ReturnInformation {
     result: boolean;
     info: string;
