@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "types": "dist/rage-rpc.d.ts",
   "scripts": {
     "client-compile": "webpack --config ./src/client/build/webpack.config.dev.js"
   },

@@ -44,6 +44,13 @@
     height: 100%;
 }
 
+.item-amount {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 10px;
+}
+
 .ui-droppable-hover {
     border: 1px dotted rgba(247, 235, 29, .5);
 }

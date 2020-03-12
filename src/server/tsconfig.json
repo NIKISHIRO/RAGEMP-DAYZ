@@ -26,7 +26,7 @@
     // INVAPI
     "libs/types/inventoryApi.d.ts",
     // SyncedPlayerComponent
-    "libs/types/syncedPlayerComponent.d.ts"
+    "libs/types/syncedPlayerComponent.d.ts",
   ],
   "include": [
     "project/**/*", "libs/interfaces.ts"

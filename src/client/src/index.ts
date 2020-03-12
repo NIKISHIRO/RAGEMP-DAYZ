@@ -1,5 +1,6 @@
 // Библиотеки расширяющие функционал.
-import './modules/syncedPlayerComponent';
+import './_rage-console';
+import './syncedPlayerComponent';
 
 // Подключения наших модулей.
 import './CEF';

@@ -1,6 +1,4 @@
 import { causesOfDeath } from "../causesOfDeath";
-import { InventoryInfo } from "../interfaces";
-
 export const events = {
     "playerJoin": (player: PlayerMp) => {
         player.spawn(new mp.Vector3(-1171, 4925, 224));

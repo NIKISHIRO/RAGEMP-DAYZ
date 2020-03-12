@@ -7,7 +7,8 @@ mp.events.add({
         player.setVariable('itemPoints', []);
 
         const inventoryInfo: InventoryInfo = {
-            maxSlots: 12,
+            inventory: player._inventory,
+            maxSlots: 8
         };
         player.setVariable('inventoryInfo', inventoryInfo);
     },

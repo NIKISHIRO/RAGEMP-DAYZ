@@ -21,7 +21,7 @@
     "./libs/types/rageMp/ped_hashes.d.ts",
     "./libs/types/rageMp/enums.d.ts",
     // any
-    "./libs/types/common/globals.d.ts"
+    "./libs/types/common/globals.d.ts",
   ],
   "include": [
       "./src",

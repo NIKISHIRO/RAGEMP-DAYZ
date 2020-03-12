@@ -5,7 +5,12 @@ export interface VehicleSpawnProp extends Document {
     hash: string;
     description: string;
     color: number[];
-    position: {
+    defaultPosition: {
+        x: number,
+        y: number,
+        z: number,
+    },
+    savePosition: {
         x: number,
         y: number,
         z: number,

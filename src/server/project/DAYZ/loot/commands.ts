@@ -76,8 +76,18 @@ mp.events.addCommand('take', (player: PlayerMp, ft: string, srcCellId: string, s
     // Если игрок передал 2 аргумент.
     if (Number.isInteger(itemId)) {
         const returnInformation: ReturnInformation = Player.takeColshapeItem(player, cellId, itemId, amount);
-        player.outputChatBox(returnInformation.info);
+        player.outputChatBox(returnInformation.info.text);
+
+        // Если игрок получил предмет.
+        const takenItem: Item = returnInformation.info.data.takenItem;
+        if (takenItem) {
+            Player.toClientTakeItemInfo(player, takenItem);
+        }
     }
+});
+
+mp.events.addCommand('slot', (player: PlayerMp, ft: string, slots: string) => {
+    Player.toClientSetInventorySlots(player, parseInt(slots));
 });
 
 mp.events.addCommand('drop', (player: PlayerMp, ft: string, id: string, amount: string, cellId: string) => {
@@ -89,8 +99,8 @@ mp.events.addCommand('drop', (player: PlayerMp, ft: string, id: string, amount: 
     const returnInformation: ReturnInformation = Player.dropItem(player, parseInt(id), parseInt(amount), parseInt(cellId));
 
     if (returnInformation.result) {
-        player.outputChatBox(`!{#97CC24}${returnInformation.info}`);
+        player.outputChatBox(`!{#97CC24}${returnInformation.info.text}`);
     } else {
-        player.outputChatBox(`!{#BC3C00}${returnInformation.info}`);
+        player.outputChatBox(`!{#BC3C00}${returnInformation.info.text}`);
     }
 });

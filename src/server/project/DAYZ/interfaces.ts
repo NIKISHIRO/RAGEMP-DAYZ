@@ -1,10 +1,16 @@
 export interface InventoryInfo {
+    inventory: Item[];
     maxSlots: number;
+}
+
+interface Info {
+    text: string;
+    data?: any;
 }
 
 export interface ReturnInformation {
     result: boolean;
-    info: string;
+    info: Info;
 }
 
 // Тип созданного колшипа.

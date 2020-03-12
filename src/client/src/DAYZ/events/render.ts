@@ -17,7 +17,7 @@ mp.events.add('render', () => {
       outline: true
     });
     
-    mp.game.graphics.drawText(`[I] Инвентарь:`, [0.9, 0.8], 
+    mp.game.graphics.drawText(`[TAB] Инвентарь:`, [0.9, 0.8], 
     { font: 4, color: [255, 255, 255, 255], scale: [0.3, 0.4], outline: true });
 
     mp.game.graphics.drawText(`[G] Зайти в инвентарь машины:`, [0.9, 0.83], 

@@ -3,9 +3,9 @@ import './commands';
 import './events';
 import { Loot } from './Loot/Loot';
 import { Colshape } from './entities/Colshape';
-import { CreateItemParams, LootSpawn } from '../interfaces';
+import { CreateItemParams, LootSpawn, InventoryInfo } from '../interfaces';
 import { EItem } from './Item/Item';
-import { DataBodyArmour, DataWeapon } from './Item/interface';
+import { DataBodyArmour, DataWeapon, ItemType } from './Item/interface';
 
 const invAPI = require('@modules/inventory-api');
 
@@ -15,27 +15,47 @@ invAPI.on("itemDefined", (key, name, description) => {
 });
 
 invAPI.on("itemAdded", (player: PlayerMp, key, amount, data) => {
-    player.setVariable('inventory', player._inventory);
+    const inventoryInfo: InventoryInfo = {
+        inventory: player._inventory,
+        maxSlots: 8
+    };
+    player.setVariable('inventoryInfo', inventoryInfo);
     console.log(`${player.name} received ${amount}x ${key}.`);
 });
 
 invAPI.on("itemUsed", (player: PlayerMp, invIdx, key, data) => {
-    player.setVariable('inventory', player._inventory);
+    const inventoryInfo: InventoryInfo = {
+        inventory: player._inventory,
+        maxSlots: 8
+    };
+    player.setVariable('inventoryInfo', inventoryInfo);
     console.log(`${player.name} used ${key}.`);
 });
 
 invAPI.on("itemRemoved", (player: PlayerMp, invIdx, key, amount, data) => {
-    player.setVariable('inventory', player._inventory);
+    const inventoryInfo: InventoryInfo = {
+        inventory: player._inventory,
+        maxSlots: 8
+    };
+    player.setVariable('inventoryInfo', inventoryInfo);
     console.log(`${player.name} lost ${amount}x ${key}.`);
 });
 
 invAPI.on("itemRemovedCompletely", (player: PlayerMp, key, data) => {
-    player.setVariable('inventory', player._inventory);
+    const inventoryInfo: InventoryInfo = {
+        inventory: player._inventory,
+        maxSlots: 8
+    };
+    player.setVariable('inventoryInfo', inventoryInfo);
     console.log(`${player.name} no longer has ${key} (${data ? "with data" : "without data"}) in their inventory.`);
 });
 
 invAPI.on("inventoryReplaced", (player: PlayerMp, oldInventory, newInventory) => {
-    player.setVariable('inventory', player._inventory);
+    const inventoryInfo: InventoryInfo = {
+        inventory: player._inventory,
+        maxSlots: 8
+    };
+    player.setVariable('inventoryInfo', inventoryInfo);
     console.log(`${player.name} had their inventory replaced. (Old item count: ${oldInventory.length}, new: ${newInventory.length})`);
 });
 
@@ -63,30 +83,30 @@ invAPI.addItem("item_weapon_ak47", "AK-47 AMMO", "ammo......",
 
 // data-object for inventory.
 const dataBodyArmour: DataBodyArmour = {
-    defenceLevel: 40,
+    type: ItemType.ARMOUR,
+    defence: 40,
     name: 'Бронежелет',
     description: 'Бронежелет 3 уровня. Увеличивает ваш армор до 50%',
-    weight: 30,
     maxStackCount: 1,
 };
-const item_armour = EItem.createItem('item_armour', 1, dataBodyArmour);
+const item_armour = EItem.createItem('item_armour', 5, dataBodyArmour);
 
 const dataWeapon: DataWeapon = {
+    type: ItemType.WEAPON,
     name: 'Калаш',
     description: 'AK-47.',
-    weight: 6,
     clip: 30,
     maxStackCount: 1,
 };
-const item_weapon_ak47 = EItem.createItem('item_weapon_ak47', 1, dataWeapon);
+const item_weapon_ak47 = EItem.createItem('item_weapon_ak47', 5, dataWeapon);
 
-/// Создание точки для лута.
+// Создание точки для лута.
 const createItemParams: CreateItemParams = {
-    colshapePosition: new mp.Vector3(-1144, 4909, 220),
-    objectPosition: new mp.Vector3(-1144, 4909, 220),
-    labelPosition: new mp.Vector3(-1144, 4909, 220),
+    colshapePosition: new mp.Vector3(-1165, 4926, 223),
+    objectPosition: new mp.Vector3(-1165, 4926, 223),
+    labelPosition: new mp.Vector3(-1165, 4926, 223),
     range: 3,
-    labelText: LootSpawn.RELOAD, 
+    labelText: LootSpawn.RELOAD,
     objectHash: 'gr_prop_gr_offchair_01a',
 };
 
