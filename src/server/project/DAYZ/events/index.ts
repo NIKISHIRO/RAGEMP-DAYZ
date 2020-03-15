@@ -1,5 +1,6 @@
 import { causesOfDeath } from "../causesOfDeath";
 import { InventoryInfo } from "../interfaces";
+import { Car } from "../car/Car";
 
 export const events = {
     "playerJoin": (player: PlayerMp) => {

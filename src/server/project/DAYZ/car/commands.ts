@@ -1,8 +1,7 @@
-import vehicleCoords from './vehicleCoords.json';
+
 import { Car } from "./Car";
 import { Player } from '../player/Player.js';
 import { ReturnInformation } from "../interfaces";
-import fs from 'fs';
 import {VehicleSpawn} from '../db/schema';
 
 mp.events.addCommand('savecar', (player:PlayerMp,ft: string, hash: string, x: string, y:string, z:string, description: string, rx:string, ry:string, rz:string, c0:string, c1:string, c2:string, c3:string, c4:string, c5:string) => {
@@ -16,7 +15,6 @@ mp.events.addCommand('savecar', (player:PlayerMp,ft: string, hash: string, x: st
                                                             new mp.Vector3(parseInt(rx), parseInt(ry), parseInt(rz)),// Угол машины
                                                             [c0, c1, c2, c3, c4, c5].map(n => parseInt(n)), // цвет машины
                                                             description); // описание машины;
-x
     if (returnInformation.result) {
         player.outputChatBox(`!{#97CC24}${returnInformation.info}`);
     } else {
@@ -24,10 +22,20 @@ x
     }
 });
 
-mp.events.addCommand('vehicles', (player:PlayerMp) => {
-    var vehicle = mp.vehicles.new(989294410, player.position); //Spawns Voltic2 at 'player' position
-    vehicle.explode();
-    console.log(mp.vehicles)
+mp.events.addCommand('updCar', (player:PlayerMp) => {
+    mp.vehicles.forEach(veh => {
+        let id = veh.getVariable('id');
+        let color: number[] = []
+        
+        veh.getColorRGB(0).map((first) => {
+            color.push(first)
+        })
+        veh.getColorRGB(1).map((second) => {
+            color.push(second)
+        })
+
+        Car.updateCar(id, veh.position, veh.rotation, color)
+    })
 })
 
 mp.events.addCommand("weapon", (player:PlayerMp, fullText: string, weapon:string, ammo:string) => {
@@ -36,22 +44,22 @@ mp.events.addCommand("weapon", (player:PlayerMp, fullText: string, weapon:string
 });
 
 mp.events.addCommand('explode', (player:PlayerMp) => {
-    let car = Car.getCar(player, 10)
+    let car = Car.getCar(player, 100)
     car.forEach(elem => {
         elem.explode();
     })
 })
 
 mp.events.addCommand('sc', () => {
-    VehicleSpawn.find({},'_id color hash description position rotation isExplode', function(err, veh){
+    VehicleSpawn.find({},'_id color hash description defaultPosition savePosition rotation isExplode', function(err, veh){
         if(err) console.log(err)
         veh.forEach(car => {
             if(car.isExplode) return
             Car.spawnCar(car.hash, 
-                new mp.Vector3(car.position.x, car.position.y, car.position.z),
+                new mp.Vector3(car.savePosition.x, car.savePosition.y, car.savePosition.z),
                 new mp.Vector3(car.rotation.x, car.rotation.y, car.rotation.z),
-                [car.color[0],car.color[1],car.color[2],car.color[3],car.color[4],car.color[5]]
-                );
+                [car.color[0],car.color[1],car.color[2],car.color[3],car.color[4],car.color[5]],
+                car._id);
         });
     })
 });
@@ -86,4 +94,12 @@ mp.events.addCommand('cartake', (player:PlayerMp, ft:string, index:string, amoun
 
     console.log('Окончательный результат машины',car.getVariable('carInventory'));
     console.log('Окончательный результат игрока',player.getInventory());
+})
+
+
+mp.events.addCommand('color', (player: PlayerMp,fullText:string, a:string, b: string, c:string, i:string, j: string, k:string) => {
+        player.setHeadBlend(
+            parseInt(a), parseInt(i), 0,
+            parseInt(b), parseInt(j), 0,
+            parseFloat(c), parseFloat(k), 0)
 })

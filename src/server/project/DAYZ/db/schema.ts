@@ -5,7 +5,12 @@ export interface VehicleSpawnProp extends Document {
     hash: string;
     description: string;
     color: number[];
-    position: {
+    defaultPosition: {
+        x: number,
+        y: number,
+        z: number,
+    },
+    savePosition: {
         x: number,
         y: number,
         z: number,
@@ -23,7 +28,12 @@ const VehicleSpawnSchema = new Schema({
     hash: String,
     description: String,
     color: [Number],
-    position: {
+    defaultPosition: {
+        x: Number,
+        y: Number,
+        z: Number,
+    },
+    savePosition: {
         x: Number,
         y: Number,
         z: Number,

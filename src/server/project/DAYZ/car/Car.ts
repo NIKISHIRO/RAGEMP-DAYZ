@@ -2,10 +2,10 @@ import { ReturnInformation } from "../interfaces";
 import {VehicleSpawn} from '../db/schema';
 
 export class Car {
-    static spawnCar(hash: string, position: Vector3Mp, rotation: Vector3Mp, color: number[]): VehicleMp {
+    static spawnCar(hash: string, position: Vector3Mp, rotation: Vector3Mp, color: number[], id:string ): VehicleMp {
         let veh: VehicleMp = mp.vehicles.new(mp.joaat(hash), position);
         const items: Item[] = [];
-        
+
         if(!rotation.x) rotation.x = 0;
         if(!rotation.y) rotation.x = 0;
         if(!rotation.z) rotation.z = Car.random(1,360)
@@ -20,6 +20,7 @@ export class Car {
 
         veh.setVariable('carInventory', items);
         veh.setVariable('isExplode', false);
+        veh.setVariable('id', id)
 
         return veh;
     }
@@ -43,7 +44,12 @@ export class Car {
             hash: hash,
             description: description,
             color: [color[0], color[1], color[2], color[3], color[4], color[5]],
-            position: {
+            defaultPosition: {
+                x: position.x,
+                y: position.y,
+                z: position.z,
+            },
+            savePosition: {
                 x: position.x,
                 y: position.y,
                 z: position.z,
@@ -52,13 +58,18 @@ export class Car {
                 x: rotation.x,
                 y: rotation.y,
                 z: rotation.z,
-            },
-            isExplode: false
+            }
         });
         Car.VehicleCreate(car)
         returnInformation.info = 'Машина успешно сохранена';
         returnInformation.result = true;
         return returnInformation
+    }
+
+    static updateCar(id: string, position: Vector3Mp,rotation: Vector3Mp, color: number[]) {
+        VehicleSpawn.updateMany({'_id': id}, {$set: {savePosition: position, rotation: rotation, color: color}})
+        .then(result => console.log(result))
+        .catch(err => console.log(err))
     }
 
     // Функция возвращает рандомное число.

@@ -1,6 +1,7 @@
 // Библиотеки расширяющие функционал.
 import './syncedPlayerComponent';
 import './_rage-console';
+
 // Подключения наших модулей.
 import './CEF';
 import './DAYZ/events/render';
@@ -12,3 +13,7 @@ mp.keys.bind(0x47, true, function() {
 });
 
 mp.gui.chat.push('ПРИВЕТ ОТ ВЕБПАКА!');
+
+mp.events.add("playerEnterVehicle", (vehicle, seat) => {
+	vehicle.setInvincible(false);
+});
