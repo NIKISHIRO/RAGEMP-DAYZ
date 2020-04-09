@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'rsuite/dist/styles/rsuite-default.css';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { App } from './components/App';

@@ -9,7 +9,7 @@ function PlayerEvents(dispatch, getState) {
     });
 
     emitter.on('goToEquipment', () => {
-        dispatch(push('/equipment'))
+        dispatch(push('/ui'))
     });
 
     emitter.on('addInventoryItem', (item: any) => {

@@ -1,15 +1,15 @@
 import { combineReducers } from "redux";
-import { InventoryReducer, InventoryState } from "./inventoryReducer";
+import { UIReducer, UIState } from "./UIReducer";
 import { ClothesReducer, ClothesState } from "./clothesReducer";
 import { connectRouter } from 'connected-react-router'
 
 export type State = {
-    inventory: InventoryState;
+    UI: UIState;
     clothes: ClothesState;
 }
 
 const createRootReducer = (history) => combineReducers({
-    inventory: InventoryReducer,
+    UI: UIReducer,
     clothes: ClothesReducer,
     router: connectRouter(history),
   });

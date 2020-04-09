@@ -1,26 +1,26 @@
 /* ОПИСАНИЕ ПРЕДМЕТА */
 export enum ItemType {
     WEAPON = 'WEAPON',
-    ARMOUR = 'ARMOUR',
+    ARMOR = 'ARMOR',
 }
 
-export const ItemTypes = {
-    ITEM: 'ITEM',
-};
+export enum ItemKey {
+    ITEM_WEAPON_AK47 = 'ITEM_WEAPON_AK47',
+    ITEM_ARMOR = 'ITEM_ARMOR',
+}
 
 export type Item = {
-    key: string;
+    key: ItemKey;
     amount: number;
     data: ItemData;
 }
 
 export type ItemData = {
     type: ItemType;
-    cellIdx?: number; // Ид ячейки в который лежит предмет.
     name: string; // Название предмета.
     description: string;
     maxStackCount: number; // Максимальный стак предмета.
-    condition: number; // Состояние предмета.
+    shortid: string;
 }
 
 export interface DataBodyArmour extends ItemData {

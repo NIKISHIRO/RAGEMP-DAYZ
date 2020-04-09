@@ -1,8 +1,7 @@
 import React from "react";
 import { Switch, Route, Redirect } from 'react-router-dom';
-import 'rsuite/dist/styles/rsuite-default.css';
-import './styles.css'
-import { Equipment } from "../UI/Equipment";
+import './styles.css';
+import { UserInterface } from "../UserInterface";
 import { emitter } from "../../helpers/emitter";
 
 function RoutesComp() {
@@ -27,12 +26,18 @@ function Home({ history }) {
 }
 
 function App(props) {
+  // //// //// //// //// //// //// //// //// //// //// //// //// //// //// //
+  // УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ 
+  // //// //// //// //// //// //// //// //// //// //// //// //// //// //// //
+  emitter.emit('goToEquipment')
+  // //// //// //// //// //// //// //// //// //// //// //// //// //// //// //
+
   return (
     <div className="app">
       <RoutesComp />
       <Switch>
         <Route exact path='/' component={ Home } />
-        <Route path='/equipment' component={ Equipment } />
+        <Route path='/ui' component={ UserInterface } />
       </Switch>
     </div>
   );
