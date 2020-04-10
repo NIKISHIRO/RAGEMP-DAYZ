@@ -13,7 +13,7 @@ function PlayerEvents(dispatch, getState) {
     });
 
     emitter.on('addInventoryItem', (item: any) => {
-        dispatch(addInventoryItem(item));
+        // dispatch(addInventoryItem(item));
     });
 }
 
