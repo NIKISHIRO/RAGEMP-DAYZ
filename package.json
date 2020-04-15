@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "dist/rage-rpc.d.ts",
   "scripts": {
-    "client-compile": "webpack --config ./src/client/build/webpack.config.dev.js"
+    "client-watch": "webpack --config ./src/client/build/webpack.config.dev.js --watch"
   },
   "keywords": [],
   "author": "",
@@ -36,9 +36,9 @@
     "colors": "^1.4.0",
     "fs": "0.0.1-security",
     "module-alias": "^2.2.2",
-    "mongoose": "^5.9.3",
     "path": "^0.12.7",
     "rage-rpc": "^0.4.0",
+    "shortid": "^2.2.15",
     "ts-mongoose": "0.0.21"
   },
   "_moduleAliases": {
