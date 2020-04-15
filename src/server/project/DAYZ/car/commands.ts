@@ -96,10 +96,3 @@ mp.events.addCommand('cartake', (player:PlayerMp, ft:string, index:string, amoun
     console.log('Окончательный результат игрока',player.getInventory());
 })
 
-
-mp.events.addCommand('color', (player: PlayerMp,fullText:string, a:string, b: string, c:string, i:string, j: string, k:string) => {
-        player.setHeadBlend(
-            parseInt(a), parseInt(i), 0,
-            parseInt(b), parseInt(j), 0,
-            parseFloat(c), parseFloat(k), 0)
-})

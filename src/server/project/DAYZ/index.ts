@@ -7,6 +7,6 @@ mp.events.add(events);
 import './commands';
 import './loot';
 import './car';
-import './lessons';
+import './customCharacter';
 import './db';
 

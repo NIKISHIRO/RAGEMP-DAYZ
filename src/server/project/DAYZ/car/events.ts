@@ -14,6 +14,8 @@ mp.events.add("vehicleDeath", (vehicle: VehicleMp) => {
         veh.forEach((car) => {
             Car.spawnCar(car.hash, new mp.Vector3(car.defaultPosition.x, car.defaultPosition.y, car.defaultPosition.z), new mp.Vector3(NaN, NaN, NaN), [NaN, NaN, NaN, NaN, NaN, NaN], id)
             VehicleSpawn.updateMany({'_id': id}, {$set: {savePosition: car.defaultPosition}})
+            .then(result => console.log(result))
+            .catch(err => console.log(err))
         })
     })
     setTimeout(() => {

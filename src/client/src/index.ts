@@ -17,3 +17,10 @@ mp.gui.chat.push('ПРИВЕТ ОТ ВЕБПАКА!');
 mp.events.add("playerEnterVehicle", (vehicle, seat) => {
 	vehicle.setInvincible(false);
 });
+
+mp.keys.bind(0x31, true, function(){
+    mp.events.callRemote('previ');
+})
+mp.keys.bind(0x32, true, function(){
+    mp.events.callRemote('nexti');
+})
