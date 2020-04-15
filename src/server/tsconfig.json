@@ -13,8 +13,8 @@
     "esModuleInterop": true,                  /* needed to read json*/
     "outDir": "../../packages/DAYZ",                /* Redirect output structure to the directory. */
     "strict": true,                            /* Enable all strict type-checking options. */
-    "strictPropertyInitialization": false
-
+    "strictPropertyInitialization": false,
+    "noImplicitAny": false
   },
   "files": [
     // RAGEMP
@@ -26,10 +26,10 @@
     // INVAPI
     "libs/types/inventoryApi.d.ts",
     // SyncedPlayerComponent
-    "libs/types/syncedPlayerComponent.d.ts"
+    "libs/types/syncedPlayerComponent.d.ts",
   ],
   "include": [
-    "project/**/*"
+    "project/**/*", "libs/interfaces.ts"
   ],
   "exclude": [
     "node_modules",

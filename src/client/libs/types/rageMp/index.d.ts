@@ -21,6 +21,18 @@ type Array2d = [ number, number ];
 // -------------------------------------------------------------------------
 
 interface Mp {
+    Blip(arg0: string, blips: BlipMpPool, Blip: any);
+    Checkpoint(arg0: string, checkpoints: CheckpointMpPool, Checkpoint: any);
+    Colshape(arg0: string, colshapes: ColshapeMpPool, Colshape: any);
+    TextLabel(arg0: string, labels: TextLabelMpPool, TextLabel: any);
+    Marker(arg0: string, markers: MarkerMpPool, Marker: any);
+    Object(arg0: string, objects: ObjectMpPool, Object: any);
+    Pickup(arg0: string, pickups: PickupMpPool, Pickup: any);
+    Player(arg0: string, players: PlayerMpPool, Player: any);
+	Vehicle(arg0: string, vehicles: VehicleMpPool, Vehicle: any);
+	
+    joaat: any;
+    trigger: any;
 	blips: BlipMpPool;
 	browsers: BrowserMpPool;
 	cameras: CameraMpPool;
@@ -2110,10 +2122,10 @@ interface GameGraphicsMp {
 	drawText(text: string, position: Array3d | Array2d,
 		data?: {
 			font: number,
-			centre: boolean,
 			color: RGBA,
 			scale: Array2d,
-			outline: boolean
+			outline: boolean,
+			centre?: boolean,
 		}
 	): void;
 	drawTvChannel(xPos: number, yPos: number, xScale: number, yScale: number, rotation: number, r: number, g: number,

@@ -1,0 +1,115 @@
+2020-03-08T12:15:33.933Z - info: ---> Commands File.
+2020-03-08T12:15:54.991Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e64e1f7a9400d33bce847ee,
+  hash: 'turismor',
+  description: 'descr',
+  position: { x: 111, y: 111, z: 111 },
+  rotation: { x: 111, y: 111, z: 111 },
+  __v: 0 }
+2020-03-08T12:15:57.813Z - info: ---> Commands File.
+2020-03-08T12:15:59.741Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e64e1ffe02aa61770997da5,
+  hash: 'turismor',
+  description: 'descr',
+  position: { x: 111, y: 111, z: 111 },
+  rotation: { x: 111, y: 111, z: 111 },
+  __v: 0 }
+2020-03-08T12:15:59.742Z - info: undefined
+2020-03-08T12:17:03.331Z - info: ---> Commands File.
+2020-03-08T12:17:05.253Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e64e240e4021a5a88927fd1,
+  hash: 'turismor',
+  description: 'descr',
+  position: { x: 111, y: 111, z: 111 },
+  rotation: { x: 111, y: 111, z: 111 },
+  __v: 0 }
+2020-03-08T12:17:05.254Z - info: undefined
+2020-03-08T12:18:18.062Z - info: ---> Commands File.
+2020-03-08T12:18:19.382Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e64e28a120ccf4f042664de,
+  hash: 'turismor',
+  description: 'descr',
+  position: { x: 111, y: 111, z: 111 },
+  rotation: { x: 111, y: 111, z: 111 },
+  __v: 0 }
+2020-03-08T12:18:19.382Z - info: undefined
+2020-03-08T12:18:43.639Z - info: ---> Commands File.
+2020-03-08T12:18:44.840Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e64e2a437860a4ac458321a,
+  hash: 'turismor',
+  description: 'descr',
+  position: { x: 111, y: 111, z: 111 },
+  rotation: { x: 111, y: 111, z: 111 },
+  __v: 0 }
+2020-03-08T12:18:44.841Z - info: undefined
+2020-03-08T12:18:51.609Z - info: ---> Commands File.
+2020-03-08T12:18:53.114Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e64e2ac7ad54367c827852c,
+  hash: 'turismor',
+  description: 'descr',
+  position: { x: 111, y: 111, z: 111 },
+  rotation: { x: 111, y: 111, z: 111 },
+  __v: 0 }
+2020-03-08T12:18:53.115Z - info: undefined
+2020-03-08T12:22:54.975Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T12:23:45.603Z - info: ---> Commands File.
+2020-03-08T12:23:46.058Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T12:23:54.148Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e64e3d5d123b929dc6ce0a5,
+  hash: 'turismor',
+  description: 'descr',
+  position: { x: 111, y: 111, z: 111 },
+  rotation: { x: 111, y: 111, z: 111 },
+  __v: 0 }
+2020-03-08T12:23:54.150Z - info: undefined
+2020-03-08T12:24:35.195Z - info: ---> Commands File.
+2020-03-08T12:24:39.038Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T12:24:39.787Z - info: test - cmd -  - -
+2020-03-08T12:24:40.067Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e64e4075b41a62520f1e851,
+  hash: 'turismor',
+  description: 'descr',
+  position: { x: 111, y: 111, z: 111 },
+  rotation: { x: 111, y: 111, z: 111 },
+  __v: 0 }
+2020-03-08T12:24:40.067Z - info: undefined
+2020-03-08T12:25:14.935Z - info: ---> Commands File.
+2020-03-08T12:25:18.739Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T12:25:19.676Z - info: test - cmd -  - -
+2020-03-08T12:25:20.006Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e64e42f1571571a54d0656a,
+  hash: 'turismor',
+  description: 'descr',
+  position: { x: 111, y: 111, z: 111 },
+  rotation: { x: 111, y: 111, z: 111 },
+  __v: 0 }
+2020-03-08T12:25:20.007Z - info: undefined
+2020-03-08T12:25:57.805Z - info: ---> Commands File.
+2020-03-08T12:26:02.846Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T12:26:47.839Z - info: ---> Commands File.
+2020-03-08T12:26:52.492Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T12:27:16.955Z - info: ---> Commands File.
+2020-03-08T12:27:21.799Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T12:27:30.717Z - info: ---> Commands File.
+2020-03-08T12:27:35.444Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T12:27:55.469Z - info: ---> Commands File.
+2020-03-08T12:27:59.884Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T12:29:10.947Z - info: ---> Commands File.
+2020-03-08T12:29:15.791Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T13:08:25.428Z - info: ---> Commands File.
+2020-03-08T13:08:29.654Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T13:11:34.926Z - info: ---> Commands File.
+2020-03-08T13:11:34.975Z - info: test
+2020-03-08T13:11:38.903Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T13:11:47.780Z - info: ---> Commands File.
+2020-03-08T13:11:52.845Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T13:12:00.638Z - info: test
+2020-03-08T13:12:00.640Z - info: ---> Commands File.
+2020-03-08T13:12:05.027Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T13:12:07.372Z - info: test
+2020-03-08T13:12:07.379Z - info: ---> Commands File.
+2020-03-08T13:12:11.868Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T13:12:14.940Z - info: ---> Commands File.
+2020-03-08T13:12:19.796Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T13:12:22.845Z - info: ---> Commands File.
+2020-03-08T13:12:27.710Z - info: NIKISHIRO: Зашел на сервер.
