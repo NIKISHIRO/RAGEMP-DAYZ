@@ -1,4 +1,5 @@
 import { Player } from "../player/Player";
+import { Item } from "../types";
 
 let fs = require('fs');
 

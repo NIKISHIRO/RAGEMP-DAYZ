@@ -1,5 +1,5 @@
 export class CEFBrowser {
-    private absolute_path: string = 'package://CEF/browsers/UI/';
+    private absolute_path: string = 'package://CEF/build/';
     private browser: BrowserMp;
     private cursorState: boolean;
 
@@ -17,7 +17,7 @@ export class CEFBrowser {
     public getBrowser(): BrowserMp {
         return this.browser;
     }
-
+    
     public getCursorState() {
         return this.cursorState;
     }

@@ -1,6 +1,13 @@
+import { Item } from "./types";
+
 export interface InventoryInfo {
     inventory: Item[];
     maxSlots: number;
+}
+
+export interface NotifyParams {
+    text: string;
+    color?: string;
 }
 
 interface Info {

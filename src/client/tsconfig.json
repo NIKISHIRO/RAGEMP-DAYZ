@@ -22,6 +22,7 @@
     "./libs/types/rageMp/enums.d.ts",
     // any
     "./libs/types/common/globals.d.ts",
+    "./src/rage-rpc/defs.d.ts"
   ],
   "include": [
       "./src",

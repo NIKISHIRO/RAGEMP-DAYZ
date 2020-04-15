@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'rsuite/dist/styles/rsuite-default.css';
+import 'typeface-roboto';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import { App } from './components/App';
 import { Root } from './components/Root';
-import { emitter } from './helpers/emitter';
+import { rpcRegister } from './helpers/playerEvents/rpcRegister';
 
 ReactDOM.render(
   <Root />,
@@ -17,3 +16,5 @@ ReactDOM.render(
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
+// Регистрация всех RPC события для RAGEMP
+// rpcRegister();

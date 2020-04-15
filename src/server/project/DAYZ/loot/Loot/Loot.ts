@@ -1,5 +1,8 @@
 import { Colshape } from "../entities/Colshape";
-import { CreateItemParams, LootShapeInfo, LootSpawn } from "../../interfaces";
+import { CreateItemParams, LootSpawn, LootShapeInfo } from "../../interfaces";
+import shortid from 'shortid';
+import { EItem } from "../Item/Item";
+import { Item, DataWeapon, ItemType, ItemKey, DataBodyArmour } from "../../types";
 
 /*
     Лут - класс, который создает на указаных коорд. точку для взятия лута.
@@ -24,6 +27,7 @@ export class Loot {
         
         this.colshape.setVariable('lootShapeInfo', lootShapeInfo);
         this.colshape.setVariable('itemList', []);
+        this.colshape.setVariable('playersIdsOnColshape', []);
     }
 
     public getColshape(): ColshapeMp {
@@ -38,10 +42,9 @@ export class Loot {
         const colshape: ColshapeMp = mp.colshapes.newSphere(
             params.colshapePosition.x, 
             params.colshapePosition.y, 
-            params.colshapePosition.z, 
-            params.range
+            params.colshapePosition.z,
+            params.range,
         );
-        
             
         const object: ObjectMp = mp.objects.new(params.objectHash, params.objectPosition);
         let blip = mp.blips.new(1, params.colshapePosition, {
@@ -67,5 +70,37 @@ export class Loot {
         this.createLootShape(params);
         const colshape: ColshapeMp = this.getColshape();
         Colshape.addItem(colshape, [...items]);        
+    }
+
+    public spawn(items: Item[], params: CreateItemParams) {
+        // Создание точки для лута.
+        this.createLootPoint(items, params);
+    }
+
+    // СОЗДАНИЕ ОБЪЕКТОВ ПРЕДМЕТОВ.
+    public createWeaponItem(name: string, description: string, clip: number, maxStackCount: number, amount: number): Item {
+        const dataWeapon: DataWeapon = {
+            type: ItemType.WEAPON,
+            name: name,
+            description: description,
+            clip: clip,
+            maxStackCount: 1,
+            shortid: shortid.generate(),
+        };
+        
+        return EItem.createItem(ItemKey.ITEM_WEAPON_AK47, amount, dataWeapon);
+    }
+    
+    public createBodyArmorItem(name: string, description: string, defence: number, maxStackCount: number, amount: number): Item {
+        const dataBodyArmour: DataBodyArmour = {
+            type: ItemType.ARMOR,
+            defence: defence,
+            name: name,
+            description: description,
+            maxStackCount: maxStackCount,
+            shortid: shortid.generate(),
+        };
+    
+        return EItem.createItem(ItemKey.ITEM_ARMOR, amount, dataBodyArmour);
     }
 }

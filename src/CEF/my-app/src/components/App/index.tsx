@@ -10,7 +10,7 @@ function RoutesComp() {
       <div>
         <ul>
           <li><a href='#' onClick={ () => emitter.emit('goToHome') }>Главная</a></li>
-          <li><a href='#' onClick={ () => emitter.emit('goToEquipment') }>Equipment</a></li>
+          <li><a href='#' onClick={ () => emitter.emit('goToUi') }>Equipment</a></li>
         </ul>
       </div>
     </div>
@@ -29,7 +29,7 @@ function App(props) {
   // //// //// //// //// //// //// //// //// //// //// //// //// //// //// //
   // УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ 
   // //// //// //// //// //// //// //// //// //// //// //// //// //// //// //
-  emitter.emit('goToEquipment')
+  emitter.emit('goToUi')
   // //// //// //// //// //// //// //// //// //// //// //// //// //// //// //
 
   return (

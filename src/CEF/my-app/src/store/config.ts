@@ -3,8 +3,8 @@ import { createStore, applyMiddleware, compose } from "redux";
 import { createRootReducer } from "../reducers";
 import logger from 'redux-logger';
 import thunk from 'redux-thunk';
-import { PlayerEvents } from "../helpers/playerEvents";
 import { routerMiddleware } from 'connected-react-router';
+import { PlayerEvents } from '../helpers/playerEvents';
 
 const history = createMemoryHistory({
     initialEntries: [ '/one', '/two', { pathname: '/three' } ],

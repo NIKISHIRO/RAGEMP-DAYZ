@@ -1,7 +1,6 @@
-import { Loot } from './Loot/Loot';
-import { logger } from '../shared/logger';
 import { Player } from '../player/Player';
-import { ReturnInformation } from '../interfaces';
+import { ReturnInformation, InventoryInfo } from '../interfaces';
+import { Item } from '../types';
 
 // Выводит инвентарь игрока.
 mp.events.addCommand('inv', (player: PlayerMp, ft: string) => {
@@ -32,7 +31,8 @@ mp.events.addCommand('use', (player: PlayerMp, ft: string, idx: string) => {
 
 // Выводит места для лута (ИДЫ КОЛШИПОВ).
 mp.events.addCommand('items', (player: PlayerMp, ft: string) => {
-    const itemPoints = Player.getItemPoints(player);
+    const plr = new Player(player);
+    const itemPoints = plr.getItemPoints();
 
     player.outputChatBox(`!{#20db63}(ItemPoints): [${itemPoints.length}]`);
     player.outputChatBox(`!{#20db63}Смотреть содержимое через /take.`);
@@ -43,6 +43,8 @@ mp.events.addCommand('items', (player: PlayerMp, ft: string) => {
 });
 
 mp.events.addCommand('take', (player: PlayerMp, ft: string, srcCellId: string, srcItemId: string, srcAmount: string) => {
+    const plr = new Player(player);
+    
     if (!ft) {
         player.outputChatBox('/take [ИД ячейки] - содержимое ячейки.');
         player.outputChatBox('/take [ИД ячейки] [ИД предмета] [Кол-во]- получить предмет ячейки.');
@@ -53,7 +55,9 @@ mp.events.addCommand('take', (player: PlayerMp, ft: string, srcCellId: string, s
     const itemId: number = parseInt(srcItemId);
     const amount: number = parseInt(srcAmount);
 
-    const itemList = Player.getItemListByIndex(player, cellId);
+    const itemList = plr.getItemListByIndex(cellId);
+
+    console.log('itemList', itemList);
 
     if (!itemList) {
         player.outputChatBox(`Такой ячейки нету!`);
@@ -75,32 +79,29 @@ mp.events.addCommand('take', (player: PlayerMp, ft: string, srcCellId: string, s
 
     // Если игрок передал 2 аргумент.
     if (Number.isInteger(itemId)) {
-        const returnInformation: ReturnInformation = Player.takeColshapeItem(player, cellId, itemId, amount);
+        const returnInformation: ReturnInformation = plr.takeColshapeItem(cellId, itemId, amount);
         player.outputChatBox(returnInformation.info.text);
 
         // Если игрок получил предмет.
         const takenItem: Item = returnInformation.info.data.takenItem;
         if (takenItem) {
-            Player.toClientTakeItemInfo(player, takenItem);
+            console.log('returnInformation', returnInformation);
         }
     }
 });
 
-mp.events.addCommand('slot', (player: PlayerMp, ft: string, slots: string) => {
-    Player.toClientSetInventorySlots(player, parseInt(slots));
-});
-
 mp.events.addCommand('drop', (player: PlayerMp, ft: string, id: string, amount: string, cellId: string) => {
+    const plr = new Player(player);
+    
     if (!ft) { 
-        player.outputChatBox('/drop [ИД Предмета из инвентаря] [кол-во]');
         player.outputChatBox('/drop [ИД Предмета из инвентаря] [кол-во] [ИД Ячейки]');
+        player.outputChatBox('/drop [ИД Предмета из инвентаря] [кол-во]');
+
         return;
     }
-    const returnInformation: ReturnInformation = Player.dropItem(player, parseInt(id), parseInt(amount), parseInt(cellId));
+    const returnInformation: ReturnInformation = plr.dropItem(parseInt(id), parseInt(amount), parseInt(cellId));
 
     if (returnInformation.result) {
-        player.outputChatBox(`!{#97CC24}${returnInformation.info.text}`);
-    } else {
-        player.outputChatBox(`!{#BC3C00}${returnInformation.info.text}`);
+        player.outputChatBox(returnInformation.info.text);
     }
 });

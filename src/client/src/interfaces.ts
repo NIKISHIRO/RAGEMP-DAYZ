@@ -8,3 +8,8 @@ export interface Item {
     amount: number;
     data?: object;
 }
+
+export interface NotifyParams {
+    text: string;
+    color?: string;
+}

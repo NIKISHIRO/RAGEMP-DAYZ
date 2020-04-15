@@ -1,3 +1,5 @@
+import { Item } from "project/DAYZ/types";
+
 export class Colshape {
     static destroy(colshape: ColshapeMp): boolean {
         console.log(' -> shape destroy');

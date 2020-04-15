@@ -1,5 +1,6 @@
 import vehicleCoords from './vehicleCoords.json';
 import { Car } from "./Car";
+import { Item } from '../types';
 
 mp.events.addCommand('pos', () => {
     Car.saveCar("turismor", new mp.Vector3(111,111,111), new mp.Vector3(0,0,111), [255,255,255,0,0,0], 'spawn tachka');
