@@ -1,0 +1,191 @@
+::-webkit-scrollbar { width: 3px; height: 3px;}
+::-webkit-scrollbar-button {  background-color: #666; }
+::-webkit-scrollbar-track {  background-color: #999;}
+::-webkit-scrollbar-track-piece { background-color: #ffffff;}
+::-webkit-scrollbar-thumb { height: 50px; background-color: #666; border-radius: 3px;}
+::-webkit-scrollbar-corner { background-color: #999;}
+::-webkit-resizer { background-color: #666;}
+
+* {
+    outline: none;
+}
+
+.UI {
+    height: 100%;
+    width: 100%;
+}
+
+.UI-container {
+    height: 100%;
+    width: 100%;
+    /* background: url('../../assets/bgc.png'); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+
+.inventory {
+    width: 40rem;
+    height: 40rem;
+    background-color: rgba(0, 0, 0, .7);
+}
+
+.ui-top {
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, .8);
+    box-shadow: 0 0 black;
+}
+
+.inventory-middle {
+    padding: 5px 5px;
+}
+
+.clothes-item {
+    width: 3.75rem;
+    height: 3.75rem;
+    margin: 5px;
+    background-color: rgba(192, 192, 192, .2);
+    display: inline-block;
+}
+
+.clothes-item:hover {
+    background-color: rgba(192, 192, 192, .1);
+}
+
+.inventory-body-items {
+    display: flex;
+    justify-content: space-between;
+    height: 27.6rem;
+}
+
+.inventory-body-left {
+    margin: 5px;
+    width: 45%;
+    padding: 2px;
+    /* border: 1px solid rgba(255, 255, 255, .2); */
+}
+
+.inventory-body-right {
+    margin: 5px;
+    width: 55%;
+    /* border: 1px solid rgba(255, 255, 255, .2); */
+    padding: 2px;
+}
+
+.inventory-cell {
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: rgba(192, 192, 192, .2);
+    margin-bottom: 2px;
+    padding: 5px;
+}
+
+.isStack {
+    position: absolute;
+    left: 50%;
+    bottom: -1.2rem;
+    font-size: 1.5rem;
+    display: block;
+    z-index: 10;
+}
+
+.isStack:hover {
+    opacity: .7;
+}
+
+.inventory-cell:hover {
+    background-color: rgba(192, 192, 192, .1);
+}
+
+.inventory-cell-image {
+    display: inline-block;
+}
+
+.inventory-cell-image img {
+    height: 100%;
+}
+
+.inventory-cell-name {
+    margin-left: 2rem;
+    display: inline-block;
+}
+
+.inventory-cell-amount {
+    position: absolute;
+    top: .1rem;
+    right: .3rem;
+    display: inline-block;
+    text-align: right;
+}
+
+/* items-ground */
+
+.items-ground {
+    background-color: rgba(0, 0, 0, .7);
+    width: 20rem;
+    height: 40rem;
+    margin-right: 3rem;
+}
+
+.items-ground-middle {
+    height: 100%;
+    padding: 5px;
+}
+
+.paperOverridePopover {
+    color: #fff !important;
+    background-color: rgba(0, 0, 0, .9) !important;
+}
+
+.cell-popover-content {
+    padding: .9rem;
+    width: 25rem;
+    height: auto;
+}
+
+.cell-popover-content__data-image {
+    margin-top: 1rem;
+    position: relative;
+}
+
+.cell-popover-content__data-image img {
+    height: 4rem;
+}
+
+.rootOverrideAppBar {
+    background-color: transparent !important;
+}
+
+.popover-select-tab > div{
+    padding: 5px 10px;
+}
+
+.popover-select-tab > div{
+    padding: .6rem 5rem .6rem .6rem;
+}
+
+.popover-select-tab > div:hover {
+    opacity: .7;
+}
+
+.popover-tab-container {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.popover-tab-container__item {
+    margin-top: 1rem;
+    width: 100%;
+}
+.popover-icon-button {
+    padding: .5rem !important;
+}
+
+.cell-popover-content-tab2 input {
+    margin: 0 1rem;
+    width: 3rem;
+}
