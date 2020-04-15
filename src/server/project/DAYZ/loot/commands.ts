@@ -1,5 +1,5 @@
 import { Player } from '../player/Player';
-import { ReturnInformation, InventoryInfo } from '../interfaces';
+import { ReturnInformation } from '../interfaces';
 import { Item } from '../types';
 
 // Выводит инвентарь игрока.
@@ -21,7 +21,7 @@ mp.events.addCommand('use', (player: PlayerMp, ft: string, idx: string) => {
     if (isNaN(id) || !Number.isInteger(id)) {
         return;
     }
-
+    
     if (player.useItem(id)) {
         player.outputChatBox(`Вы использовали предмет с ID = ${id}.`);
     } else {
@@ -90,18 +90,8 @@ mp.events.addCommand('take', (player: PlayerMp, ft: string, srcCellId: string, s
     }
 });
 
-mp.events.addCommand('drop', (player: PlayerMp, ft: string, id: string, amount: string, cellId: string) => {
+mp.events.addCommand('weight', (player: PlayerMp, ft: string, id: string, amount: string, cellId: string) => {
     const plr = new Player(player);
-    
-    if (!ft) { 
-        player.outputChatBox('/drop [ИД Предмета из инвентаря] [кол-во] [ИД Ячейки]');
-        player.outputChatBox('/drop [ИД Предмета из инвентаря] [кол-во]');
-
-        return;
-    }
-    const returnInformation: ReturnInformation = plr.dropItem(parseInt(id), parseInt(amount), parseInt(cellId));
-
-    if (returnInformation.result) {
-        player.outputChatBox(returnInformation.info.text);
-    }
+    const invMaxWeight: number = player.getVariable('invMaxWeight');
+    player.outputChatBox(`Макс.вес игрока: ${invMaxWeight}`);
 });

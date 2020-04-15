@@ -1,9 +1,31 @@
 import { Item } from "../types";
 import shortid from 'shortid';
+import { SnackbarOrigin } from "@material-ui/core/Snackbar";
 
 export const SET_INVENTORY_ITEMS = 'SET_INVENTORY_ITEMS';
 export const SET_GROUND_ITEMS = 'ITEMS_GROUND_ITEMS';
 export const SET_INVENTORY_SLOTS = 'SET_INVENTORY_SLOTS';
+export const SET_SNACKBAR = 'SET_SNACKBAR';
+
+export type SnackbarType = {
+    open: boolean;
+    text?: string
+    origin?: SnackbarOrigin;
+}
+
+const setSnackbar = (snackbar: SnackbarType) => {
+    return (dispatch, getState) => {
+        if (!snackbar.hasOwnProperty('origin')) {
+            snackbar = { ...snackbar, origin: { horizontal: 'center', vertical: 'bottom' } }
+            console.log('snackbar',snackbar)
+        }
+
+        dispatch({
+            type: SET_SNACKBAR,
+            payload: snackbar,
+        });
+    };
+};
 
 const addInventoryItem = () => {
     return (dispatch, getState) => {
@@ -118,6 +140,7 @@ const setGroundItems = (items: Item[]) => {
 };
 
 export {
+    setSnackbar,
     addInventoryItem,
     setInventoryItems,
     setInventorySlots,

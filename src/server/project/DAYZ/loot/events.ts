@@ -1,19 +1,13 @@
 import { Player } from "../player/Player";
-import { LootShapeInfo, LootSpawn, InventoryInfo } from "../interfaces";
 import { Item } from "../types";
-import { Loot } from "./Loot/Loot";
 import { CEF } from "../CEF";
 
 mp.events.add({
     'playerJoin': (player: PlayerMp) => {
         // itemPoints - массив ИД-ов колшипов.
         player.setVariable('itemPoints', []);
-
-        const inventoryInfo: InventoryInfo = {
-            inventory: player._inventory,
-            maxSlots: 8
-        };
-        player.setVariable('inventoryInfo', inventoryInfo);
+        // Макс. вес для предметов игрока.
+        player.setVariable('invMaxWeight', 100000000);
     },
 
     'playerEnterColshape': (player: PlayerMp, shape: ColshapeMp) => {
@@ -23,10 +17,6 @@ mp.events.add({
         const cef = new CEF(player);
 
         plr.addItemPoint(shape.id);
-        const itemPoints = plr.getItemPoints();
-        
-        console.log('itemPoints', itemPoints);
-
         plr.addPlayerInColshape(shape, player);
         player.outputChatBox(JSON.stringify(shape.getVariable('playersIdsOnColshape')));
 

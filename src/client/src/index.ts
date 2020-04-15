@@ -16,5 +16,3 @@ mp.keys.bind(0x47, true, function() {
     callBrowsers('testrpc', false);
     mp.events.callRemote('keypress:G');
 });
-
-mp.gui.chat.push('ПРИВЕТ ОТ ВЕБПАКА!');

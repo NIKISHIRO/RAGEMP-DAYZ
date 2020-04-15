@@ -1,10 +1,24 @@
 export class Blip {
-    static destroy(blipIid: number): boolean {
-        const blip: BlipMp = mp.blips.at(blipIid)
+    private blip: BlipMp;
+
+    constructor(blip: BlipMp) {
+        this.blip = blip;
+    }
+
+    static findBlipById(blipId: number): BlipMp | false {
+        const blip: BlipMp = mp.blips.at(blipId);
         if (mp.blips.exists(blip)) {
-            blip.destroy();
+            return blip;
+        }
+
+        return false;
+    }
+
+    static destroy(blipId: number): boolean {
+        if (mp.blips.exists(blipId)) {
+            mp.blips.at(blipId).destroy();
             return true;
-        } 
+        }
 
         return false;
     }

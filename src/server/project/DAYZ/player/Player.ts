@@ -2,14 +2,18 @@ import { logger } from "../shared/logger";
 import { Colshape } from "../loot/entities/Colshape";
 import { Label } from "../loot/entities/Label";
 import { EObject } from "../loot/entities/Object";
-import { Loot } from "../loot/Loot/Loot";
-import { ReturnInformation, LootShapeInfo, CreateItemParams, LootSpawn, InventoryInfo, NotifyParams } from "../interfaces";
+import { Loot } from "../loot/Loot";
+import { ReturnInformation, LootShapeInfo } from "../interfaces";
 import { Blip } from "../loot/entities/Blip";
 import { EItem } from "../loot/Item/Item";
 import {SPAWNS} from '../playerSpawns';
-import { callBrowsers } from 'rage-rpc';
 import { Item } from "../types";
 import { CEF } from "../CEF";
+
+type ServerResult = {
+    result: boolean;
+    text: string;
+}
 
 export class Player {
 
@@ -19,8 +23,30 @@ export class Player {
 
     public player: PlayerMp;
 
+    public setSkin() {
+        const clothes = {
+            male: {
+                masks: { id: 1, data: [1, 2, 10, 8, 21, 44, 45, 63, 68, 74, 97, 168, 27, 35, 48, 51, 64, 85, 104, 107, 105, 109, 113, 114, 115, 125, 136, 147, 152, 159, 160, 171, 177] },
+                hair: { id: 2, data: [] },
+                torsos: { id: 3, data: [] },
+                legs: { id: 4, data: [] },
+                bags: { id: 5, data: [] },
+                shoes: { id: 5, data: [] },
+                armors: { id: 9, data: [] },
+                decals: { id: 9, data: [] },
+            },
+            femal: {},
+        };
+        
+    }
+
+    // Получить вес массива предметов предметов в инвентаре.
+    public getItemsWeight(items: Item[]) {
+        return items.reduce((acc, item) => acc + (item.amount * item.data.weight), 0);
+    }
+
     // С CEF приходит shortid. По shortid найти предмет.
-    public takeItemByShortId(shortid: string, amount: number) {
+    public takeItemByShortId(shortid: string, amount: number): ServerResult {
         const colshapes = this.getColshapesObjectsGround();
 
         // Поиск предмета и колшип, который пытается взять игрок.
@@ -42,14 +68,23 @@ export class Player {
 
             const idx = itemList.findIndex(item => item.data.shortid === findItem.data.shortid);
 
-            console.log('idx', idx);
-
             // Если в предметах колшипа не был найден предмет с данные shortid.
             if (idx === -1) {
-                return;
+                return { result: false, text: 'Такого предмета здесь нету.' };
             }
 
             const newItem = {...findItem};
+            const invMaxWeight: number = this.player.getVariable('invMaxWeight');
+            const plrInventory = [...this.player.getInventory()];
+            plrInventory.push({...newItem});
+            this.player.outputChatBox(JSON.stringify(newItem))
+            // Вес инвентаря с новым предметом.
+            const weightWithItem = this.getItemsWeight(plrInventory);
+            this.player.outputChatBox(`weightWithItem ${weightWithItem}`);
+            if (weightWithItem > invMaxWeight) {
+                return { result: false, text: 'Не хватает места в инвентаре.' };
+            }
+
             if (newItem.amount > amount) {
                 newItem.amount -= amount;
                 itemList.splice(idx, 1, EItem.createItem(newItem.key, newItem.amount, newItem.data));
@@ -82,39 +117,35 @@ export class Player {
             if (!itemList.length) {
                 this.removeAllLootShapeEntity(findShape);
             }
+            
+            const createdItem = EItem.createItem(newItem.key, newItem.amount, newItem.data);
+            console.log('createdItem', createdItem);
+            this.player.outputChatBox(JSON.stringify(createdItem));
+            this.player.giveItem(createdItem.key, amount, createdItem.data);
+
+            return { result: true, text: `${createdItem.data.name} + ${amount}` };
         }
+
+        return { result: false, text: 'Такого предмета здесь нету.' };
     }
 
     public removeAllLootShapeEntity(colshape: ColshapeMp) {
         const lootShapeInfo: LootShapeInfo = colshape.getVariable('lootShapeInfo');
-        
-        if (Colshape.destroy(colshape)) {
+        const instColshape = new Colshape(colshape);
+
+        if (instColshape.destroy()) {
             const labelId = lootShapeInfo.labelId;
             const objId = lootShapeInfo.objectId;
             const blipId = lootShapeInfo.blipId;
 
-            // Если label с таким ИД на серваке нету - вывести в консоль об этом.
-            if (!mp.labels.exists(labelId)) {
-                logger('red', 'Player', 'takeItem', 'mp.labels.exists', 'Такого Label не существует.');
-            } else { // Уничтожить..
-                Label.destroy(labelId);
-            }
+            // Удалить label.
+            Label.destroy(labelId) && console.log(`[Label] с ID = ${labelId} удален.`);
 
-            // Если object с таким ИД на серваке нету - вывести в консоль об этом.
-            if (!mp.objects.exists(objId)) {
-                logger('red', 'Player', 'takeItem', 'mp.objects.exists', 'Такого Object не существует.');
-            } else { // Уничтожить.
-                EObject.destroy(objId);
-            }
-
-            // Если object с таким ИД на серваке нету - вывести в консоль об этом.
-            if (!mp.blips.exists(blipId)) {
-                logger('red', 'Player', 'takeItem', 'mp.objects.exists', 'Такого Object не существует.');
-            } else { // Уничтожить.
-                Blip.destroy(blipId);
-            }
-
-            logger('green', 'colshape', colshape.toString(), 'Удален.');
+            // Удалить объект.
+            EObject.destroy(objId) && console.log(`[EObject] с ID = ${objId} удален.`);
+            
+            // Удалить блип.
+            Blip.destroy(blipId) && console.log(`[Blip] с ID = ${blipId} удален.`);
         }
     }
 
@@ -173,7 +204,7 @@ export class Player {
         itemPoints.push(shapeId);
         this.player.setVariable('itemPoints', itemPoints);
     }
-
+    
     // Удаляет колшип из массива itemPoints игрока.
     public removeItemPoint(shapeId: number) {
         const itemPoints = this.getItemPoints();
@@ -235,8 +266,6 @@ export class Player {
     // и берет из массива itemList предмет под индексом itemId
     public takeColshapeItem(cellId: number, itemId: number, amount: number): ReturnInformation {
         const item = this.getItem(cellId, itemId);
-        const inventory: Item[] = [...this.player.getInventory()];
-        const invInfo: InventoryInfo = this.player.getVariable('inventoryInfo');
 
         const returnInformation = {
             info: {
@@ -258,6 +287,7 @@ export class Player {
             const colshape: ColshapeMp = colshapes[cellId];
             const colshapeId: number = colshape.id;
             const lootShapeInfo: LootShapeInfo = colshape.getVariable('lootShapeInfo');
+            const instColshape = new Colshape(colshape);
             
             const itemPoints: number[] = this.getItemPoints();
             const itemListOrFalse = this.getItemListByIndex(cellId);
@@ -317,7 +347,7 @@ export class Player {
                     });
 
                     // Если получилось уничтожить colshape.
-                    if (Colshape.destroy(colshape)) {
+                    if (instColshape.destroy()) {
                         console.log('lootShapeInfo', lootShapeInfo);
                         const labelId = lootShapeInfo.labelId;
                         const objId = lootShapeInfo.objectId;
@@ -370,88 +400,36 @@ export class Player {
     }
 
     // Выкидывает предмет из инвентаря.
-    public dropItem(itemIdx: number, amount: number, cellId?: number): ReturnInformation {
+    public dropItem(itemKey: string, amount: number): ServerResult {
         const inventory = this.player.getInventory();
         const pos = this.player.position;
 
-        const returnInformation: ReturnInformation = {
-            result: false,
-            info: {
-                text: 'Введите корректные целые числа'
-            } 
-        };
+        const item = inventory.find(item => item.key === itemKey);
 
-        // Если пришло не число или не целое число, то return.
-        if (isNaN(itemIdx) || isNaN(amount) || !Number.isInteger(itemIdx) || !Number.isInteger(amount)) {
-            logger('red', 'dropItem', 'itemIdx', String(itemIdx), ', amount', String(amount));
-            return returnInformation;
+        if (!this.player.hasItem(itemKey) || item === undefined) {
+            return { result: false, text: `У вас нет в инвентаре этого предмета.` };
         }
-        
-        // Если инвентарь не имеет предмета под данным индексом - return.
-        if (!inventory[itemIdx]) {
-            returnInformation.info.text = 'У вас нет в инвентаре предмета с индексом '+itemIdx;
-            return returnInformation;
-        }
-
-        const item: Item = inventory[itemIdx];
 
         // Если кол-во предметов в инвентаре меньше, чем указал игрок - return.
-        if (this.player.getItemAmount(item.key) < amount) {
-            returnInformation.info.text = 'В вашем инвентаре нет шт. '+amount+ ' ' + amount;
-            return returnInformation;
+        if (this.player.getItemAmount(itemKey) < amount) {
+            return { result: false, text: 'В вашем инвентаре нет столько предметов.' };
         }
 
         // Минус 'amount' предметов.
-        if(!this.player.removeItem(itemIdx, amount)) {
-            returnInformation.result = false;
-            returnInformation.info.text = `Ошибка удаления предмета из инвентаря.`;
-            return returnInformation;
+        if(!this.player.removeItem(this.player.getItemIndex(itemKey), amount)) {
+            return { result: false, text: 'Не получилось выбросить предмет. Попробуйте еще раз.' };
         }
 
-        // Если указана ячейка (индекс колшипа) и он целое число.
-        if (cellId !== undefined && Number.isInteger(cellId)) {
-            const itemPoints = this.getItemPoints();
+        // Создает предмет на координатах его выброса.
+        const colshape = Loot.createColshape(pos);
+        const object = Loot.createObject(pos);
+        const label = Loot.createLabel(pos);
+        const blip = Loot.createBlip(pos);
+        const loot = new Loot(colshape, object, label, blip);
 
-            if (itemPoints && itemPoints[cellId] !== undefined) {
-                const colshapeId = itemPoints[cellId];
-                const colshape = mp.colshapes.at(colshapeId);
+        const createdItem = EItem.createItem(item.key, amount, item.data);
+        loot.createLootPoint([createdItem]);
 
-                if (!mp.colshapes.exists(colshape)) {
-                    returnInformation.result = false;
-                    returnInformation.info.text = 'Не существует ячейки с ИД = ' + cellId;
-                    return returnInformation;
-                }
-
-                Colshape.addItem(colshape, [EItem.createItem(item.key, amount, {...item.data})]);
-                returnInformation.result = true;
-                returnInformation.info.text = 'Вы положили предмет в колшип с ИД = ' + colshape.id!;
-                return returnInformation;
-            }
-
-            returnInformation.result = false;
-            returnInformation.info.text = 'Такой точки ' +cellId+ ' с лутом здесь нет!';
-            return returnInformation;
-        } else { // Если не указана - создать новый КОЛШИП С ПРЕДМЕТАМИ.
-            // Создает предмет на координатах его выброса.
-            const createItemParams: CreateItemParams = {
-                colshapePosition: pos,
-                objectPosition: pos,
-                labelPosition: pos,
-                range: 3, 
-                labelText: LootSpawn.DROPPED, 
-                objectHash: 'bkr_prop_duffel_bag_01a',
-            };
-
-            const loot = new Loot();
-
-            const createdItem = EItem.createItem(item.key, amount, item.data);
-            loot.createLootPoint([createdItem], createItemParams);
-
-            returnInformation.result = true;
-            returnInformation.info.text = 'Вы выбросили ' +amount+ 'шт. '+item.key;
-        }
-
-        return returnInformation;
+        return { result: true, text: `Вы выбросили ${item.data.name} - ${amount}` };
     }
-
-}       
+}

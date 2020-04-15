@@ -1,10 +1,5 @@
 import { Item } from "./types";
 
-export interface InventoryInfo {
-    inventory: Item[];
-    maxSlots: number;
-}
-
 export interface NotifyParams {
     text: string;
     color?: string;
@@ -32,13 +27,3 @@ export interface LootShapeInfo {
     objectId: number;
     blipId: number;
 }
-
-export interface CreateItemParams {
-    colshapePosition: Vector3Mp; 
-    objectPosition: Vector3Mp; 
-    labelPosition: Vector3Mp; 
-    range: number;
-    labelText: string;
-    objectHash: string;
-}
-

@@ -1,8 +1,7 @@
 export class Label {
     static destroy(labelId: number): boolean {
-        const label: TextLabelMp = mp.labels.at(labelId)
-        if (mp.labels.exists(label)) {
-            label.destroy();
+        if (mp.labels.exists(labelId)) {
+            mp.labels.at(labelId).destroy();
             return true;
         } 
 

@@ -1,8 +1,12 @@
 import React from "react";
 import { Switch, Route, Redirect } from 'react-router-dom';
 import './styles.css';
-import { UserInterface } from "../UserInterface";
+import { ItemsUI } from "../UserInterface";
 import { emitter } from "../../helpers/emitter";
+import { connect } from "react-redux";
+import { State } from "../../reducers";
+import { UIState } from "../../reducers/UIReducer";
+import { NotifyComp } from "./NotifyComp";
 
 function RoutesComp() {
   return (
@@ -10,14 +14,14 @@ function RoutesComp() {
       <div>
         <ul>
           <li><a href='#' onClick={ () => emitter.emit('goToHome') }>Главная</a></li>
-          <li><a href='#' onClick={ () => emitter.emit('goToUi') }>Equipment</a></li>
+          <li><a href='#' onClick={ () => emitter.emit('goToUi') }>Items UI</a></li>
         </ul>
       </div>
     </div>
   );
 };
 
-function Home({ history }) {
+function Home() {
   console.log('history');
 
   return (
@@ -25,20 +29,18 @@ function Home({ history }) {
   );
 }
 
-function App(props) {
-  // //// //// //// //// //// //// //// //// //// //// //// //// //// //// //
-  // УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ 
-  // //// //// //// //// //// //// //// //// //// //// //// //// //// //// //
-  emitter.emit('goToUi')
-  // //// //// //// //// //// //// //// //// //// //// //// //// //// //// //
+
+function App() {
+  emitter.emit('goToUi');
 
   return (
     <div className="app">
       <RoutesComp />
       <Switch>
         <Route exact path='/' component={ Home } />
-        <Route path='/ui' component={ UserInterface } />
+        <Route path='/ui' component={ ItemsUI } />
       </Switch>
+      <NotifyComp />
     </div>
   );
 }
