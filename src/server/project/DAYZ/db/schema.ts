@@ -1,4 +1,5 @@
 import { Schema, model, Model, Document } from 'mongoose';
+import { Item } from '../types';
 
 // Интерфейсы.
 export interface VehicleSpawnProp extends Document {

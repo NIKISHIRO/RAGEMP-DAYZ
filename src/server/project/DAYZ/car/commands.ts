@@ -1,8 +1,9 @@
 
 import { Car } from "./Car";
 import { Player } from '../player/Player.js';
-import { ReturnInformation } from "../interfaces";
 import {VehicleSpawn} from '../db/schema';
+import { CarReturnInformation } from "../interfaces";
+
 
 mp.events.addCommand('savecar', (player:PlayerMp,ft: string, hash: string, x: string, y:string, z:string, description: string, rx:string, ry:string, rz:string, c0:string, c1:string, c2:string, c3:string, c4:string, c5:string) => {
     if(!ft || !hash) return player.outputChatBox('/savecar hash x y z')
@@ -10,7 +11,7 @@ mp.events.addCommand('savecar', (player:PlayerMp,ft: string, hash: string, x: st
     if(!y) y = player.position.y.toString();
     if(!z) z = player.position.z.toString();
 
-    const returnInformation: ReturnInformation = Car.saveCar(hash, // Название машины
+    const returnInformation: CarReturnInformation = Car.saveCar(hash, // Название машины
                                                             new mp.Vector3(parseInt(x), parseInt(y), parseInt(z)), // Позиция машины x,y,z
                                                             new mp.Vector3(parseInt(rx), parseInt(ry), parseInt(rz)),// Угол машины
                                                             [c0, c1, c2, c3, c4, c5].map(n => parseInt(n)), // цвет машины
@@ -67,8 +68,9 @@ mp.events.addCommand('sc', () => {
 mp.events.addCommand('carput', (player:PlayerMp,ft: string, index:string, amount:string) =>{
     if(!ft || !index || !amount) return player.outputChatBox('/carput index amount')
 
+    const plr = new Player(player);
     let car = Car.arrayCars(player)[0].objCar;
-    const returnInformation: ReturnInformation = Player.putItemCar(player, car, parseInt(index), parseInt(amount));
+    const returnInformation: CarReturnInformation = plr.putItemCar(car, parseInt(index), parseInt(amount));
 
     if (returnInformation.result) {
         player.outputChatBox(`!{#97CC24}${returnInformation.info}`);
@@ -84,7 +86,7 @@ mp.events.addCommand('cartake', (player:PlayerMp, ft:string, index:string, amoun
     if(!ft || !index || !amount) return player.outputChatBox('/cartake index amount')
 
     let car = Car.arrayCars(player)[0].objCar;
-    const returnInformation: ReturnInformation = Player.takeItemCar(player, car, parseInt(index), parseInt(amount));
+    const returnInformation: ReturnInformation = player.takeItemCar(car, parseInt(index), parseInt(amount));
 
     if (returnInformation.result) {
         player.outputChatBox(`!{#97CC24}${returnInformation.info}`);

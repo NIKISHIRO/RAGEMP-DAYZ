@@ -1,16 +1,16 @@
-interface Item {
-    key: string;
-    amount: number;
-    data?: object;
+type IItem = {
+    key: any;
+    amount: any;
+    data: any;
 }
 
 interface PlayerMp_InvApi {
-    _inventory: Item[];
+    _inventory: IItem[];
 
     // Возврашает массив инвентаря.
-    getInventory(): Item[];
+    getInventory(): IItem[];
     // Заменяет массив инвентаря на новый.   
-    setInventory(newInventory: Item[]): boolean;
+    setInventory(newInventory: any[]): boolean;
     // Возвр. true || false. Есть ли в инв. предм. по itemKey.
     hasItem(itemKey: string): boolean;
     // Возвр. true || false. Тоже что и инвентаря игрока, но с data. 

@@ -1,11 +1,10 @@
 export class EObject {
     static destroy(objId: number): boolean {
-        const obj: ObjectMp = mp.objects.at(objId)
-        if (mp.objects.exists(obj)) {
-            obj.destroy();
+        if (mp.objects.exists(objId)) {
+            mp.objects.at(objId).destroy();
             return true;
         } 
 
         return false;
     }
-}
+};

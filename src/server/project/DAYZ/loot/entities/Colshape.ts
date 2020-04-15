@@ -1,27 +1,35 @@
+import { Item } from "project/DAYZ/types";
+
 export class Colshape {
-    static destroy(colshape: ColshapeMp): boolean {
+    private colshape: ColshapeMp;
+
+    constructor(colshape: ColshapeMp) {
+        this.colshape = colshape;
+    }
+
+    public destroy(): boolean {
         console.log(' -> shape destroy');
 
-        if (mp.colshapes.exists(colshape.id)) {
-            colshape.destroy();
+        if (mp.colshapes.exists(this.colshape.id)) {
+            this.colshape.destroy();
             return true;
         }
         return false;
     }
 
-    static getItemList(colshape: ColshapeMp): Item[] {
-        return colshape.getVariable('itemList');
+    public getItemList(): Item[] {
+        return this.colshape.getVariable('itemList');
     }
 
     // Добавляет предметы в массив itemList.
-    static addItem(colshape: ColshapeMp, items: Item[]): boolean {
+    public addItem(items: Item[]): boolean {
         if (!items.length) {
             return false;
         }
 
-        const itemList: Item[] = colshape.getVariable('itemList');
+        const itemList: Item[] = this.colshape.getVariable('itemList');
         itemList.push(...items);
-        colshape.setVariable('itemList', itemList);
+        this.colshape.setVariable('itemList', itemList);
         
         return true;
     }    

@@ -1,11 +1,9 @@
 import './handlers';
 import './commands';
 import './events';
-import { Loot } from './Loot/Loot';
-import { Colshape } from './entities/Colshape';
-import { CreateItemParams, LootSpawn } from '../interfaces';
-import { EItem } from './Item/Item';
-import { DataBodyArmour, DataWeapon } from './Item/interface';
+import './cef';
+import { Loot } from './Loot';
+import { ItemKey, DataClothes } from '../types';
 
 const invAPI = require('@modules/inventory-api');
 
@@ -15,81 +13,64 @@ invAPI.on("itemDefined", (key, name, description) => {
 });
 
 invAPI.on("itemAdded", (player: PlayerMp, key, amount, data) => {
-    player.setVariable('inventory', player._inventory);
+
     console.log(`${player.name} received ${amount}x ${key}.`);
 });
 
 invAPI.on("itemUsed", (player: PlayerMp, invIdx, key, data) => {
-    player.setVariable('inventory', player._inventory);
+
     console.log(`${player.name} used ${key}.`);
 });
 
 invAPI.on("itemRemoved", (player: PlayerMp, invIdx, key, amount, data) => {
-    player.setVariable('inventory', player._inventory);
+
     console.log(`${player.name} lost ${amount}x ${key}.`);
 });
 
 invAPI.on("itemRemovedCompletely", (player: PlayerMp, key, data) => {
-    player.setVariable('inventory', player._inventory);
+
     console.log(`${player.name} no longer has ${key} (${data ? "with data" : "without data"}) in their inventory.`);
 });
 
 invAPI.on("inventoryReplaced", (player: PlayerMp, oldInventory, newInventory) => {
-    player.setVariable('inventory', player._inventory);
+
     console.log(`${player.name} had their inventory replaced. (Old item count: ${oldInventory.length}, new: ${newInventory.length})`);
 });
 
-invAPI.addItem("item_bodyarmor", "Body Armor", "Refills your armor when used.", (player, inventoryIndex, itemKey, data) => {
+invAPI.addItem(ItemKey.ITEM_ARMOR, "Body Armor", "Refills your armor when used.", (player, inventoryIndex, itemKey, data) => {
     player.armour = 100;
     player.outputChatBox("Armor refilled.");
     player.removeItem(inventoryIndex);
 });
 
-invAPI.addItem("item_armour", "Body Armor", "Refills your armor when used.", 
+invAPI.addItem(ItemKey.ITEM_AMMO_SHOTGUN, "Патроны на шотик", "Refills your armor when used.", 
 (player: PlayerMp, inventoryIndex: number, itemKey: string, data: object) => {
     player.armour = 100;
     player.outputChatBox("Armor refilled.");
     player.removeItem(inventoryIndex);
 });
 
-invAPI.addItem("item_weapon_ak47", "AK-47 AMMO", "ammo......", 
+invAPI.addItem(ItemKey.ITEM_WEAPON_AK47, "AK-47 AMMO", "ammo......", 
 (player: PlayerMp, inventoryIndex: number, itemKey: string, data: object) => {
-    player.outputChatBox("Ты подобрал патроны на калаш.");
-
-    console.log('--> data', data);
-
     player.removeItem(inventoryIndex);
 });
 
-// data-object for inventory.
-const dataBodyArmour: DataBodyArmour = {
-    defenceLevel: 40,
-    name: 'Бронежелет',
-    description: 'Бронежелет 3 уровня. Увеличивает ваш армор до 50%',
-    weight: 30,
-    maxStackCount: 1,
-};
-const item_armour = EItem.createItem('item_armour', 1, dataBodyArmour);
+invAPI.addItem(ItemKey.ITEM_CLOTHES_MASK_1, ItemKey.ITEM_CLOTHES_MASK_1, ItemKey.ITEM_CLOTHES_MASK_1, (player: PlayerMp, inventoryIndex: number, itemKey: string, data: DataClothes) => {
+    player.changeClothes(data.componentId, data.drawable, 1, true);
+    player.removeItem(inventoryIndex);
+});
 
-const dataWeapon: DataWeapon = {
-    name: 'Калаш',
-    description: 'AK-47.',
-    weight: 6,
-    clip: 30,
-    maxStackCount: 1,
-};
-const item_weapon_ak47 = EItem.createItem('item_weapon_ak47', 1, dataWeapon);
+const colshape = Loot.createColshape(new mp.Vector3(-1165, 4926, 223));
+const object = Loot.createObject(new mp.Vector3(-1165, 4926, 223));
+const label = Loot.createLabel(new mp.Vector3(-1165, 4926, 223));
+const blip = Loot.createBlip(new mp.Vector3(-1165, 4926, 223));
+const loot = new Loot(colshape, object, label, blip);
 
-/// Создание точки для лута.
-const createItemParams: CreateItemParams = {
-    colshapePosition: new mp.Vector3(-1144, 4909, 220),
-    objectPosition: new mp.Vector3(-1144, 4909, 220),
-    labelPosition: new mp.Vector3(-1144, 4909, 220),
-    range: 3,
-    labelText: LootSpawn.RELOAD, 
-    objectHash: 'gr_prop_gr_offchair_01a',
-};
+const items = [
+    loot.createWeaponItem('Калаш', 'Пусто.', 4, 1, 3),
+    loot.createBodyArmorItem('Броня', 'Пустое описание.', 8, 40, 1, 1),
+    loot.createItem(ItemKey.ITEM_AMMO_SHOTGUN, 'Shotgun Shell', 'Патроны на дробовик', .2, 30, 30000000),
+    loot.createClothesItem(ItemKey.ITEM_CLOTHES_MASK_1, 'Маска', 'Маска..', 1, 1, .2, 30),
+];
 
-const loot = new Loot();
-loot.createLootPoint([item_armour, item_weapon_ak47], createItemParams);
-///
+loot.createLootPoint(items);

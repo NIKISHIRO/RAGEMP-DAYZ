@@ -1,11 +1,11 @@
 import { causesOfDeath } from "../causesOfDeath";
-import { InventoryInfo } from "../interfaces";
-import { Car } from "../car/Car";
+import { Player } from "../player/Player";
 
 export const events = {
     "playerJoin": (player: PlayerMp) => {
-        player.spawn(new mp.Vector3(-1171, 4925, 224));
+        Player.spawnRandomCoords(player);
         console.log(`${player.name}: Зашел на сервер.`);
+        mp.players.broadcast(`!{#666666}${player.name}: Зашел на сервер.`);
     },
     /////////////////////////////////////////////////////////////////
     "playerDeath": (player: PlayerMp, reason: number) => {
@@ -13,7 +13,7 @@ export const events = {
             mp.players.forEach(p => p.notify(`<font color="#00D4FF">${player.name}</font> умер по причине: <font color="#FA00FF">${causesOfDeath[reason]}</font>.`))
         }    
     
-        player.spawn(new mp.Vector3(-1171, 4925, 224));
+        Player.spawnRandomCoords(player);
     },
     /////////////////////////////////////////////////////////////////
     "keypress:G": (player: PlayerMp) => {

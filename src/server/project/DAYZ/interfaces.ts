@@ -1,8 +1,21 @@
-export interface InventoryInfo {
-    maxSlots: number;
+import { Item } from "./types";
+
+export interface NotifyParams {
+    text: string;
+    color?: string;
+}
+
+interface Info {
+    text: string;
+    data?: any;
 }
 
 export interface ReturnInformation {
+    result: boolean;
+    info: Info;
+}
+
+export interface CarReturnInformation {
     result: boolean;
     info: string;
 }
@@ -19,13 +32,3 @@ export interface LootShapeInfo {
     objectId: number;
     blipId: number;
 }
-
-export interface CreateItemParams {
-    colshapePosition: Vector3Mp; 
-    objectPosition: Vector3Mp; 
-    labelPosition: Vector3Mp; 
-    range: number;
-    labelText: string;
-    objectHash: string;
-}
-

@@ -1,5 +1,11 @@
-import { ReturnInformation } from "../interfaces";
-import {VehicleSpawn} from '../db/schema';
+import { Player } from "../player/Player";
+import { Item } from "../types";
+import { VehicleSpawn } from "../db/schema";
+
+interface ReturnInformation {
+    result: boolean;
+    info: string;
+}
 
 export class Car {
     static spawnCar(hash: string, position: Vector3Mp, rotation: Vector3Mp, color: number[], id:string ): VehicleMp {
