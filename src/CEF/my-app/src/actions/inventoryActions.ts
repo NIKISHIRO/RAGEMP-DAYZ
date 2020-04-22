@@ -1,29 +1,26 @@
 import { Item } from "../types";
 import shortid from 'shortid';
-import { SnackbarOrigin } from "@material-ui/core/Snackbar";
 
 export const SET_INVENTORY_ITEMS = 'SET_INVENTORY_ITEMS';
-export const SET_GROUND_ITEMS = 'ITEMS_GROUND_ITEMS';
+export const SET_GROUND_ITEMS = 'SET_GROUND_ITEMS';
 export const SET_INVENTORY_SLOTS = 'SET_INVENTORY_SLOTS';
 export const SET_SNACKBAR = 'SET_SNACKBAR';
 
-export type SnackbarType = {
-    open: boolean;
-    text?: string
-    origin?: SnackbarOrigin;
-}
-
-const setSnackbar = (snackbar: SnackbarType) => {
+const deleteInventoryItemById = (id: number) => {
     return (dispatch, getState) => {
-        if (!snackbar.hasOwnProperty('origin')) {
-            snackbar = { ...snackbar, origin: { horizontal: 'center', vertical: 'bottom' } }
-            console.log('snackbar',snackbar)
+        if (id === -1) {
+            return;
         }
 
-        dispatch({
-            type: SET_SNACKBAR,
-            payload: snackbar,
-        });
+        const { UI } = getState();
+        const { inventory } = UI;
+        const { items: inventoryItems } = inventory;
+        const invItems = [...inventoryItems];
+
+        invItems.splice(id, 1);
+        dispatch(
+            setInventoryItems(invItems)
+        );
     };
 };
 
@@ -38,7 +35,7 @@ const stackItems = (currentItemIndex: number, nextItemIndex: number) => {
         const { UI } = getState();
         const { inventory } = UI;
         const { items } = inventory;
-        const invItems = [...items];        
+        const invItems = [...items];
 
         if (currentItemIndex === -1 || nextItemIndex === -1) {
             return;
@@ -69,8 +66,6 @@ const stackItems = (currentItemIndex: number, nextItemIndex: number) => {
             invItems.splice(nextItemIndex, 1);
         }
 
-
-        
         dispatch({
             type: SET_INVENTORY_ITEMS,
             payload: invItems,
@@ -91,11 +86,12 @@ const setInventoryItems = (items: Item[]) => {
     return (dispatch, getState) => {
         dispatch({
             type: SET_INVENTORY_ITEMS,
-            payload: [...items],
+            payload: items,
         })
     };
 };
 
+// Разделяет предметы в инвентаре.
 const splitInventoryItemByIndex = (itemId: number, splitCount: number) => {
     return (dispatch, getState) => {
         if (!Number.isInteger(splitCount)) {
@@ -124,8 +120,7 @@ const splitInventoryItemByIndex = (itemId: number, splitCount: number) => {
         newItem.amount = splitCount;
     
         invItems.splice(itemId, 1);
-        invItems.unshift(findItem, newItem);
-    
+        invItems.splice(itemId, 0, findItem, newItem);
         dispatch(setInventoryItems(invItems));
     };
 };
@@ -134,17 +129,17 @@ const setGroundItems = (items: Item[]) => {
     return (dispatch, getState) => {
         dispatch({
             type: SET_GROUND_ITEMS,
-            payload: [...items],
+            payload: items,
         })
     };
 };
 
 export {
-    setSnackbar,
     addInventoryItem,
     setInventoryItems,
     setInventorySlots,
     setGroundItems,
     stackItems,
     splitInventoryItemByIndex,
+    deleteInventoryItemById,
 }

@@ -6,10 +6,6 @@
 ::-webkit-scrollbar-corner { background-color: #999;}
 ::-webkit-resizer { background-color: #666;}
 
-* {
-    outline: none;
-}
-
 .UI {
     height: 100%;
     width: 100%;
@@ -26,7 +22,7 @@
 }
 
 .inventory {
-    width: 40rem;
+    /* width: 50rem; */
     height: 40rem;
     background-color: rgba(0, 0, 0, .7);
 }
@@ -35,6 +31,7 @@
     padding: 5px 10px;
     background-color: rgba(0, 0, 0, .8);
     box-shadow: 0 0 black;
+    font-family: 'etelka-bold';
 }
 
 .inventory-middle {
@@ -42,9 +39,10 @@
 }
 
 .clothes-item {
-    width: 3.75rem;
-    height: 3.75rem;
-    margin: 5px;
+    position: relative;
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: .3rem;
     background-color: rgba(192, 192, 192, .2);
     display: inline-block;
 }
@@ -53,23 +51,20 @@
     background-color: rgba(192, 192, 192, .1);
 }
 
+.clothes-item-icon {
+    position: absolute;
+    font-size: 3.3rem;
+    opacity: .3;
+}
+
 .inventory-body-items {
     display: flex;
     justify-content: space-between;
     height: 27.6rem;
 }
 
-.inventory-body-left {
-    margin: 5px;
-    width: 45%;
-    padding: 2px;
-    /* border: 1px solid rgba(255, 255, 255, .2); */
-}
-
-.inventory-body-right {
-    margin: 5px;
-    width: 55%;
-    /* border: 1px solid rgba(255, 255, 255, .2); */
+.inventory-body {
+    width: 20.5rem;
     padding: 2px;
 }
 
@@ -79,14 +74,15 @@
     position: relative;
     background-color: rgba(192, 192, 192, .2);
     margin-bottom: 2px;
-    padding: 5px;
+    padding: 0 5px;
+    height: 3.5rem;
 }
 
 .isStack {
     position: absolute;
     left: 50%;
     bottom: -1.2rem;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     display: block;
     z-index: 10;
 }
@@ -104,7 +100,7 @@
 }
 
 .inventory-cell-image img {
-    height: 100%;
+    max-height: 2.5rem;
 }
 
 .inventory-cell-name {
@@ -114,10 +110,17 @@
 
 .inventory-cell-amount {
     position: absolute;
-    top: .1rem;
+    top: .2rem;
     right: .3rem;
     display: inline-block;
     text-align: right;
+}
+
+.inventory-cell-weight {
+    position: absolute;
+    bottom: .1rem;
+    right: .3rem;
+    font-size: .8rem;
 }
 
 /* items-ground */
