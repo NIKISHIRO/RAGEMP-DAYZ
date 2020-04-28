@@ -6,7 +6,7 @@ import { enqueueSnackbar } from '../../actions/notificationActions';
 import { NotifyOrigin } from '../../actions/notificationActions';
 import { DisplayUI } from '../../reducers/UIReducer';
 import { setDisplayUI } from '../../actions/displayUIActions';
-import { setHealthHudsData } from '../../actions/hudsDataActions';
+import { setHudsData, HudType } from '../../actions/hudsDataActions';
 
 function PlayerEvents(dispatch, getState) {
     emitter.on('goToClear', () => {
@@ -15,6 +15,10 @@ function PlayerEvents(dispatch, getState) {
 
     emitter.on('goToUIItems', () => {
         dispatch(push('/UIItems'));
+    });
+
+    emitter.on('goToEntityCreate', () => {
+        dispatch(push('/goToEntityCreate'));
     });
 
     emitter.on('eventSetGroundItems', (items: Item[]) => {
@@ -49,7 +53,25 @@ function PlayerEvents(dispatch, getState) {
 
     emitter.on('cef_set_health_huds', (health: number) => {
         dispatch(
-            setHealthHudsData(health)
+            setHudsData(HudType.SET_HEALTH_HUDS, health)
+        );
+    });
+
+    emitter.on('cef_set_armor_huds', (armor: number) => {
+        dispatch(
+            setHudsData(HudType.SET_ARMOR_HUDS, armor)
+        );
+    });
+
+    emitter.on('cef_set_hunger_huds', (hunger: number) => {
+        dispatch(
+            setHudsData(HudType.SET_HUNGER_HUDS, hunger)
+        );
+    });
+
+    emitter.on('cef_set_dehydration_huds', (hunger: number) => {
+        dispatch(
+            setHudsData(HudType.SET_DEHYDRATION_HUDS, hunger)
         );
     });
 }

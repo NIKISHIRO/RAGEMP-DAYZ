@@ -5,6 +5,7 @@ export const SET_INVENTORY_ITEMS = 'SET_INVENTORY_ITEMS';
 export const SET_GROUND_ITEMS = 'SET_GROUND_ITEMS';
 export const SET_INVENTORY_SLOTS = 'SET_INVENTORY_SLOTS';
 export const SET_SNACKBAR = 'SET_SNACKBAR';
+export const GET_INVENTORY_ITEMS = 'GET_INVENTORY_ITEMS';
 
 const deleteInventoryItemById = (id: number) => {
     return (dispatch, getState) => {

@@ -1,9 +1,10 @@
-import { SET_INVENTORY_ITEMS, SET_GROUND_ITEMS, SET_INVENTORY_SLOTS, SET_SNACKBAR } from "../actions/inventoryActions";
+import { SET_INVENTORY_ITEMS, SET_GROUND_ITEMS, SET_INVENTORY_SLOTS, SET_SNACKBAR, GET_INVENTORY_ITEMS } from "../actions/inventoryActions";
 import shortid from 'shortid';
 import { Item, ItemKey, ItemType } from "../types";
 import { ENQUEUE_SNACKBAR, CLOSE_SNACKBAR, REMOVE_SNACKBAR } from "../actions/notificationActions";
 import { SET_DISPLAY_UI } from "../actions/displayUIActions";
-import { SET_HEALTH_HUDS } from "../actions/hudsDataActions";
+import { HudType } from "../actions/hudsDataActions";
+import { SET_LOOT_CREATE_DATA } from "../actions/lootCreateDataActions";
 
 export type DisplayUI = {
     huds: boolean;
@@ -11,9 +12,22 @@ export type DisplayUI = {
 
 export type HudsData = {
     health: number;
+    armor: number;
+    hunger: number;
+    dehydration: number;
+    temperature: number;
+    isBleeding: boolean;
+};
+
+export type LootCreateData = {
+    objectId: number;
+    objectHash: string;
+    position: number[];
+    rotation: number[];
 };
 
 export type UIState = {
+    lootCreate: LootCreateData;
     hudsData: HudsData;
     displayUI: DisplayUI;
     notifications: any[];
@@ -44,7 +58,7 @@ const getData = (): Item[] => [
 
     {
         key: ItemKey.ITEM_AMMO_SHOTGUN, 
-        amount: 40,
+        amount: 25,
         data: {
             type: ItemType.COMMON,
             name: 'SHOTGUN SHELL',
@@ -89,8 +103,19 @@ const getData = (): Item[] => [
 ];
 
 const initialState: UIState = {
+    lootCreate: {
+        objectId: 0,
+        objectHash: 'w_sg_pumpshotgun',
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+    },
     hudsData: {
-        health: 25,
+        health: 100,
+        armor: 100,
+        hunger: 100,
+        dehydration: 100,
+        temperature: 100,
+        isBleeding: true,
     },
     displayUI: {
         huds: true,
@@ -107,7 +132,49 @@ const initialState: UIState = {
 
 function UIReducer(state: UIState = initialState, action: any) {
     switch (action.type) {
-        case SET_HEALTH_HUDS:
+        case SET_LOOT_CREATE_DATA:
+            return {
+                ...state,
+                lootCreate: { ...action.payload },
+            };
+
+        case HudType.SET_TEMPERATURE_HUDS:
+            return {
+                ...state,
+                hudsData: {
+                    ...state.hudsData,
+                    temperature: action.payload,
+                },
+            };
+
+        case HudType.SET_HUNGER_HUDS:
+            return {
+                ...state,
+                hudsData: {
+                    ...state.hudsData,
+                    hunger: action.payload,
+                },
+            };
+
+        case HudType.SET_DEHYDRATION_HUDS:
+            return {
+                ...state,
+                hudsData: {
+                    ...state.hudsData,
+                    dehydration: action.payload,
+                },
+            };
+
+        case HudType.SET_ARMOR_HUDS:
+            return {
+                ...state,
+                hudsData: {
+                    ...state.hudsData,
+                    armor: action.payload,
+                },
+            };
+
+        case HudType.SET_HEALTH_HUDS:
             return {
                 ...state,
                 hudsData: {

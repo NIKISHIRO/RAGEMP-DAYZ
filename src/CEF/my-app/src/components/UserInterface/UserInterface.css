@@ -14,7 +14,6 @@
 .UI-container {
     height: 100%;
     width: 100%;
-    /* background: url('../../assets/bgc.png'); */
     display: flex;
     justify-content: center;
     align-items: center;

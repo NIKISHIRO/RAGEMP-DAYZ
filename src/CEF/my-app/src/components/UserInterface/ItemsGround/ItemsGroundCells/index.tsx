@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 import { setInventoryItems } from "../../../../actions/inventoryActions";
 import { UIState } from "../../../../reducers/UIReducer";
 import { InventoryCell } from "../../Inventory/InventoryCell";
-
-const shortString = '__groundCells';
+const groundShortString = 'groundCells__';
+const inventoryShortString = 'inventoryCells_';
 
 const getListStyle = (isDraggingOver) => ({
     overflowY: 'auto',
@@ -25,7 +25,7 @@ const ItemsGroundCells = (props) => {
         <Droppable droppableId="droppable">
         {(provided, snapshot) => (
             <div { ...provided.droppableProps } ref={ provided.innerRef } style={ getListStyle(snapshot.isDraggingOver) }>
-                { items.map((item, idx) => <InventoryCell key={ `${shortString}${item.data.shortid}` } id={ idx } item={ item } />) }
+                { items.map((item, idx) => <InventoryCell key={ `${groundShortString}${item.data.shortid}` } id={ idx } item={ item } />) }
                 { provided.placeholder }
             </div>
         )}

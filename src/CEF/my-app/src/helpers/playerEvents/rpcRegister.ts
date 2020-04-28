@@ -10,7 +10,7 @@ type NotifyData = {
     origin: NotifyOrigin;
 };
 
-const rpcRegister = () => {
+function rpcRegister() {
     console.log(' ---> rpcRegister');
     
     register('cef_set_ground_items', (items: Item[]) => {
@@ -29,13 +29,25 @@ const rpcRegister = () => {
     register('cef_set_display_ui', (displayUI: DisplayUI) => {
         emitter.emit('cef_set_display_ui', displayUI);
     });
-
+    
     register('cef_change_UI', (name: string) => {
         emitter.emit('change_UI', name);
     });
 
     register('cef_set_health_huds', (health: number) => {
         emitter.emit('cef_set_health_huds', health);
+    });
+
+    register('cef_set_armor_huds', (armor: number) => {
+        emitter.emit('cef_set_armor_huds', armor);
+    });
+
+    register('cef_set_hunger_huds', (hunger: number) => {
+        emitter.emit('cef_set_hunger_huds', hunger);
+    });
+
+    register('cef_set_dehydration_huds', (hunger: number) => {
+        emitter.emit('cef_set_dehydration_huds', hunger);
     });
 };
 

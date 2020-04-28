@@ -11,6 +11,8 @@ import { SelectedGroundItem } from "../SelectedGroundItem";
 import { takeInventoryItemToServer } from "../../../../helpers/playerEvents/rpcCall";
 import { enqueueSnackbar, NotifyVariant } from "../../../../actions/notificationActions";
 import shortid from 'shortid';
+const groundShortString = 'groundCells__';
+const inventoryShortString = 'inventoryCells_';
 
 type Props = {
     item: Item;
@@ -84,26 +86,25 @@ const InventoryCell = (props: Props) => {
         // Клик правой кнопкой мыши на элемент на земле.
         else if (!isInventory && event.button === 2) {
             console.log('Взять макс число предметов.', item);
+            
             // Взять максимальное количество предметов по клику на правую кнопку мыши.
             const serverResult = await takeInventoryItemToServer(item.data.serverId, item.amount);
 
             // Если удалить предмет с земли получилось - положить его в инвентарь.
             if (serverResult.result) {
                 const idx = groundItems.findIndex(i => i === item);
-
+                
                 if (idx === -1) {
                     return;
                 }
 
-                const inventoryItems = [...items];
                 const groundItem = JSON.parse(JSON.stringify(groundItems[idx]));
                 const inventoryItem = JSON.parse(JSON.stringify(groundItem));
-                
+                inventoryItem.data.shortid = `${inventoryShortString}${shortid.generate()}`;
                 inventoryItem.amount = item.amount;
-                inventoryItems.unshift(inventoryItem);
+                items.unshift(inventoryItem);
                 groundItems.splice(idx, 1);
-
-                dispatch(setInventoryItems(inventoryItems));
+                dispatch(setInventoryItems(items));
                 dispatch(setGroundItems(groundItems));
             }
 

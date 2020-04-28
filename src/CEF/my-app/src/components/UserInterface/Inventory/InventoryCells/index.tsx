@@ -3,7 +3,7 @@ import { Droppable } from "react-beautiful-dnd";
 import { InventoryCell } from "../InventoryCell";
 import { useSelector } from "react-redux";
 import { UIState } from '../../../../reducers/UIReducer';
-const shortString = '__inventoryCells';
+const shortString = 'inventoryCells_';
 
 const getListStyle = (isDraggingOver) => {
     console.log('isDraggingOver', isDraggingOver);
