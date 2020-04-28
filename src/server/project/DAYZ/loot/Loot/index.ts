@@ -1,9 +1,17 @@
 import { Colshape } from "../entities/Colshape";
 import { LootSpawn, LootShapeInfo } from "../../interfaces";
-import shortid from 'shortid';
 import { EItem } from "../Item/Item";
-import { Item, ItemType, ItemKey, ItemData, ClothesData, WeaponData, BodyArmourData, SpawnData, ItemRarity } from "../../types";
+import { Item, SpawnLootData, ItemRarity } from "../../types";
 import { itemInfo } from "../Item/itemInfo";
+import { postgres } from "../../db/config";
+import { randomInteger } from '../../helpers';
+
+type RarityItems = {
+    [ItemRarity.RARITY_1]: Item[];
+    [ItemRarity.RARITY_2]: Item[];
+    [ItemRarity.RARITY_3]: Item[];
+    [ItemRarity.RARITY_4]: Item[];
+}
 
 class Loot {
     static range: number = 2;
@@ -31,14 +39,6 @@ class Loot {
         this.colshape.setVariable('playersIdsOnColshape', []);
     }
     
-    public getColshape(): ColshapeMp {
-        return this.colshape;
-    }
-
-    public getLabel(): TextLabelMp {
-        return this.label;
-    }
-
     static createColshape(pos: Vector3Mp) {
         pos.z -= .9;
         return mp.colshapes.newSphere(pos.x, pos.y, pos.z, this.range);
@@ -60,28 +60,28 @@ class Loot {
         });
     }
 
-    // СОЗДАЕТ ТОЧКУ ДЛЯ ЛУТА.
-    public createLootPoint(items: Item[]) {
-        const instColshape = new Colshape(this.colshape);
-        instColshape.addItem([...items]);
+    // Добавляет новую точку с лутом.
+    static async addSpawnLootPoint(items: ItemRarity[], position: number[]) {
+        await postgres<SpawnLootData>('spawnlootinfo').insert({items, position});
+        mp.players.broadcast(`Добавлена точка с лутом: ${items.join(', ')} | ${position.join(', ')}`);
     }
 
-    static spawnLoot(spawnData: SpawnData[]) {
-        // получить случайное число (min-max).
-        function randomInteger(min, max) {
-            let rand = min - 0.5 + Math.random() * (max - min + 1);
-            return Math.round(rand);
+    // Возвращает все созданные точки с лутом.
+    static async getSpawnLootPoints(): Promise<SpawnLootData[]> {
+        return postgres<SpawnLootData>('spawnlootinfo').select('*');
+    }
+
+    // Разделение предметов на редкость. 
+    static getRarItems(): RarityItems {
+        return {
+            [ItemRarity.RARITY_1]: itemInfo.map(i => i.data.rarity === ItemRarity.RARITY_1 ? i : null).filter(i => i !== null) as Item[],
+            [ItemRarity.RARITY_2]: itemInfo.map(i => i.data.rarity === ItemRarity.RARITY_2 ? i : null).filter(i => i !== null) as Item[],
+            [ItemRarity.RARITY_3]: itemInfo.map(i => i.data.rarity === ItemRarity.RARITY_3 ? i : null).filter(i => i !== null) as Item[],
+            [ItemRarity.RARITY_4]: itemInfo.map(i => i.data.rarity === ItemRarity.RARITY_4 ? i : null).filter(i => i !== null) as Item[],
         }
-    
-        // Разделение предметов на редкость.
-        function getRarItems() {
-            return {
-                [ItemRarity.RARITY_1]: itemInfo.map(i => i.data.rarity === ItemRarity.RARITY_1 ? i : null).filter(i => i !== null),
-                [ItemRarity.RARITY_2]: itemInfo.map(i => i.data.rarity === ItemRarity.RARITY_2 ? i : null).filter(i => i !== null),
-                [ItemRarity.RARITY_3]: itemInfo.map(i => i.data.rarity === ItemRarity.RARITY_3 ? i : null).filter(i => i !== null),
-                [ItemRarity.RARITY_4]: itemInfo.map(i => i.data.rarity === ItemRarity.RARITY_4 ? i : null).filter(i => i !== null),
-            }
-        }
+    }
+
+    static spawnLoot(spawnData: SpawnLootData[]) {
     
         spawnData.forEach(spawn => { 
             // Создание сущностей в одной точке.
@@ -92,8 +92,9 @@ class Loot {
             const blip = Loot.createBlip(vector3);
             const loot = new Loot(colshape, object, label, blip);
     
-            const items: any = spawn.items.map((item) => {
-                const itemsByRarity = getRarItems()[item.rarity];
+            // Массив рандомных предметов, разделенные по редкости.
+            const items: any = spawn.items.map(rarity => {
+                const itemsByRarity = Loot.getRarItems()[rarity];
     
                 // Заполняет массив рандомными предметами.
                 for (let i = 0; i < spawn.items.length; i++) {
@@ -101,19 +102,31 @@ class Loot {
                     const randomItem = itemsByRarity[randomIndex];
         
                     if (randomItem) {
-                        console.log(`[LOOT CREATE]: ${randomItem.key} | ${randomItem.amount} | ${item.rarity}`.yellow);
+                        console.log(`[LOOT CREATE]: ${randomItem.key} | ${randomItem.amount} | ${rarity}`.yellow);
                         return EItem.createItem(randomItem.key, randomItem.amount, randomItem.data);
                     }
     
                     return null;
                 }
-            });
-    
-            const lootItems = items.filter(i => i !== null);
-            loot.createLootPoint(lootItems);
+            })
+            .filter(i => i !== null);
+            loot.createLootPoints(items);
         });
     }
+
+    public getColshape(): ColshapeMp {
+        return this.colshape;
+    }
+
+    public getLabel(): TextLabelMp {
+        return this.label;
+    }
     
+    // СОЗДАЕТ ТОЧКУ ДЛЯ ЛУТА.
+    public createLootPoints(items: Item[]) {
+        const instColshape = new Colshape(this.colshape);
+        instColshape.addItem([...items]);
+    }
 }
 
 export {

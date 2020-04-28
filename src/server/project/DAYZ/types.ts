@@ -30,12 +30,9 @@ export enum ItemRarity {
     RARITY_4 = 'RARITY_4',
 };
 
-type SpawnType = {
-    rarity: ItemRarity;
-}
-
-export type SpawnData = {
-    items: SpawnType[];
+export type SpawnLootData = {
+    id: number;
+    items: ItemRarity[];
     position: number[];
 };
 
