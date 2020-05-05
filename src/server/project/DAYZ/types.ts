@@ -31,10 +31,32 @@ export enum ItemRarity {
 };
 
 export type SpawnLootData = {
-    id: number;
     items: ItemRarity[];
     position: number[];
+    playerId: number;
 };
+
+export type PlayerData = {
+    login: string;
+    passwordHash: string;
+    email: string;
+    gender: 'male' | 'female';
+    hunger: number;
+    dehydration: number;
+    health: number;
+    armor: number;
+    admin: number;
+    position: { x: number; y: number; z: number };
+    inventory: Item[];
+    face: CharacterFace[];
+    headblend: any[],
+    clothes: number[];
+}
+
+export type CharacterFace = {
+    index: number; 
+    feature: number;
+}
 
 /* ОПИСАНИЕ ПРЕДМЕТА */
 export type ItemData = {
