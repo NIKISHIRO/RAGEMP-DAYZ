@@ -3,44 +3,49 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import './styles.css';
 import { ItemsUI } from "../UserInterface";
 import { emitter } from "../../helpers/emitter";
-import { connect } from "react-redux";
-import { State } from "../../reducers";
-import { UIState } from "../../reducers/UIReducer";
 import { NotifyComp } from "./NotifyComp";
+import { useSelector, useDispatch } from "react-redux";
+import { DisplayUI } from "../../reducers/UIReducer";
+import { Huds } from "./Huds";
+import { push } from "connected-react-router";
+import { AdminInterface } from "../AdminInterface";
 
 function RoutesComp() {
+  const dispatch = useDispatch();
+
   return (
-    <div style={{position: 'absolute', top: 0, left: 0}}>
+    <div style={{position: 'absolute', top: '50px', left: 0}}>
       <div>
         <ul>
-          <li><a href='#' onClick={ () => emitter.emit('goToHome') }>Главная</a></li>
-          <li><a href='#' onClick={ () => emitter.emit('goToUi') }>Items UI</a></li>
+          <li><a href='#' onClick={ () => dispatch(push('/clear')) }>clear</a></li>
+          <li><a href='#' onClick={ () => dispatch(push('/UIItems')) }>Items UI</a></li>
+          <li><a href='#' onClick={ () => dispatch(push('/AdminInterface')) }>Admin Interface</a></li>
         </ul>
       </div>
     </div>
   );
 };
 
-function Home() {
-  console.log('history');
-
-  return (
-    <div>Всем привет, я хоме.</div>
-  );
+function Clear() {
+  return (<div>clear</div>);
 }
 
-
 function App() {
-  emitter.emit('goToUi');
+  const store = useSelector((store: any) => store || []);
+  const displayUI: DisplayUI = store.UI.displayUI;
+  const { huds } = displayUI;
 
   return (
     <div className="app">
-      <RoutesComp />
+      { huds && <Huds />}
+      <NotifyComp />      
       <Switch>
-        <Route exact path='/' component={ Home } />
-        <Route path='/ui' component={ ItemsUI } />
+        <Route exact path='/clear' component={ Clear } />
+        <Route exact path='/UIItems' component={ ItemsUI } />
+        <Route exact path='/AdminInterface' component={ AdminInterface } />
+        <Redirect to="/AdminInterface" />
       </Switch>
-      <NotifyComp />
+      <RoutesComp />
     </div>
   );
 }

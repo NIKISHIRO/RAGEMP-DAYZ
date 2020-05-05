@@ -3,13 +3,6 @@ import { Item } from "../types";
 import { CEF } from "../CEF";
 
 mp.events.add({
-    'playerJoin': (player: PlayerMp) => {
-        // itemPoints - массив ИД-ов колшипов.
-        player.setVariable('itemPoints', []);
-        // Макс. вес для предметов игрока.
-        player.setVariable('invMaxWeight', 100000000);
-    },
-
     'playerEnterColshape': (player: PlayerMp, shape: ColshapeMp) => {
         player.outputChatBox('event -> playerEnterColshape');
 

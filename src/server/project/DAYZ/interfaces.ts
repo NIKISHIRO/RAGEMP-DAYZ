@@ -22,8 +22,9 @@ export interface CarReturnInformation {
 
 // Тип созданного колшипа.
 export enum LootSpawn {
-    RELOAD = 'RELOAD',
-    DROPPED = 'DROPPED',
+    SPAWN = 'SPAWN',
+    DROPPED = 'DROPPED', // Предмет выкинули.
+    LOOTBOX = 'LOOTBOX', // Палатка.
 }
 
 export interface LootShapeInfo {

@@ -4,7 +4,7 @@ import '@modules/SyncedPlayerComponent'; // Синхронизация комп�
 
 import {events} from './events';
 mp.events.add(events);
+import './events/rpcRegister';
 import './commands';
 import './loot';
-import './car'; 
 import './db';
