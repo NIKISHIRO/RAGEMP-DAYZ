@@ -1,32 +1,32 @@
 {
-  "compilerOptions": {
-      "module": "commonjs",
-      "alwaysStrict": true,
-      "noImplicitAny": false,
-      "noEmitOnError": false,
-      "removeComments": true,
-      "sourceMap": false,
-      "target": "es2017",
-      "outDir": "./out",
-      "rootDir": "./src",
-      "allowJs": true,
-      "experimentalDecorators": true,
-      "strictPropertyInitialization": false,
-  },
-  "files": [
-    // RAGEMP
-    "./libs/types/rageMp/index.d.ts",
-    "./libs/types/rageMp/vehicle_hashes.d.ts",
-    "./libs/types/rageMp/weapon_hashes.d.ts",
-    "./libs/types/rageMp/ped_hashes.d.ts",
-    "./libs/types/rageMp/enums.d.ts",
-    // any
-    "./libs/types/common/globals.d.ts",
-    "./src/rage-rpc/defs.d.ts"
-  ],
-  "include": [
-      "./src",
-      "node_modules"
-  ],
-  "compileOnSave": true
+    "compilerOptions": {
+        "module": "commonjs",
+        "alwaysStrict": true,
+        "noImplicitAny": false,
+        "noEmitOnError": false,
+        "removeComments": true,
+        "sourceMap": false,
+        "target": "es2017",
+        "outDir": "./out",
+        "rootDir": "./src",
+        "allowJs": true,
+        "experimentalDecorators": true,
+        "strictPropertyInitialization": false,
+    },
+    "files": [
+      // RAGEMP
+      "./libs/types/rageMp/index.d.ts",
+      "./libs/types/rageMp/vehicle_hashes.d.ts",
+      "./libs/types/rageMp/weapon_hashes.d.ts",
+      "./libs/types/rageMp/ped_hashes.d.ts",
+      "./libs/types/rageMp/enums.d.ts",
+      // any
+      "./libs/types/common/globals.d.ts",
+      "./src/rage-rpc/defs.d.ts"
+    ],
+    "include": [
+        "./src/**/*",
+        "node_modules"
+    ],
+    "compileOnSave": true
 }

@@ -85,8 +85,9 @@ mp.events.addCommand('carput', (player:PlayerMp,ft: string, index:string, amount
 mp.events.addCommand('cartake', (player:PlayerMp, ft:string, index:string, amount:string) =>{
     if(!ft || !index || !amount) return player.outputChatBox('/cartake index amount')
 
+    const plr = new Player(player)
     let car = Car.arrayCars(player)[0].objCar;
-    const returnInformation: ReturnInformation = player.takeItemCar(car, parseInt(index), parseInt(amount));
+    const returnInformation: CarReturnInformation = plr.takeItemCar(car, parseInt(index), parseInt(amount));
 
     if (returnInformation.result) {
         player.outputChatBox(`!{#97CC24}${returnInformation.info}`);
