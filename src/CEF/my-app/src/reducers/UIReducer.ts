@@ -220,7 +220,7 @@ function UIReducer(state: UIState = initialState, action: any) {
             };
 
         case SET_SNACKBAR:
-            return { ...state, snackbar: {...action.payload} }
+            return { ...state, snackbar: {...action.payload} };
 
         case SET_INVENTORY_ITEMS:
             state.inventory.items = action.payload;

@@ -12,6 +12,10 @@ export async function up(knex: Knex): Promise<any> {
         table.integer('dehydration');
         table.integer('admin').notNullable().defaultTo(0);
         table.specificType('position', 'jsonb');
+        table.specificType('gender', 'varchar(10)');
+        table.specificType('face', 'jsonb[]');
+        table.specificType('headblend', 'jsonb[]');
+        table.specificType('clothes', 'integer[]');
         table.specificType('inventory', 'jsonb[]');
     });
 
@@ -28,10 +32,10 @@ export async function up(knex: Knex): Promise<any> {
         table.text('hash').notNullable();
         table.text('description').notNullable();
         table.specificType('color', 'integer[]').notNullable();
-        table.specificType('defaultposition', 'real[]').notNullable();
-        table.specificType('saveposition', 'real[]').notNullable();
-        table.specificType('rotation', 'real[]').notNullable();
-        table.boolean('isExplode').notNullable().defaultTo(true);
+        table.jsonb('defaultposition').notNullable();
+        table.jsonb('saveposition').notNullable();
+        table.jsonb('rotation').notNullable();
+        table.boolean('isExplode').notNullable().defaultTo(false);
     });
 }
 export async function down(knex: Knex): Promise<any> {

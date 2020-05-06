@@ -1,8 +1,10 @@
 import { serverSetHealth } from "./CallServer";
 import { constants } from "../constants";
+import { Browser } from "../CEF/browser";
 
 class Player {
     private player: PlayerMp;
+
     public hungerDecrementIntervalId: any = null;// Счетчик вычитания здоровья по голоду.
     public checkHungerIntervalId: any = null;// Счетчик вычитания здоровья по голоду.
     public checkDehydrationIntervalId: any = null;
@@ -21,9 +23,13 @@ class Player {
                 lootCreate: {
                     data: [], // для LootCreate класса.
                 }
-            }
+            },
+            character: {
+                gender: null,
+                face: [],
+                eyes: 0, // 0 - 31;
+            },
         };
-
         mp.players.local['customData'] = customData;
 
         this.setHunger(100);

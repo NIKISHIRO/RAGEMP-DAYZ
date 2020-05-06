@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'typeface-roboto';
+import 'rsuite/dist/styles/rsuite-dark.css';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { Root } from './components/Root';
@@ -17,4 +18,4 @@ ReactDOM.render(
 serviceWorker.unregister();
 
 // Регистрация всех RPC события для RAGEMP
-// rpcRegister(); 
+// rpcRegister();

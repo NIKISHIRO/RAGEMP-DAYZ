@@ -1,0 +1,129 @@
+.character {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.character-drawer .rs-drawer-content {
+    background-color: rgba(0, 0, 0, .8) ;
+}
+
+.character-drawer .rs-drawer-header-close {
+    display: none;
+}
+
+.character-content {
+    padding-right: 0.5em;
+}
+
+.character-content-root {
+    border: 1px solid #fff !important;
+    background-color: transparent !important;
+    color: #fff !important;
+    border: 1px dashed #34c3ff !important;
+    margin-bottom: 1rem;
+    padding-right: 0.5rem;
+}
+
+.character-content .MuiExpansionPanelDetails-root {
+    display: block !important;
+}
+
+.character-content-header {
+    font-size: 1.6rem !important;
+    margin: 0 auto !important;
+}
+
+.character-content-root .MuiButtonBase-root:hover {
+    opacity: .5;
+}
+
+.character-heading {
+    bottom: 2rem;
+    left: 40%;
+    width: 40rem;
+    margin: 0 auto;
+    position: absolute;
+}
+
+.character-gender {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.character-gender button {
+    width: 10rem;
+    padding: .5rem;
+    font-size: 1.5rem;
+}
+
+.character-gender button:hover {
+    opacity: .6;
+}
+
+.character-content-inner {
+    overflow: auto;
+}
+
+.character::-webkit-scrollbar { width: 6px; height: 3px;}
+.character::-webkit-scrollbar-button {  background-color: #34c3ff }
+.character::-webkit-scrollbar-track {  background-color: #999;}
+.character::-webkit-scrollbar-track-piece { background-color: #ffffff;}
+.character::-webkit-scrollbar-thumb { height: 1rem; background-color: #34c3ff;}
+.character::-webkit-scrollbar-corner { background-color: #999;}
+.character::-webkit-resizer { background-color: #34c3ff;}
+
+.character-face__item-title {
+    text-align: center;
+    margin: 1rem 0; 
+    font-size: 1.2rem;
+}
+
+.heading-slider {
+    height: 1rem;
+    background-color: rgba(0, 0, 0, .8);
+    border-radius: .5rem;
+}
+.heading-thumb {
+    background-color: #34c3ff;
+    border-radius: 100%;
+    border: 1px dashed #000;
+    height: 2rem;
+    width: 2rem;
+    top: -50%;
+}
+
+.character-reset {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 1.2rem;
+}
+
+.character-reset:hover {
+    opacity: .5;
+}
+
+.character-slider {
+    height: .5rem;
+    background-color: rgba(0, 0, 0, .2);
+    border-radius: .5rem;
+} 
+
+.character-thumb{
+    background-color: #34c3ff;
+    border: 1px dashed #000;
+    border-radius: 100%;
+    height: 1.5rem;
+    width: 1.5rem;
+    top: -100%;
+} 
+
+.character-head-container {
+    text-align: center;
+}
+
+.character-head-container__title {
+    font-size: 1.3rem;
+}

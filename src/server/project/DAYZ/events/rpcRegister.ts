@@ -1,6 +1,7 @@
 import { register } from 'rage-rpc';
-import { Player } from '../player/Player';
+import { Player} from '../player/Player';
 import { CEF } from '../CEF';
+import { Hash } from 'crypto';
 
 type TakeData = {
     serverId: string;
@@ -19,6 +20,17 @@ export type DisplayUI = {
 type DisplayData = {
     name: string;
     bool: boolean;    
+};
+
+type ServerRegister = {
+    login: string;
+    password: string;
+    email: string;
+};
+
+type LoginRegister = {
+    login: string;
+    password: string;
 };
 
 register('server_take_inventory_item', (jsonData: string, info: any) => {
@@ -58,4 +70,22 @@ register('server_set_health', (health: number, info: any) => {
     const player = info.player;
     player.health = health;
     console.log('server_set_health ' + health);
+});
+
+register('server_register', (data: ServerRegister, info: any) => {
+    const player = info.player;
+    const plr = new Player(player);
+    plr.register(data.login, data.email, data.password);
+});
+
+register('server_login', (data: LoginRegister, info: any) => {
+console.log('server_login');
+
+    const player = info.player;
+    const plr = new Player(player);
+    plr.login(data.login, data.password);
+});
+
+register('server_get_ammo', (data:number, info: any) => {
+    console.log(data)
 });

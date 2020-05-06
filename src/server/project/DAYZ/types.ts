@@ -53,6 +53,23 @@ export type PlayerData = {
     clothes: number[];
 }
 
+export type PositionCoords = {
+    x: number;
+    y: number; 
+    z: number;
+}
+
+export type VehicleData = {
+    id:number;
+    hash: string;
+    description: string;
+    color: number[];
+    defaultposition: PositionCoords;
+    saveposition: PositionCoords;
+    rotation: PositionCoords;
+    isExplode: boolean;
+}
+
 export type CharacterFace = {
     index: number; 
     feature: number;

@@ -1,4 +1,4 @@
-const colors = require('colors');
+import colors from 'colors'
 
 export function logger(color: string, ...args: string[]) {
     const text = args.toString;

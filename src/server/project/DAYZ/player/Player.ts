@@ -6,15 +6,24 @@ import { Loot } from "../loot/Loot";
 import { ReturnInformation, LootShapeInfo, CarReturnInformation } from "../interfaces";
 import { Blip } from "../loot/entities/Blip";
 import { EItem } from "../loot/Item/Item";
-import {SPAWNS} from '../playerSpawns';
-import { Item } from "../types";
-import { CEF } from "../CEF";
+import { SPAWNS } from '../playerSpawns';
+import { Item, PlayerData, CharacterFace } from "../types";
+import { CEF, CharacterClientData } from "../CEF";
 import { DisplayUI } from "../events/rpcRegister";
+import { postgres } from "../db";
+import bcrypt from 'bcryptjs';
 
 type ServerResult = {
     result: boolean;
     text: string;
-}
+};
+
+export type CharacterPlayerData = {
+    gender: 'male' | 'female';
+    face: CharacterFace[];
+    headArray: any[];
+    clothes: number[];
+};
 
 export class Player {
     public player: PlayerMp;
@@ -23,24 +32,254 @@ export class Player {
         this.player = player;
     }
 
-    public variablesInit() {
+    public init() {
+        this.player.setVariable('isAuth', false);
+        this.player.setVariable('admin', 0);
         this.player.setVariable('itemPoints', []); // itemPoints - массив ИД-ов колшипов.
-        this.player.setVariable('invMaxWeight', 12); // Макс. вес для предметов игрока.
-        this.player.setVariable('displayUI', {
-            huds: true,
+        this.player.setVariable('invMaxWeight', 10); // Макс. вес для предметов игрока.
+        this.player.setVariable('displayUI', { // Отображение частей в CEF.
+            huds: false,
+        });
+
+        // Дефолтная одежда.
+        const male: number[] = [
+            0, // masks
+            0, // hair
+            0, // torsos
+            14, // legs
+            0, // bags
+            5, // shoes
+            0, // accessories
+            0, // Undershirts 
+            0, // body armor
+            0, // decals
+            44, // tops
+        ];
+        const female: number[] = [
+            0, // masks
+            0, // hair
+            15, // torsos
+            56, // legs
+            0, // bags
+            16, // shoes
+            0, // accessories
+            0, // Undershirts 
+            0, // body armor
+            0, // decals
+            0, // tops
+        ];
+        
+        this.player.setVariable('clothes', {male, female});        
+    }
+
+    // Инициал. всех переменных игрока.
+    public async registerInit() {
+        this.init();
+        this.player.health = 100;
+        this.player.armour = 0;
+        this.player.setVariable('isAuth', true);
+
+        // Спавнит игрока на рандом.коорд.
+        this.spawnRandomCoords();
+    }
+
+    // Инициал. св-в после авторизации.
+    public async authInit(data: PlayerData) {
+        const cef = new CEF(this.player);
+        let { position: pos, login, health, armor, inventory, admin, hunger, dehydration, face, headblend, gender, clothes } = data;
+
+        if (!face || !headblend || !gender || !clothes) {
+            console.log(`[${this.player.name}]:[authInit - face, headblend, gender, clothes]: один из этих параметров null!`.red);
+            this.player.outputChatBox('!{ff0000}Ошибка установлении кастомизации.');
+        }
+
+        if (!health) {
+            health = 100;
+        }
+        if (!armor) {
+            armor = 0;
+        }
+        if (!hunger) {
+            hunger = 100;
+        }
+        if (!dehydration) {
+            dehydration = 100;
+        }
+
+        let position = new mp.Vector3(111, 111, 111);
+        if (pos) {
+            position = new mp.Vector3(pos.x, pos.y, pos.z)
+        }
+
+        this.init();
+        this.player.name = login;
+        this.player.position = position;
+        this.player.health = health;
+        this.player.armour = armor;
+        this.player.setInventory(inventory);
+        this.player.setVariable('isAuth', true);
+        this.player.setVariable('admin', admin);
+        this.player.setVariable('hunger', hunger);
+        this.player.setVariable('dehydration', dehydration);
+
+        // Отправляет на клиент инфу что игрок аутентифицирован.
+        cef.clientAfterAuthInit();
+
+        await this.characterInit({ face, headArray: headblend, gender, clothes });
+    }
+
+    // ИНИЦИАЛИЗАЦИЯ ВНЕШНОСТИ ПЕРСОНАЖА.
+    public async characterInit(data: CharacterPlayerData) {
+        console.log('characterInit -> ', data);
+        
+        const { clothes, headArray, gender } = data;
+        const model = gender === 'male' ? mp.joaat('mp_m_freemode_01') : mp.joaat("mp_f_freemode_01");
+
+        // Установка модели.
+        this.player.model = model;
+
+        // Установка лица перса.
+        data.face.forEach(i => {
+            this.player.setFaceFeature(i.index, i.feature);
+        });
+
+        // Установка парам. головы.
+        this.player.setHeadBlend(
+            headArray[0],
+            headArray[1],
+            headArray[2],
+            headArray[3],
+            headArray[4],
+            headArray[5],
+            headArray[6],
+            headArray[7],
+            headArray[8],
+        );
+
+        // Установка одежды.
+        this.player.changeClothes(1, clothes[0], 0, true);
+        this.player.changeClothes(2, clothes[1], 0, true);
+        this.player.changeClothes(3, clothes[2], 0, true);
+        this.player.changeClothes(4, clothes[3], 0, true);
+        this.player.changeClothes(5, clothes[4], 0, true);
+        this.player.changeClothes(6, clothes[5], 0, true);
+        this.player.changeClothes(7, clothes[6], 0, true);
+        this.player.changeClothes(8, clothes[7], 0, true);
+        this.player.changeClothes(9, clothes[8], 0, true);
+        this.player.changeClothes(10, clothes[9], 0, true);
+        this.player.changeClothes(11, clothes[10], 0, true);
+    }
+
+    public async logout() {
+        await postgres<PlayerData>('players')
+            .where({
+                login: this.player.name,
+            })
+            .update({
+                health: parseInt(String(this.player.health)),
+                armor: parseInt(String(this.player.armour)),
+                admin: this.player.getVariable('admin'),
+                inventory: this.player.getInventory(),
+                position: this.player.position,
+                hunger: 3,
+                dehydration: 2,
+            });
+    }
+    // Регистрация игрока в бд.
+    public async register(login: string, email: string, password: string) {
+        const cef = new CEF(this.player);
+        const loginRegular = /^[a-z0-9_-]{3,16}$/;
+        const passwordRegular = /[0-9a-zA-Z!@#$%^&*]{6,30}/;
+        const emailRegular = /.+@.+\..+/i;
+
+        if (!loginRegular.test(login)) {
+            return this.player.outputChatBox('!{#ff0000}Логин должен быть от 3 до 16 символов. Латинские буквы, цифры.');
+        }
+
+        if (!emailRegular.test(email)) {
+            return this.player.outputChatBox('Не корректное мыло.')
+        }
+
+        if (!passwordRegular.test(password)) {
+            return this.player.outputChatBox('!{ff0000}Пароль должен содержать мин. 1 заглавную букву, цифру, специальный символ. Размер 6 до 30 символов.')
+        }
+
+        const findUser = await postgres<PlayerData>('players').select('*').where({login});
+
+        if (findUser.length) {
+            return this.player.outputChatBox('!{ff0000}Игрок с таким логином уже зарегистрирован!')
+        }
+
+        bcrypt.hash(password, 10, async (err, hash) => {
+            if (err) {
+                return console.log(err);
+            }
+
+            // Получаем данные с клиента о кастомизации.
+            const { hair, face, gender, headArray }: CharacterClientData = await cef.clientCharacterReady(); // Получает данные с клиента после кастомизации и регистрации.
+            const clothes = this.player.getVariable('clothes')[gender]; // Берет данные скина по гендеру.
+            
+            // Установка волос с клиента.
+            clothes[1] = hair;
+
+            // Добавление пользователя в БД.
+            await postgres<PlayerData>('players').insert({ 
+                login: login,
+                email: email,
+                passwordHash: hash,
+                face: face,
+                gender: gender,
+                headblend: headArray,
+                clothes: clothes,
+                inventory: [],
+            });
+
+            this.player.outputChatBox('!{00ff00}Вы успешно зарегистрировались!');
+            
+            // Установка персонажа после регистрации.
+            const characterPlayerData: CharacterPlayerData = { gender, face, headArray, clothes };
+            this.characterInit(characterPlayerData);
+            
+            // Инициал. св-в после регистра.
+            this.registerInit();
+
+            // Отправляет на клиент инфу что игрок аутентифицирован.
+            cef.clientAfterAuthInit();
         });
     }
 
-    // Нужен для отображения или убирания каких то кнкретных частей в верстке (НАПРИМЕР HUDS).
+    // Авторизация игрока в бд.
+    public async login(login: string, password: string) {
+        const data = await postgres<PlayerData>('players').select('*').where({ login });
+
+        console.log(data);
+
+        if (!data.length) {
+            return this.player.outputChatBox('!{#ff0000}Не верный логин/пароль!');
+        }
+
+        const plrData = data[0];
+        const compareResult = await bcrypt.compare(password, plrData.passwordHash)
+        
+        if (compareResult) {
+            this.player.outputChatBox(`!{#00ff00} Вы успешно авторизовались!`);
+            this.authInit(plrData);
+        } else {
+            return this.player.outputChatBox('!{#ff0000}Не верный логин/пароль!');
+        }
+    }
+
+    // Нужен для отображения каких-либо частей в верстке (НАПРИМЕР HUDS).
     public setDisplayUI(name: string, bool: boolean) {
         const cef = new CEF(this.player);
         const displayUI: DisplayUI = this.player.getVariable('displayUI');
+
         if (displayUI.hasOwnProperty(name)) {
             displayUI[name] = bool;
             this.player.setVariable('displayUI', displayUI);
             cef.setDisplayUI(displayUI);
         } else {
-            console.log(`setDisplayUI: ${name} - нет такого интерфейса!`);
+            mp.players.broadcast(`setDisplayUI: ${name} - нет такого интерфейса!`);
         }
     }
 
@@ -53,9 +292,6 @@ export class Player {
     public useItemByServerId(serverId: string): ServerResult {
         const inventory = [...this.player.getInventory()];
         const idx = inventory.findIndex(i => i.data.serverId === serverId);
-        
-        // console.log('inventory', inventory);
-        console.log('useItemByServerId', serverId, idx);
         
         if (idx !== -1) {
             const result = this.player.useItem(idx);
