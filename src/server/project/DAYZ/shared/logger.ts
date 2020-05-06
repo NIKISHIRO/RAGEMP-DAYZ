@@ -10,5 +10,4 @@ export function logger(color: string, ...args: string[]) {
     if (color === 'green') {
         console.log(colors.green(args.join(' | ')));
     }
-
 }

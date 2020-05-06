@@ -1,10 +1,10 @@
 import { Colshape } from "../entities/Colshape";
 import { LootSpawn, LootShapeInfo } from "../../interfaces";
 import { EItem } from "../Item/Item";
-import { Item, SpawnLootData, ItemRarity } from "../../types";
+import { Item, SpawnLootData, ItemRarity, Color} from "../../types";
 import { itemInfo } from "../Item/itemInfo";
-import { postgres } from "../../db/config";
 import { randomInteger } from '../../helpers';
+import { postgres } from "project/DAYZ/db";
 
 type RarityItems = {
     [ItemRarity.RARITY_1]: Item[];

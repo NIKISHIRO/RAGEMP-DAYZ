@@ -1,7 +1,6 @@
 
 import { Car } from "./Car";
 import { Player } from '../player/Player.js';
-import {VehicleSpawn} from '../db/schema';
 import { CarReturnInformation } from "../interfaces";
 
 
@@ -52,17 +51,19 @@ mp.events.addCommand('explode', (player:PlayerMp) => {
 })
 
 mp.events.addCommand('sc', () => {
-    VehicleSpawn.find({},'_id color hash description defaultPosition savePosition rotation isExplode', function(err, veh){
-        if(err) console.log(err)
-        veh.forEach(car => {
-            if(car.isExplode) return
-            Car.spawnCar(car.hash, 
-                new mp.Vector3(car.savePosition.x, car.savePosition.y, car.savePosition.z),
-                new mp.Vector3(car.rotation.x, car.rotation.y, car.rotation.z),
-                [car.color[0],car.color[1],car.color[2],car.color[3],car.color[4],car.color[5]],
-                car._id);
-        });
-    })
+    // VehicleSpawn.find({},'_id color hash description defaultPosition savePosition rotation isExplode', function(err, veh){
+    //     if(err) console.log(err)
+    //     veh.forEach(car => {
+    //         if(!car.isExplode){
+    //             return;
+    //         };
+    //         Car.spawnCar(car.hash, 
+    //             new mp.Vector3(car.savePosition.x, car.savePosition.y, car.savePosition.z),
+    //             new mp.Vector3(car.rotation.x, car.rotation.y, car.rotation.z),
+    //             [car.color[0],car.color[1],car.color[2],car.color[3],car.color[4],car.color[5]],
+    //             car._id);
+    //     });
+    // })
 });
 
 mp.events.addCommand('carput', (player:PlayerMp,ft: string, index:string, amount:string) =>{

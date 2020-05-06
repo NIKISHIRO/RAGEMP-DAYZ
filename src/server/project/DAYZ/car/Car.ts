@@ -1,6 +1,6 @@
 import { Player } from "../player/Player";
 import { Item } from "../types";
-import { VehicleSpawn } from "../db/schema";
+import { postgres } from "../db";
 
 interface ReturnInformation {
     result: boolean;
@@ -46,36 +46,36 @@ export class Car {
         })
         if(!description) description = "Машина была добавлена без описания";
 
-        let car = new VehicleSpawn({
-            hash: hash,
-            description: description,
-            color: [color[0], color[1], color[2], color[3], color[4], color[5]],
-            defaultPosition: {
-                x: position.x,
-                y: position.y,
-                z: position.z,
-            },
-            savePosition: {
-                x: position.x,
-                y: position.y,
-                z: position.z,
-            },
-            rotation: {
-                x: rotation.x,
-                y: rotation.y,
-                z: rotation.z,
-            }
-        });
-        Car.VehicleCreate(car)
+        // let car = new VehicleSpawn({
+        //     hash: hash,
+        //     description: description,
+        //     color: [color[0], color[1], color[2], color[3], color[4], color[5]],
+        //     defaultPosition: {
+        //         x: position.x,
+        //         y: position.y,
+        //         z: position.z,
+        //     },
+        //     savePosition: {
+        //         x: position.x,
+        //         y: position.y,
+        //         z: position.z,
+        //     },
+        //     rotation: {
+        //         x: rotation.x,
+        //         y: rotation.y,
+        //         z: rotation.z,
+        //     }
+        // });
+        // Car.VehicleCreate(car)
         returnInformation.info = 'Машина успешно сохранена';
         returnInformation.result = true;
         return returnInformation
     }
 
     static updateCar(id: string, position: Vector3Mp,rotation: Vector3Mp, color: number[]) {
-        VehicleSpawn.updateMany({'_id': id}, {$set: {savePosition: position, rotation: rotation, color: color}})
-        .then(result => console.log(result))
-        .catch(err => console.log(err))
+        // VehicleSpawn.updateMany({'_id': id}, {$set: {savePosition: position, rotation: rotation, color: color}})
+        // .then(result => console.log(result))
+        // .catch(err => console.log(err))
     }
 
     // Функция возвращает рандомное число.
@@ -112,8 +112,6 @@ export class Car {
         return vehicles;
     };
     static async VehicleCreate(vehicle) {
-        await vehicle.save()
-            .catch(error => console.log(error)) // Если ошибка есть, он её выведет.
-            .then(result => console.log(result)) // Выводит результат, если ошибок нет.
+        // postgres.returning()
     }
 }
