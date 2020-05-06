@@ -38,6 +38,7 @@ mp.keys.bind(0x47, true, function() {
     mp.players.local.taskReloadWeapon(true);
     mp.gui.chat.push(`ammo: ${mp.players.local.getAmmoInClip(mp.players.local.weapon)}`);
     mp.gui.chat.push(`getWeaponTintCount: ${mp.game.weapon.getWeaponTintCount(mp.players.local.weapon)}`);
+    this.player.setHeadOverlay(8, 0, 100, 0, 0);
 });
 
 mp.keys.bind(0x76, false, function () { // F7 key

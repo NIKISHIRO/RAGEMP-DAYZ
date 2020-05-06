@@ -1,5 +1,6 @@
 import { register } from "../../rage-rpc";
 import { lootCreate } from "../loot/LootCreate";
+import { playerInstance } from "./Player";
 
 // Отправка данных об созданных объектах в CEF.
 register('client_set_loot_create', (objectHash: string) => {
@@ -22,4 +23,18 @@ register('client_set_loot_create_rotation', (pos: number[]) => {
 register('client_set_loot_create_hash', (hash: string) => {
     mp.gui.chat.push('client_set_loot_create_hash');
     return lootCreate.changeModel(hash);
+});
+
+register('client_get_any_prop', (name: 'hunger' | 'dehydration' | 'temperature') => {
+    switch (name) {
+        case 'hunger': {
+            return playerInstance.getHunger();
+        }
+        case 'dehydration': {
+            return playerInstance.getDehydration();
+        }
+        default: {
+            return false;
+        }
+    }
 });

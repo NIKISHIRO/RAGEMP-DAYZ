@@ -139,8 +139,9 @@ class Character {
     };
 
     public setHeadOverlay(overlayId: number, index: number) {
-        mp.gui.chat.push(JSON.stringify({overlayId, index}));
-        this.player.setHeadOverlay(overlayId, index, 1, 1, 1);
+        if (overlayId === 4 && index === 0 || overlayId === 5 && index === 0) index = 255;
+        this.player.setHeadOverlay(overlayId, index, 100, 0, 0);
+        this.player.customData.character.headOverlay[overlayId] = index;
     }
 
     public setHairColor(id: number) {
@@ -258,14 +259,15 @@ class Character {
         this.setEyeColor(0);
 
         // Сброс headOverlay.
-        headOverlay.forEach(i => {
-            this.setHeadOverlay(i, headOverlay[i]);
-        })
+        headOverlay.forEach((i, id) => {
+            this.setHeadOverlay(id, 255);
+        });
 
         // Сброс лица.
         defaultCharacter.face.forEach(face => {
             this.player.setFaceFeature(face.index, face.feature);
         });
+
         // Сброс внешности.
         this.player.setHeadBlendData(
             characterHead.mother,
@@ -304,9 +306,11 @@ class Character {
         ];
 
         const headOverlay = character.headOverlay;
+        const eyesColor = character.eyes;
+
         const hair = this.player.customData.character.hair[this.player.customData.character.gender];
 
-        return { gender, face, headArray, hair, headOverlay };
+        return { gender, face, headArray, hair, headOverlay, eyesColor };
     }
 }
 
@@ -314,8 +318,9 @@ type CharacterData = {
     gender: 'male' | 'female';
     face: { index: number; feature: number; }[];
     headArray: any[]; // headblend.
-    headOverlay: any;
+    headOverlay: number[];
     hair: number;
+    eyesColor: number;
 };
 
 const character = new Character(mp.players.local);

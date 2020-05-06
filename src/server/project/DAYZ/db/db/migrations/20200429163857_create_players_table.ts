@@ -6,17 +6,19 @@ export async function up(knex: Knex): Promise<any> {
         table.text('login').notNullable();
         table.text('passwordHash').notNullable();
         table.text('email').notNullable();
-        table.integer('health');
-        table.integer('armor');
-        table.integer('hunger');
-        table.integer('dehydration');
         table.integer('admin').notNullable().defaultTo(0);
+        table.integer('health').defaultTo(100);
+        table.integer('armor').defaultTo(100);
+        table.integer('hunger').defaultTo(100);
+        table.integer('dehydration').defaultTo(100);
+        table.integer('eyescolor').defaultTo(0);
         table.specificType('position', 'jsonb');
-        table.specificType('gender', 'varchar(10)');
+        table.specificType('gender', 'varchar(10)').defaultTo('male');
         table.specificType('face', 'jsonb[]');
         table.specificType('headblend', 'jsonb[]');
         table.specificType('clothes', 'integer[]');
         table.specificType('inventory', 'jsonb[]');
+        table.specificType('headoverlay', 'integer[]');
     });
 
     await knex.schema.createTable('spawnlootinfo', (table) => {

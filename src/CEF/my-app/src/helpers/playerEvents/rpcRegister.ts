@@ -49,6 +49,10 @@ function rpcRegister() {
     register('cef_set_dehydration_huds', (hunger: number) => {
         emitter.emit('cef_set_dehydration_huds', hunger);
     });
+
+    register('cef_set_inventory_weight', (weight: number) => {
+        emitter.emit('cef_set_inventory_weight', weight);
+    });
 };
 
 export {

@@ -52,8 +52,8 @@ function App() {
         <Route exact path='/auth' component={ Auth } />
         <Route exact path='/character' component={ Character } />
         <Route exact path='/StartMenu' component={ StartMenu } />
-        <Redirect to="/StartMenu" />
       </Switch>
+      <Redirect to="/StartMenu" />
       {/* <RoutesComp /> */}
     </div>
   );

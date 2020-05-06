@@ -1,4 +1,5 @@
 import { ClothesData, WeaponData, ItemData } from "../types";
+import { Player } from "../player/Player";
 
 function armorHandler(player, inventoryIndex, itemKey, data) {
     player.armour = 70;
@@ -21,6 +22,9 @@ function weaponAK47Handler(player: PlayerMp, inventoryIndex: number, itemKey: st
 function clothesHandler(player: PlayerMp, inventoryIndex: number, itemKey: string, data: ClothesData) {
     player.changeClothes(data.componentId, data.drawable, 1, true);
         
+    const plr = new Player(player);
+    plr.addInventorySlots(data.addSlots);
+
     data.isDelete && player.removeItem(inventoryIndex);
 }
 

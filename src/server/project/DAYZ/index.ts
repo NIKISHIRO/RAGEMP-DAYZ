@@ -8,3 +8,4 @@ import './events/rpcRegister';
 import './commands';
 import './loot';
 import './db';
+import 'colors';

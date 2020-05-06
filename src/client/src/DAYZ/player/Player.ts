@@ -13,9 +13,9 @@ class Player {
     constructor(player: PlayerMp) {
         this.player = player;
     }
-    
+
     // Инициализация всех дефолтных св-в.
-    public init() {        
+    public init() {
         const customData = {
             hunger: 100,
             dehydration: 0,

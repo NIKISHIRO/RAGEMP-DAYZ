@@ -1,11 +1,11 @@
 import { causesOfDeath } from "../causesOfDeath";
 import { Player } from "../player/Player";
-import { CEF } from "../CEF";
+import { CallRPC } from "../CallRPC";
 
 export const events = {
     "playerJoin": (player: PlayerMp) => {
         const plr = new Player(player);
-        const cef = new CEF(player);
+        const cef = new CallRPC(player);
 
         console.log(`${player.name}: Зашел на сервер.`);
         mp.players.broadcast(`!{#666666}${player.name}: Зашел на сервер.`);
