@@ -4,6 +4,15 @@ export type Item = {
     data: ItemData | BodyArmourData | WeaponData | ClothesData;
 };
 
+export type CharacterClientData = {
+    gender: 'male' | 'female';
+    face: { index: number; feature: number; }[];
+    headArray: any[]; // headblend.
+    headOverlay: number[];
+    hair: number;
+    eyesColor: number;
+};
+
 /* ОПИСАНИЕ ПРЕДМЕТА */
 export enum ItemType {
     WEAPON = 'WEAPON',
@@ -51,6 +60,8 @@ export type PlayerData = {
     face: CharacterFace[];
     headblend: any[],
     clothes: number[];
+    headoverlay: number[];
+    eyescolor: number;
 }
 
 export type PositionCoords = {

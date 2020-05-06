@@ -1,16 +1,9 @@
-import { Item } from "../types";
+import { Item, CharacterClientData } from "../types";
 import { callBrowsers, callClient } from 'rage-rpc';
 import { DisplayUI } from "../events/rpcRegister";
 
-export type CharacterClientData = {
-    gender: 'male' | 'female';
-    face: { index: number; feature: number; }[];
-    headArray: any[];
-    hair: number;
-};
-
 // Класс через который происходит отправка данных в другие сущности(CLIENT, CEF).
-class CEF {
+class CallRPC {
     private player: PlayerMp;
 
     constructor(player: PlayerMp) {
@@ -50,11 +43,22 @@ class CEF {
         callClient(this.player, 'client_before_auth_init');
     }
 
+<<<<<<< HEAD:src/server/project/DAYZ/CEF/index.ts
     public async clientGetAmmoInClip() {
         return await callClient(this.player, 'client_get_ammo_in_clip');
+=======
+    // GET HUNGER, DEHYDRATION, TEMPERATURE ...
+    public clientGetAnyProp(name: 'hunger' | 'dehydration' | 'temperature'): Promise<number | false> {
+        return callClient(this.player, 'client_get_any_prop', name);
+    }
+
+    // Устанавливает в CEF кол-во макс.веса в рюкзаке.
+    public cefSetInventoryWeight(weight: number): Promise<any> {
+        return callBrowsers(this.player, 'cef_set_inventory_weight', weight);
+>>>>>>> Loot:src/server/project/DAYZ/CallRPC/index.ts
     }
 }
 
 export {
-    CEF,
+    CallRPC,
 }

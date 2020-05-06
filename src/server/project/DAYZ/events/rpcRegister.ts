@@ -1,6 +1,6 @@
 import { register } from 'rage-rpc';
-import { Player} from '../player/Player';
-import { CEF } from '../CEF';
+import { Player } from '../player/Player';
+import { CallRPC } from '../CallRPC';
 import { Hash } from 'crypto';
 
 type TakeData = {
@@ -56,7 +56,7 @@ register('server_set_display', (jsonData: string, info: any) => {
 
 register('server_change_UI', (name: string, info: any) => {
     const player = info.player;
-    const cef = new CEF(player);
+    const cef = new CallRPC(player);
     cef.changeUI(name);
 });
 
@@ -79,7 +79,6 @@ register('server_register', (data: ServerRegister, info: any) => {
 });
 
 register('server_login', (data: LoginRegister, info: any) => {
-console.log('server_login');
 
     const player = info.player;
     const plr = new Player(player);

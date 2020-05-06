@@ -1,5 +1,4 @@
 import { Player } from '../player/Player';
-import { ReturnInformation } from '../interfaces';
 import { Item } from '../types';
 
 // Выводит инвентарь игрока.
@@ -40,54 +39,6 @@ mp.events.addCommand('items', (player: PlayerMp, ft: string) => {
         player.outputChatBox(`!{#20db63}-> [${idx}]: ID - ${shapeId}`);
     });
     player.outputChatBox(`!{#20db63}---------------------------`);
-});
-
-mp.events.addCommand('take', (player: PlayerMp, ft: string, srcCellId: string, srcItemId: string, srcAmount: string) => {
-    const plr = new Player(player);
-    
-    if (!ft) {
-        player.outputChatBox('/take [ИД ячейки] - содержимое ячейки.');
-        player.outputChatBox('/take [ИД ячейки] [ИД предмета] [Кол-во]- получить предмет ячейки.');
-        return;
-    }
-
-    const cellId: number = parseInt(srcCellId);
-    const itemId: number = parseInt(srcItemId);
-    const amount: number = parseInt(srcAmount);
-
-    const itemList = plr.getItemListByIndex(cellId);
-
-    console.log('itemList', itemList);
-
-    if (!itemList) {
-        player.outputChatBox(`Такой ячейки нету!`);
-    } else {
-        if (!itemList.length) {
-            player.outputChatBox('!{#BC3C00}Это пустая ячейка!');
-            return;
-        }
-        
-        // Если не передан 2 аргумент, вывести содержимое ячейки.
-        if (!itemId && !Number.isInteger(itemId)) {
-            player.outputChatBox('!{#97CC24}Предметы в этой ячейке:');
-
-            itemList.forEach((item: Item, idx: number) => {
-                player.outputChatBox(`!{#97CC24}[${idx}] ${item.key} | ${item.amount} |`);
-            });
-        }
-    }
-
-    // Если игрок передал 2 аргумент.
-    if (Number.isInteger(itemId)) {
-        const returnInformation: ReturnInformation = plr.takeColshapeItem(cellId, itemId, amount);
-        player.outputChatBox(returnInformation.info.text);
-
-        // Если игрок получил предмет.
-        const takenItem: Item = returnInformation.info.data.takenItem;
-        if (takenItem) {
-            console.log('returnInformation', returnInformation);
-        }
-    }
 });
 
 mp.events.addCommand('weight', (player: PlayerMp, ft: string, id: string, amount: string, cellId: string) => {

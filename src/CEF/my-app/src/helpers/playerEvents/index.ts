@@ -25,10 +25,6 @@ function PlayerEvents(dispatch, getState) {
         dispatch(setGroundItems(items));
     });
 
-    emitter.on('eventSetInventorySlots', (slots: number) => {
-        dispatch(setInventorySlots(slots));
-    });
-
     emitter.on('setNotify', (msg: string, variant: string, origin: NotifyOrigin) => {
         dispatch(enqueueSnackbar({
             message: msg,
@@ -72,6 +68,12 @@ function PlayerEvents(dispatch, getState) {
     emitter.on('cef_set_dehydration_huds', (hunger: number) => {
         dispatch(
             setHudsData(HudType.SET_DEHYDRATION_HUDS, hunger)
+        );
+    });
+
+    emitter.on('cef_set_inventory_weight', (weight: number) => {
+        dispatch(
+            setInventorySlots(weight)
         );
     });
 }
