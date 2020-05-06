@@ -1,7 +1,7 @@
-import { ItemType, ItemRarity, SpawnData } from "../../types";
+import { ItemType, ItemRarity, SpawnLootData } from "../../types";
 
 // Предметы с указанным типом и редкостью, которые будут добавлены на коорд. указанных в position.
-const spawnDataArray: SpawnData[] = [
+const spawnDataArray: SpawnLootData[] = [
     {
         items: [
             ItemRarity.RARITY_1,

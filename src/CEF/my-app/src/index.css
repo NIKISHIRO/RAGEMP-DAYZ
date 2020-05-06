@@ -29,6 +29,8 @@ body {
   font-family: 'etelka-light';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  overflow: hidden;
 }
 
 code {

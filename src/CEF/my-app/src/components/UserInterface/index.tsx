@@ -120,17 +120,19 @@ function ItemsUI(props) {
                     dispatch(setInventoryItems(result.droppable1));
                 }
 
-                enqueueSnackbar({
-                    message: serverResult.text,
-                    options: {
-                        key: new Date().getTime() + Math.random(),
-                        variant: serverResult.result ? NotifyVariant.DEFAULT : NotifyVariant.ERROR,
-                        anchorOrigin: {
-                            horizontal: 'center',
-                            vertical: 'bottom',
+                dispatch(
+                    enqueueSnackbar({
+                        message: serverResult.text,
+                        options: {
+                            key: new Date().getTime() + Math.random(),
+                            variant: serverResult.result ? NotifyVariant.DEFAULT : NotifyVariant.ERROR,
+                            anchorOrigin: {
+                                horizontal: 'center',
+                                vertical: 'bottom',
+                            },
                         },
-                    },
-                }); 
+                    })
+                )
             }
         }
     };

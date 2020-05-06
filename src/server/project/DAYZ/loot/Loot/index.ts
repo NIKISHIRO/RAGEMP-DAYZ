@@ -3,7 +3,7 @@ import { LootSpawn, LootShapeInfo } from "../../interfaces";
 import { EItem } from "../Item/Item";
 import { Item, SpawnLootData, ItemRarity } from "../../types";
 import { itemInfo } from "../Item/itemInfo";
-import { postgres } from "../../db/config";
+import { postgres } from "../../db";
 import { randomInteger } from '../../helpers';
 
 type RarityItems = {
@@ -66,9 +66,13 @@ class Loot {
         mp.players.broadcast(`Добавлена точка с лутом: ${items.join(', ')} | ${position.join(', ')}`);
     }
 
-    // Возвращает все созданные точки с лутом.
-    static async getSpawnLootPoints(): Promise<SpawnLootData[]> {
-        return postgres<SpawnLootData>('spawnlootinfo').select('*');
+    // Возвращает все созданные точки с лутом, либо false.
+    static async getSpawnLootPoints(): Promise<SpawnLootData[] | false> {        
+        if (await postgres.schema.hasTable('spawnlootinfo')) {
+            return postgres<SpawnLootData>('spawnlootinfo').select('*');
+        } 
+        
+        return false;
     }
 
     // Разделение предметов на редкость. 
@@ -82,7 +86,6 @@ class Loot {
     }
 
     static spawnLoot(spawnData: SpawnLootData[]) {
-    
         spawnData.forEach(spawn => { 
             // Создание сущностей в одной точке.
             const vector3 = new mp.Vector3(spawn.position[0], spawn.position[1], spawn.position[2]);

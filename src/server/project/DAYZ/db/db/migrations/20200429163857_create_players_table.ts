@@ -12,6 +12,10 @@ export async function up(knex: Knex): Promise<any> {
         table.integer('dehydration');
         table.integer('admin').notNullable().defaultTo(0);
         table.specificType('position', 'jsonb');
+        table.specificType('gender', 'varchar(10)');
+        table.specificType('face', 'jsonb[]');
+        table.specificType('headblend', 'jsonb[]');
+        table.specificType('clothes', 'integer[]');
         table.specificType('inventory', 'jsonb[]');
     });
 

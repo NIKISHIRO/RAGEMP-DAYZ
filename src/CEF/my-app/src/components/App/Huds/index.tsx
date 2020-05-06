@@ -40,9 +40,8 @@ function Huds(props) {
             <EatHud hunger={ hunger } />
             <DehydrationHud dehydration={ dehydration } />
             <TemperatureHud temperature={ temperature } />
-            temperature
 
-            <button onClick={ () => dispatch(setHudsData(HudType.SET_HEALTH_HUDS, health - 5)) }>-</button>
+            {/* <button onClick={ () => dispatch(setHudsData(HudType.SET_HEALTH_HUDS, health - 5)) }>-</button>
             <button onClick={ () => dispatch(setHudsData(HudType.SET_HEALTH_HUDS, health + 5)) }>+</button>
 
             <button onClick={ () => dispatch(setHudsData(HudType.SET_ARMOR_HUDS, armor - 5)) }>-</button>
@@ -55,7 +54,7 @@ function Huds(props) {
             <button onClick={ () => dispatch(setHudsData(HudType.SET_DEHYDRATION_HUDS, dehydration + 5)) }>+</button>
 
             <button onClick={ () => dispatch(setHudsData(HudType.SET_TEMPERATURE_HUDS, temperature - 5)) }>-</button>
-            <button onClick={ () => dispatch(setHudsData(HudType.SET_TEMPERATURE_HUDS, temperature + 5)) }>+</button>
+            <button onClick={ () => dispatch(setHudsData(HudType.SET_TEMPERATURE_HUDS, temperature + 5)) }>+</button> */}
         </div>
     );
 }
