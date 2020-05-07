@@ -30,7 +30,8 @@ class CallRPC {
 
     // Отправляет на клиент инфу что игрока зарегался или авторизовался.
     public clientAfterAuthInit() {
-        callClient(this.player, 'client_after_auth_init');
+        callClient(this.player, 'client_after_auth_init')
+        .catch(e => console.log('client_after_auth_init -> e', e))
     }
 
     // Отправляет на клиент инфу, что юзер зарегался и получает.
@@ -43,10 +44,6 @@ class CallRPC {
         callClient(this.player, 'client_before_auth_init');
     }
 
-<<<<<<< HEAD:src/server/project/DAYZ/CEF/index.ts
-    public async clientGetAmmoInClip() {
-        return await callClient(this.player, 'client_get_ammo_in_clip');
-=======
     // GET HUNGER, DEHYDRATION, TEMPERATURE ...
     public clientGetAnyProp(name: 'hunger' | 'dehydration' | 'temperature'): Promise<number | false> {
         return callClient(this.player, 'client_get_any_prop', name);
@@ -55,7 +52,6 @@ class CallRPC {
     // Устанавливает в CEF кол-во макс.веса в рюкзаке.
     public cefSetInventoryWeight(weight: number): Promise<any> {
         return callBrowsers(this.player, 'cef_set_inventory_weight', weight);
->>>>>>> Loot:src/server/project/DAYZ/CallRPC/index.ts
     }
 }
 

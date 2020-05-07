@@ -27,9 +27,9 @@ import './DAYZ/character/events';
 import './DAYZ/login';
 import './DAYZ/login/events';
 
-import './dayz/weapon';
-import './dayz/weapon/events';
-import './dayz/weapon/keypress';
+import './DAYZ/weapon';
+import './DAYZ/weapon/events';
+import './DAYZ/weapon/keypress';
 
 mp.keys.bind(0x0D, true, () => {
     mp.gui.chat.push(JSON.stringify(mp.players.local.getVariable('isAuth')));

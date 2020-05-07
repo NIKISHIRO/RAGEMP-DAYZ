@@ -4,7 +4,7 @@ import { EItem } from "../Item/Item";
 import { Item, SpawnLootData, ItemRarity} from "../../types";
 import { itemInfo } from "../Item/itemInfo";
 import { randomInteger } from '../../helpers';
-import { postgres } from "project/DAYZ/db";
+import { postgres } from "../../db";
 
 type RarityItems = {
     [ItemRarity.RARITY_1]: Item[];
