@@ -8,7 +8,7 @@ function flyCamera() {
     let pos;
     let flag = false;
     let count = .3;
-
+    
     // X.
     mp.keys.bind(0x58, true, () => {
         flag = !flag;

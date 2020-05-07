@@ -789,6 +789,7 @@ class Character {
                 male: 0,
                 female: 0,
             },
+            hairColor: 0,
             headOverlay: [
                 0,
                 0,
@@ -843,14 +844,16 @@ class Character {
     }
     ;
     setHeadOverlay(overlayId, index) {
-        if (overlayId === 4 && index === 0 || overlayId === 5 && index === 0)
+        if (index === 0)
             index = 255;
         this.player.setHeadOverlay(overlayId, index, 100, 0, 0);
         this.player.customData.character.headOverlay[overlayId] = index;
     }
     setHairColor(id) {
+        const character = this.player.customData.character;
         id = this.range(id, 0, 63);
         this.player.setHairColor(id, 0);
+        character.hairColor = id;
     }
     setHair(dId) {
         this.player.setComponentVariation(2, dId, 0, 0);
@@ -925,6 +928,7 @@ class Character {
         const headOverlay = defaultCharacter.headOverlay;
         this.setGender('male');
         this.setHair(0);
+        this.setHairColor(0);
         this.setEyeColor(0);
         headOverlay.forEach((i, id) => {
             this.setHeadOverlay(id, 255);
@@ -954,8 +958,9 @@ class Character {
         ];
         const headOverlay = character.headOverlay;
         const eyesColor = character.eyes;
-        const hair = this.player.customData.character.hair[this.player.customData.character.gender];
-        return { gender, face, headArray, hair, headOverlay, eyesColor };
+        const hair = character.hair[character.gender];
+        const hairColor = character.hairColor;
+        return { gender, face, headArray, hair, hairColor, headOverlay, eyesColor };
     }
 }
 const character = new Character(mp.players.local);
@@ -992,7 +997,8 @@ __webpack_require__(32);
 __webpack_require__(33);
 __webpack_require__(34);
 mp.keys.bind(0x0D, true, () => {
-    mp.gui.chat.push(JSON.stringify(mp.players.local.getVariable('isAuth')));
+    mp.gui.chat.push('auth: ' + JSON.stringify(mp.players.local.getVariable('isAuth')));
+    mp.gui.chat.push('admin: ' + JSON.stringify(mp.players.local.getVariable('admin')));
 });
 let flag = true;
 mp.keys.bind(0x47, true, function () {
@@ -1814,7 +1820,7 @@ rage_rpc_1.register('client_before_auth_init', () => {
     Character_1.character.faceUpdate();
     Character_1.character.headUpdate();
     const playerDefaultPos = new mp.Vector3(-2167, 5182, 15.5);
-    const cameraDefaultPos = new mp.Vector3(-2167, 5181, 16.1);
+    const cameraDefaultPos = new mp.Vector3(-2167, 5131, 20);
     playerLocal.position = playerDefaultPos;
     Camera_1.PlayerCamera.create('character', cameraDefaultPos, new mp.Vector3(0, 0, 0), 60);
     Camera_1.PlayerCamera.render('character', true);

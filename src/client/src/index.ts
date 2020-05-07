@@ -1,5 +1,6 @@
-// Библиотеки расширяющие функционал.
 import './rage-rpc';
+
+// Библиотеки расширяющие функционал.
 import './syncedPlayerComponent';
 
 // Подключения наших модулей.
@@ -31,13 +32,15 @@ import './DAYZ/weapon/events';
 import './DAYZ/weapon/keypress';
 
 mp.keys.bind(0x0D, true, () => {
-    mp.gui.chat.push(JSON.stringify(mp.players.local.getVariable('isAuth')));
+    mp.gui.chat.push('auth: '+ JSON.stringify(mp.players.local.getVariable('isAuth')));
+    mp.gui.chat.push('admin: '+ JSON.stringify(mp.players.local.getVariable('admin')));
 });
 
 let flag = true;
 mp.keys.bind(0x47, true, function() {
     flag = !flag;
     mp.events.callRemote('keypress:G');
+<<<<<<< HEAD
     mp.players.local.taskReloadWeapon(true);
     mp.gui.chat.push(`ammo: ${mp.players.local.getAmmoInClip(mp.players.local.weapon)}`);
     mp.gui.chat.push(`getWeaponTintCount: ${mp.game.weapon.getWeaponTintCount(mp.players.local.weapon)}`);
@@ -50,3 +53,6 @@ mp.keys.bind(0x76, false, function () { // F7 key
     mp.gui.chat.push(`hash: ${weaponHash}, clipSize: ${clipSize}`);
     mp.players.local.setHeadOverlay(0, 21, 1, 1, 1);
 })
+=======
+});
+>>>>>>> Loot

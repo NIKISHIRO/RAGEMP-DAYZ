@@ -1,5 +1,6 @@
 .auth {
     display: flex;
+    align-items: center;
     justify-content: center;
     position: absolute;
     top: 0;
@@ -16,7 +17,6 @@
     height: 35rem;
     height: 40rem;
     width: 50rem;
-    margin-top: 5rem;
 }
 
 .auth-interface__top {

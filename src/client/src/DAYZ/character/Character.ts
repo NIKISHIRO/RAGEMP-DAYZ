@@ -26,6 +26,7 @@ type CharacterType = {
         female: number;
         male: number;
     };
+    hairColor: number;
 };
 
 export type HeadPropType = {name: 'mother' | 'father' | 'skin' | 'similarity', val: number};
@@ -79,6 +80,7 @@ class Character {
                 male: 0,
                 female: 0,
             },
+            hairColor: 0,
             headOverlay: [
                 0, // 0-23
                 0, // 0-28
@@ -139,14 +141,16 @@ class Character {
     };
 
     public setHeadOverlay(overlayId: number, index: number) {
-        if (overlayId === 4 && index === 0 || overlayId === 5 && index === 0) index = 255;
+        if (index === 0) index = 255;
         this.player.setHeadOverlay(overlayId, index, 100, 0, 0);
         this.player.customData.character.headOverlay[overlayId] = index;
     }
 
     public setHairColor(id: number) {
+        const character: CharacterType = this.player.customData.character;
         id = this.range(id, 0, 63);
         this.player.setHairColor(id, 0);
+        character.hairColor = id;
     }
 
     public setHair(dId: number) {
@@ -254,8 +258,10 @@ class Character {
         const characterHead = defaultCharacter.head;
         const headOverlay = defaultCharacter.headOverlay;
 
+        // Сброс гендера, волос, цвета волос, цвета глаз.
         this.setGender('male');
         this.setHair(0);
+        this.setHairColor(0);
         this.setEyeColor(0);
 
         // Сброс headOverlay.
@@ -281,6 +287,7 @@ class Character {
             characterHead.p9,
             characterHead.p10,
         );
+        
         
         this.player.customData.character = JSON.parse(JSON.stringify(defaultCharacter));
         this.player.customData.character.defaultCharacter = JSON.parse(JSON.stringify(defaultCharacter));
@@ -308,9 +315,10 @@ class Character {
         const headOverlay = character.headOverlay;
         const eyesColor = character.eyes;
 
-        const hair = this.player.customData.character.hair[this.player.customData.character.gender];
+        const hair = character.hair[character.gender];
+        const hairColor = character.hairColor;
 
-        return { gender, face, headArray, hair, headOverlay, eyesColor };
+        return { gender, face, headArray, hair, hairColor, headOverlay, eyesColor };
     }
 }
 
@@ -320,6 +328,7 @@ type CharacterData = {
     headArray: any[]; // headblend.
     headOverlay: number[];
     hair: number;
+    hairColor: number;
     eyesColor: number;
 };
 

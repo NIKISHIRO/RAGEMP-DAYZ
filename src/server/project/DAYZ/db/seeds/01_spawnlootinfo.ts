@@ -1,5 +1,5 @@
 import * as Knex from "knex";
-import { SpawnLootData, ItemRarity } from '../../../types';
+import { SpawnLootData, ItemRarity } from '../../types';
 
 export async function seed(knex: Knex): Promise<any> {
     // Deletes ALL existing entries

@@ -17,5 +17,5 @@ ReactDOM.render(
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
 
-// Регистрация всех RPC события для RAGEMP
+// Регистрация всех RPC события для RAGEMP.
 // rpcRegister();

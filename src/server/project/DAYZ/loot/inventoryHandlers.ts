@@ -23,6 +23,7 @@ function clothesHandler(player: PlayerMp, inventoryIndex: number, itemKey: strin
     player.changeClothes(data.componentId, data.drawable, 1, true);
         
     const plr = new Player(player);
+    console.log('data.addSlots', data.addSlots);
     plr.addInventorySlots(data.addSlots);
 
     data.isDelete && player.removeItem(inventoryIndex);

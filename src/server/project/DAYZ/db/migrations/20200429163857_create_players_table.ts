@@ -12,6 +12,7 @@ export async function up(knex: Knex): Promise<any> {
         table.integer('hunger').defaultTo(100);
         table.integer('dehydration').defaultTo(100);
         table.integer('eyescolor').defaultTo(0);
+        table.integer('haircolor').defaultTo(0);
         table.specificType('position', 'jsonb');
         table.specificType('gender', 'varchar(10)').defaultTo('male');
         table.specificType('face', 'jsonb[]');

@@ -2,6 +2,7 @@ import { register } from 'rage-rpc';
 import { Player } from '../player/Player';
 import { CallRPC } from '../CallRPC';
 import { Hash } from 'crypto';
+import { Auth } from '../auth/Auth';
 
 type TakeData = {
     serverId: string;
@@ -74,17 +75,12 @@ register('server_set_health', (health: number, info: any) => {
 
 register('server_register', (data: ServerRegister, info: any) => {
     const player = info.player;
-    const plr = new Player(player);
-    plr.register(data.login, data.email, data.password);
+    const auth = new Auth(player);
+    auth.register(data.login, data.email, data.password);
 });
 
 register('server_login', (data: LoginRegister, info: any) => {
-
     const player = info.player;
-    const plr = new Player(player);
-    plr.login(data.login, data.password);
-});
-
-register('server_get_ammo', (data:number, info: any) => {
-    console.log(data)
+    const auth = new Auth(player);
+    auth.login(data.login, data.password);
 });

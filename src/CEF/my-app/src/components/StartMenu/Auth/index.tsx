@@ -49,13 +49,13 @@ const inputStyles = (isError) => ({
 
 function Register() {
     const dispatch = useDispatch();
-
+    
     const [state, setState] = useState<RegisterType>({
         login: {
             val: '',
             isValid: false,
             isTouch: false,
-            regular: /^[a-z0-9_-]{3,16}$/,
+            regular: /^[a-zA-Z0-9_-]{3,16}$/,
         },
         password: {
             val: '',

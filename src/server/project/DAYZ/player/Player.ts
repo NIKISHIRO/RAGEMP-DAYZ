@@ -10,7 +10,6 @@ import { Item, PlayerData, CharacterFace, CharacterClientData } from "../types";
 import { CallRPC } from "../CallRPC";
 import { DisplayUI } from "../events/rpcRegister";
 import { postgres } from "../db";
-import bcrypt from 'bcryptjs';
 
 type ServerResult = {
     result: boolean;
@@ -20,17 +19,20 @@ type ServerResult = {
 export type CharacterPlayerData = {
     gender: 'male' | 'female';
     face: CharacterFace[];
-    headBlend: any[];
+    headblend: any[];
     clothes: number[];
-    eyesColor: number;
-    headOverlay: number[];
+    eyescolor: number;
+    headoverlay: number[];
+    haircolor: number;
 };
 
 export class Player {
-    public player: PlayerMp;
+    private player: PlayerMp;
+    private callRpc: CallRPC;
 
     constructor(player: PlayerMp) {
         this.player = player;
+        this.callRpc = new CallRPC(player);
     }
 
     public init() {
@@ -46,28 +48,28 @@ export class Player {
         const male: number[] = [
             0, // masks
             0, // hair
-            0, // torsos
-            14, // legs
+            15, // torsos
+            21, // legs
             0, // bags
             5, // shoes
             0, // accessories
-            0, // Undershirts 
+            15, // Undershirts 
             0, // body armor
             0, // decals
-            44, // tops
+            15, // tops
         ];
         const female: number[] = [
             0, // masks
             0, // hair
             15, // torsos
-            56, // legs
+            16, // legs
             0, // bags
-            16, // shoes
+            5, // shoes
             0, // accessories
-            0, // Undershirts 
+            7, // Undershirts 
             0, // body armor
             0, // decals
-            0, // tops
+            101, // tops
         ];
         
         this.player.setVariable('clothes', {male, female});
@@ -76,20 +78,22 @@ export class Player {
     // Устанавливает слоты и отправляет в CEF.
     public setInventorySlots(slots: number) {
         this.player.setVariable('invMaxWeight', slots); // Макс. вес для предметов игрока.
-        const callRpc = new CallRPC(this.player);
-        callRpc.cefSetInventoryWeight(slots);
+        this.callRpc.cefSetInventoryWeight(slots);
     }
 
     public addInventorySlots(slots: number) {
         let invMaxWeight = this.player.getVariable('invMaxWeight'); // Макс. вес для предметов игрока.
         invMaxWeight += slots;
+        console.log('invMaxWeight',invMaxWeight);
         this.player.setVariable('invMaxWeight', invMaxWeight);
+        this.callRpc.cefSetInventoryWeight(invMaxWeight);
     }
 
     public removeInventorySlots(slots: number) {
         let invMaxWeight = this.player.getVariable('invMaxWeight'); // Макс. вес для предметов игрока.
         invMaxWeight -= slots;
         this.player.setVariable('invMaxWeight', invMaxWeight);
+        this.callRpc.cefSetInventoryWeight(invMaxWeight);
     }
 
     public getClothes(): number[] {
@@ -115,34 +119,15 @@ export class Player {
         this.player.armour = 0;
         this.player.setVariable('isAuth', true);
 
+        await this.callRpc.clientAfterLoginInit();
         // Спавнит игрока на рандом.коорд.
         this.spawnRandomCoords();
     }
 
     // Инициал. св-в после авторизации.
     public async loginInit(data: PlayerData) {
-        const cef = new CallRPC(this.player);
-        let { position: pos, login, health, armor, inventory, admin, hunger, dehydration, face, headblend, gender, clothes, eyescolor, headoverlay } = data;
+        let { position: pos, login, health, armor, inventory, admin, hunger, dehydration, face, headblend, gender, clothes, eyescolor, headoverlay, haircolor } = data;
 
-        if (!face || !headblend || !clothes) {
-            console.log(`[${this.player.name}]:[loginInit - face, headblend, gender, clothes]: один из этих параметров null. Игроку установлены дефолт. св-ва.`.red);
-            this.player.outputChatBox('!{ff0000}Ошибка установлении кастомизации.');
-        }
-        if (!headoverlay) {
-            headoverlay = Array(13).fill(255);
-            headoverlay.forEach((index, overlayId) => {
-                this.player.setHeadOverlay(overlayId, [index, 100, 0, 0]);
-            });
-        }
-        if (!clothes) {
-            clothes = this.player.getVariable('clothes')[data.gender];
-        }
-        if (!face) {
-            face = [];
-        }
-        if (!headblend) {
-            headblend = [];
-        }
         if (!health) {
             health = 100;
         }
@@ -172,23 +157,35 @@ export class Player {
         this.player.setVariable('hunger', hunger);
         this.player.setVariable('dehydration', dehydration);
 
+        await this.callRpc.clientAfterLoginInit();
         // Отправляет на клиент инфу что игрок аутентифицирован.
-        cef.clientAfterAuthInit();
-
-        await this.characterInit({ face, headBlend: headblend, gender, clothes, eyesColor: eyescolor, headOverlay: headoverlay });
+        await this.characterInit({ face, headblend, gender, clothes, eyescolor, headoverlay, haircolor });
     }
 
-    // ИНИЦИАЛИЗАЦИЯ ВНЕШНОСТИ ПЕРСОНАЖА.
+    // ИНИЦИАЛИЗАЦИЯ ВНЕШНОСТИ ПЕРСОНАЖА. ПРИ ОШИБКЕ УСТАНАВЛИВАЕТ ДЕФОЛТ.
     public async characterInit(data: CharacterPlayerData) {
         console.log('characterInit -> ', data);
-        
-        const { clothes, headBlend, gender, eyesColor, headOverlay } = data;
-        const model = gender === 'male' ? mp.joaat('mp_m_freemode_01') : mp.joaat("mp_f_freemode_01");
+        let { face, headblend, gender, clothes, eyescolor, headoverlay, haircolor } = data;
 
+        if (face === null || 
+            headblend === null || 
+            clothes === null || 
+            gender === null || 
+            headoverlay === null || 
+            eyescolor === null ||
+            haircolor === null) {
+            console.log(`[${this.player.name}]:[characterInit]: Ошибка установления внешности.`.red);
+            this.player.outputChatBox('!{ff0000}Ошибка установления кастомизации. Сообщите пожалуйста администрации');
+            return;
+        }
+
+        const model = gender === 'male' ? mp.joaat('mp_m_freemode_01') : mp.joaat("mp_f_freemode_01");
         // Установка модели.
         this.player.model = model;
         // Установка цвета глаз.
-        this.player.eyeColor = eyesColor;
+        this.player.eyeColor = eyescolor;
+        // Установка цвета волос.
+        this.player.setHairColor(haircolor, 0);
 
         // Установка лица перса.
         data.face.forEach(i => {
@@ -197,19 +194,19 @@ export class Player {
 
         // Установка парам. головы.
         this.player.setHeadBlend(
-            headBlend[0],
-            headBlend[1],
-            headBlend[2],
-            headBlend[3],
-            headBlend[4],
-            headBlend[5],
-            headBlend[6],
-            headBlend[7],
-            headBlend[8],
+            headblend[0],
+            headblend[1],
+            headblend[2],
+            headblend[3],
+            headblend[4],
+            headblend[5],
+            headblend[6],
+            headblend[7],
+            headblend[8],
         );
 
-        headOverlay.forEach((index, overlayId) => {
-            if (overlayId === 4 && index === 0 || overlayId === 5 && index === 0) index = 255;
+        headoverlay.forEach((index, overlayId) => {
+            if (index === 0) index = 255;
             this.player.setHeadOverlay(overlayId, [index, 100, 0, 0]);
         });
 
@@ -228,9 +225,8 @@ export class Player {
     }
 
     public async logout() {
-        const cef = new CallRPC(this.player);
-        const hunger = await cef.clientGetAnyProp('hunger');
-        const dehydration = await cef.clientGetAnyProp('dehydration');
+        const hunger = await this.callRpc.clientGetAnyProp('hunger');
+        const dehydration = await this.callRpc.clientGetAnyProp('dehydration');
 
         await postgres<PlayerData>('players')
             .where({
@@ -247,101 +243,14 @@ export class Player {
             });
     }
 
-    // Регистрация игрока в бд.
-    public async register(login: string, email: string, password: string) {
-        const cef = new CallRPC(this.player);
-        const loginRegular = /^[a-z0-9_-]{3,16}$/;
-        const passwordRegular = /[0-9a-zA-Z!@#$%^&*]{6,30}/;
-        const emailRegular = /.+@.+\..+/i;
-
-        if (!loginRegular.test(login)) {
-            return this.player.outputChatBox('!{#ff0000}Логин должен быть от 3 до 16 символов. Латинские буквы, цифры.');
-        }
-
-        if (!emailRegular.test(email)) {
-            return this.player.outputChatBox('Не корректное мыло.')
-        }
-
-        if (!passwordRegular.test(password)) {
-            return this.player.outputChatBox('!{ff0000}Пароль должен содержать мин. 1 заглавную букву, цифру, специальный символ. Размер 6 до 30 символов.')
-        }
-
-        const findUser = await postgres<PlayerData>('players').select('*').where({login});
-
-        if (findUser.length) {
-            return this.player.outputChatBox('!{ff0000}Игрок с таким логином уже зарегистрирован!')
-        }
-
-        bcrypt.hash(password, 10, async (err, hash) => {
-            if (err) {
-                return console.log(err);
-            }
-
-            // Получаем данные с клиента о кастомизации.
-            const { hair, face, gender, headArray, headOverlay, eyesColor }: CharacterClientData = await cef.clientCharacterReady(); // Получает данные с клиента после кастомизации и регистрации.
-            const clothes = this.player.getVariable('clothes')[gender]; // Берет данные скина по гендеру.
-            
-            // Установка волос с клиента.
-            clothes[1] = hair;
-
-            // Добавление пользователя в БД.
-            await postgres<PlayerData>('players').insert({ 
-                login: login,
-                email: email,
-                passwordHash: hash,
-                face: face,
-                gender: gender,
-                headblend: headArray,
-                clothes: clothes,
-                headoverlay: headOverlay,
-                eyescolor: eyesColor,
-                inventory: [],
-            });
-
-            this.player.outputChatBox('!{00ff00}Вы успешно зарегистрировались!');
-            
-            // Установка персонажа после регистрации.
-            const characterPlayerData: CharacterPlayerData = { gender, face, headBlend: headArray, clothes, eyesColor, headOverlay };
-            this.characterInit(characterPlayerData);
-            
-            // Инициал. св-в после регистра.
-            this.registerInit();
-
-            // Отправляет на клиент инфу что игрок аутентифицирован.
-            cef.clientAfterAuthInit();
-        });
-    }
-
-    // Авторизация игрока в бд.
-    public async login(login: string, password: string) {
-        const data = await postgres<PlayerData>('players').select('*').where({ login });
-
-        console.log(data);
-
-        if (!data.length) {
-            return this.player.outputChatBox('!{#ff0000}Не верный логин/пароль!');
-        }
-
-        const plrData = data[0];
-        const compareResult = await bcrypt.compare(password, plrData.passwordHash)
-        
-        if (compareResult) {
-            this.player.outputChatBox(`!{#00ff00} Вы успешно авторизовались!`);
-            this.loginInit(plrData);
-        } else {
-            return this.player.outputChatBox('!{#ff0000}Не верный логин/пароль!');
-        }
-    }
-
     // Нужен для отображения каких-либо частей в верстке (НАПРИМЕР HUDS).
     public setDisplayUI(name: string, bool: boolean) {
-        const cef = new CallRPC(this.player);
         const displayUI: DisplayUI = this.player.getVariable('displayUI');
 
         if (displayUI.hasOwnProperty(name)) {
             displayUI[name] = bool;
             this.player.setVariable('displayUI', displayUI);
-            cef.setDisplayUI(displayUI);
+            this.callRpc.setDisplayUI(displayUI);
         } else {
             mp.players.broadcast(`setDisplayUI: ${name} - нет такого интерфейса!`);
         }
@@ -427,14 +336,13 @@ export class Player {
             playersIdsOnColshape.forEach(plrId => {
                 const player = mp.players.at(plrId);
                 const plr = new Player(player);
-                const cef = new CallRPC(player);
                 
                 if (!itemList.length) {
                     plr.removeItemPoint(findShape.id);
                 }
 
                 const items = plr.getItemsPlayerAround();
-                cef.cefSetGroundItems(items);
+                this.callRpc.cefSetGroundItems(items);
             });
 
             // Если список предметов после манипуляция стал пуст - удалить кошлип и все сущности связанные с ним.
