@@ -12,11 +12,11 @@ module.exports = {
       port: 5432,
     },
     migrations: {
-      directory: './db/migrations',
+      directory: './migrations',
       tableName: "knex_migrations",
     },
     seeds: {
-      directory: './db/seeds'
+      directory: './seeds'
     }
   },
 
@@ -34,7 +34,7 @@ module.exports = {
       max: 10
     },
     migrations: {
-      directory: './db/migrations',
+      directory: './migrations',
       tableName: "knex_migrations",
     }
   }
