@@ -15,7 +15,8 @@ register('client_before_auth_init', () => {
     // Координаты спавна игрока для кастомизации.
     const playerDefaultPos = new mp.Vector3(-2167, 5182, 15.5);
     // Координаты камеры игрока для кастомизации.
-    const cameraDefaultPos = new mp.Vector3(-2167, 5181, 16.1);
+    const cameraDefaultPos = new mp.Vector3(-2167, 5131, 20);
+
     // Установка свойств до авторизации/регистрации.
     playerLocal.position = playerDefaultPos;
     // Создание камеры для кастомизации.
@@ -45,7 +46,7 @@ register('client_before_auth_init', () => {
     mp.gui.chat.push('client_before_auth_init');
 });
 
-// Установка св-в после авторизации игрока.
+// Установка св-в после аутентификации игрока.
 register('client_after_auth_init', () => {
     mp.players.local.freezePosition(false);
     mp.gui.cursor.show(false, false);
