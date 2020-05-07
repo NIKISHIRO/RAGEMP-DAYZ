@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,7 +70,7 @@
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 Object.defineProperty(exports, "__esModule", { value: true });
-const util = __webpack_require__(10);
+const util = __webpack_require__(9);
 const environment = util.getEnvironment();
 if (!environment)
     throw 'Unknown RAGE environment';
@@ -500,7 +500,7 @@ exports.default = {
     triggerBrowser
 };
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
 /***/ }),
 /* 1 */
@@ -509,8 +509,8 @@ exports.default = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const CallServer_1 = __webpack_require__(24);
-const constants_1 = __webpack_require__(25);
+const CallServer_1 = __webpack_require__(19);
+const constants_1 = __webpack_require__(20);
 class Player {
     constructor(player) {
         this.hungerDecrementIntervalId = null;
@@ -629,29 +629,15 @@ exports.playerInstance = playerInstance;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-var g;
+"use strict";
 
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
+Object.defineProperty(exports, "__esModule", { value: true });
+const CEFBrowser_1 = __webpack_require__(12);
+const Browser = new CEFBrowser_1.CEFBrowser('index.html');
+exports.Browser = Browser;
+Browser.setActive(true);
 
 
 /***/ }),
@@ -661,21 +647,8 @@ module.exports = g;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const CEFBrowser_1 = __webpack_require__(17);
-const Browser = new CEFBrowser_1.CEFBrowser('index.html');
-exports.Browser = Browser;
-Browser.setActive(true);
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
 const rage_rpc_1 = __webpack_require__(0);
-const browser_1 = __webpack_require__(3);
+const browser_1 = __webpack_require__(2);
 var HudsType;
 (function (HudsType) {
     HudsType["CEF_SET_HEALTH_HUDS"] = "cef_set_health_huds";
@@ -694,7 +667,7 @@ exports.cefSendLootCreateData = cefSendLootCreateData;
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -714,7 +687,7 @@ exports.changeUI = changeUI;
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -767,8 +740,7 @@ PlayerCamera.cameras = [];
 
 
 /***/ }),
-/* 7 */,
-/* 8 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -991,35 +963,34 @@ exports.character = character;
 
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(0);
+__webpack_require__(10);
 __webpack_require__(11);
+__webpack_require__(2);
+__webpack_require__(13);
+__webpack_require__(14);
 __webpack_require__(15);
-__webpack_require__(16);
-__webpack_require__(3);
+__webpack_require__(17);
 __webpack_require__(18);
-__webpack_require__(19);
-__webpack_require__(20);
+__webpack_require__(21);
 __webpack_require__(22);
-__webpack_require__(23);
+__webpack_require__(24);
+__webpack_require__(25);
 __webpack_require__(26);
 __webpack_require__(27);
+__webpack_require__(28);
 __webpack_require__(29);
 __webpack_require__(30);
 __webpack_require__(31);
 __webpack_require__(32);
 __webpack_require__(33);
 __webpack_require__(34);
-__webpack_require__(35);
-__webpack_require__(36);
-__webpack_require__(37);
-__webpack_require__(38);
-__webpack_require__(39);
 mp.keys.bind(0x0D, true, () => {
     mp.gui.chat.push(JSON.stringify(mp.players.local.getVariable('isAuth')));
 });
@@ -1041,7 +1012,34 @@ mp.keys.bind(0x76, false, function () {
 
 
 /***/ }),
-/* 10 */
+/* 8 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1202,16 +1200,7 @@ exports.isBrowserValid = isBrowserValid;
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'B:\\gta 5\\project\\server-files\\src\\client\\src\\_rage-console\\index.js'");
-
-/***/ }),
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */
+/* 10 */
 /***/ (function(module, exports) {
 
 mp.events.add("setComponentVariation", (componentId, drawable, texture) => {
@@ -1239,7 +1228,7 @@ function syncEntityComponents(entity) {
 }
 
 /***/ }),
-/* 16 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1254,7 +1243,7 @@ mp.events.addDataHandler('displayUI', (entity, displayData, prevDisplayData) => 
 
 
 /***/ }),
-/* 17 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1291,14 +1280,14 @@ exports.CEFBrowser = CEFBrowser;
 
 
 /***/ }),
-/* 18 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const browser_1 = __webpack_require__(3);
-const changeUI_1 = __webpack_require__(5);
+const browser_1 = __webpack_require__(2);
+const changeUI_1 = __webpack_require__(4);
 let flag = true;
 mp.keys.bind(0x09, true, function () {
     if (!mp.players.local.getVariable('isAuth'))
@@ -1316,14 +1305,14 @@ mp.keys.bind(0x09, true, function () {
 
 
 /***/ }),
-/* 19 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const browser_1 = __webpack_require__(3);
-const changeUI_1 = __webpack_require__(5);
+const browser_1 = __webpack_require__(2);
+const changeUI_1 = __webpack_require__(4);
 let flag = true;
 mp.keys.bind(0x71, true, function () {
     if (!mp.players.local.getVariable('isAuth'))
@@ -1343,13 +1332,13 @@ mp.keys.bind(0x71, true, function () {
 
 
 /***/ }),
-/* 20 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const displayUI_1 = __webpack_require__(21);
+const displayUI_1 = __webpack_require__(16);
 let flag = true;
 mp.keys.bind(0x75, true, function () {
     if (!mp.players.local.getVariable('isAuth'))
@@ -1361,7 +1350,7 @@ mp.keys.bind(0x75, true, function () {
 
 
 /***/ }),
-/* 21 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1375,7 +1364,7 @@ exports.setDisplayInterface = setDisplayInterface;
 
 
 /***/ }),
-/* 22 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1404,7 +1393,7 @@ mp.events.add('render', () => {
 
 
 /***/ }),
-/* 23 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1417,7 +1406,7 @@ Player_1.playerInstance.dehydrationInit();
 
 
 /***/ }),
-/* 24 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1431,7 +1420,7 @@ exports.serverSetHealth = serverSetHealth;
 
 
 /***/ }),
-/* 25 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1451,7 +1440,7 @@ exports.constants = constants;
 
 
 /***/ }),
-/* 26 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1493,14 +1482,14 @@ mp.events.addDataHandler('temperature', (entity, temperature, prevTemperature) =
 
 
 /***/ }),
-/* 27 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const rage_rpc_1 = __webpack_require__(0);
-const LootCreate_1 = __webpack_require__(28);
+const LootCreate_1 = __webpack_require__(23);
 const Player_1 = __webpack_require__(1);
 rage_rpc_1.register('client_set_loot_create', (objectHash) => {
     mp.gui.chat.push('CLIENT -> client_set_loot_create');
@@ -1535,7 +1524,7 @@ rage_rpc_1.register('client_get_any_prop', (name) => {
 
 
 /***/ }),
-/* 28 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1609,13 +1598,13 @@ exports.lootCreate = lootCreate;
 
 
 /***/ }),
-/* 29 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const callBrowser_1 = __webpack_require__(4);
+const callBrowser_1 = __webpack_require__(3);
 const localPlayer = mp.players.local;
 let lastArmor = localPlayer.getArmour();
 mp.events.add('render', function () {
@@ -1631,13 +1620,13 @@ mp.events.add("playerSpawn", () => {
 
 
 /***/ }),
-/* 30 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const callBrowser_1 = __webpack_require__(4);
+const callBrowser_1 = __webpack_require__(3);
 const localPlayer = mp.players.local;
 let lastHealth = 0;
 mp.events.add('render', function () {
@@ -1653,14 +1642,14 @@ mp.events.add("playerSpawn", () => {
 
 
 /***/ }),
-/* 31 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Player_1 = __webpack_require__(1);
-const callBrowser_1 = __webpack_require__(4);
+const callBrowser_1 = __webpack_require__(3);
 let lastHunger = 0;
 mp.events.add('render', function () {
     if (lastHunger !== Player_1.playerInstance.getHunger()) {
@@ -1675,14 +1664,14 @@ mp.events.add("playerSpawn", () => {
 
 
 /***/ }),
-/* 32 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Player_1 = __webpack_require__(1);
-const callBrowser_1 = __webpack_require__(4);
+const callBrowser_1 = __webpack_require__(3);
 let lastDehydration = 0;
 mp.events.add('render', function () {
     if (lastDehydration !== Player_1.playerInstance.getDehydration()) {
@@ -1697,7 +1686,7 @@ mp.events.add("playerSpawn", () => {
 
 
 /***/ }),
-/* 33 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1705,15 +1694,15 @@ mp.events.add("playerSpawn", () => {
 
 
 /***/ }),
-/* 34 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const Character_1 = __webpack_require__(8);
+const Character_1 = __webpack_require__(6);
 const rage_rpc_1 = __webpack_require__(0);
-const Camera_1 = __webpack_require__(6);
+const Camera_1 = __webpack_require__(5);
 rage_rpc_1.register('client_character_set_heading', (h) => {
     Character_1.character.setHeading(h);
 });
@@ -1752,13 +1741,13 @@ rage_rpc_1.register('client_Character_set_eyes', (val) => {
 
 
 /***/ }),
-/* 35 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const Camera_1 = __webpack_require__(6);
+const Camera_1 = __webpack_require__(5);
 flyCamera();
 const playerLocal = mp.players.local;
 function flyCamera() {
@@ -1809,16 +1798,16 @@ function flyCamera() {
 
 
 /***/ }),
-/* 36 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const rage_rpc_1 = __webpack_require__(0);
-const Camera_1 = __webpack_require__(6);
-const changeUI_1 = __webpack_require__(5);
-const Character_1 = __webpack_require__(8);
+const Camera_1 = __webpack_require__(5);
+const changeUI_1 = __webpack_require__(4);
+const Character_1 = __webpack_require__(6);
 const playerLocal = mp.players.local;
 rage_rpc_1.register('client_before_auth_init', () => {
     Character_1.character.reset();
@@ -1855,7 +1844,7 @@ rage_rpc_1.register('client_after_auth_init', () => {
 
 
 /***/ }),
-/* 37 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1863,7 +1852,7 @@ rage_rpc_1.register('client_after_auth_init', () => {
 
 
 /***/ }),
-/* 38 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1876,7 +1865,7 @@ rage_rpc_1.register('client_get_ammo_in_clip', (player) => {
 
 
 /***/ }),
-/* 39 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

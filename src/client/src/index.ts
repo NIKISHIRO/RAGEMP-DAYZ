@@ -1,6 +1,5 @@
 // Библиотеки расширяющие функционал.
 import './rage-rpc';
-import './_rage-console';
 import './syncedPlayerComponent';
 
 // Подключения наших модулей.
