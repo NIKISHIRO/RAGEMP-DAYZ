@@ -10,6 +10,7 @@ export type CharacterClientData = {
     headArray: any[]; // headblend.
     headOverlay: number[];
     hair: number;
+    hairColor: number;
     eyesColor: number;
 };
 
@@ -55,13 +56,14 @@ export type PlayerData = {
     health: number;
     armor: number;
     admin: number;
+    haircolor:number;
+    eyescolor: number;
     position: { x: number; y: number; z: number };
     inventory: Item[];
     face: CharacterFace[];
     headblend: any[],
     clothes: number[];
     headoverlay: number[];
-    eyescolor: number;
 }
 
 export type CharacterFace = {
