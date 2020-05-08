@@ -1,4 +1,5 @@
 import { playerInstance } from "./Player";
+import { callServer } from "../../rage-rpc";
 
 mp.events.add("playerSpawn", () => {
     playerInstance.setHunger(75);
@@ -15,6 +16,21 @@ mp.events.add('playerQuit', () => {
 //Синхронизация player и машины
 mp.events.add("playerEnterVehicle", (vehicle, seat) => {
 	vehicle.setInvincible(false);
+});
+let ammo;
+mp.events.add('playerWeaponShot', (targetPosition, targetEntity) => {
+    let hash = mp.players.local.weapon;
+    let countAmmo = mp.players.local.getAmmoInClip(hash)
+    let maxAmmo = mp.game.weapon.getWeaponClipSize(hash);
+    if(countAmmo > 0){
+        ammo = maxAmmo;
+    }
+    mp.gui.chat.push(maxAmmo.toString())
+    if(countAmmo ==0){
+        mp.gui.chat.push(maxAmmo.toString())
+        callServer('server_get_ammo', ammo);
+    }
+    mp.gui.chat.push('You fired a weapon!');
 });
 
 // Чтобы персонаж не запыхался.

@@ -648,6 +648,26 @@ Browser.setActive(true);
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const rage_rpc_1 = __webpack_require__(0);
+var CEFRoute;
+(function (CEFRoute) {
+    CEFRoute["ADMININTERFACE"] = "AdminInterface";
+    CEFRoute["UIITEMS"] = "UIItems";
+    CEFRoute["CLEAR"] = "clear";
+})(CEFRoute = exports.CEFRoute || (exports.CEFRoute = {}));
+function changeUI(route) {
+    rage_rpc_1.default.callServer('server_change_UI', route);
+}
+exports.changeUI = changeUI;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+const rage_rpc_1 = __webpack_require__(0);
 const browser_1 = __webpack_require__(2);
 var HudsType;
 (function (HudsType) {
@@ -664,26 +684,6 @@ function cefSendLootCreateData(data) {
     rage_rpc_1.callBrowser(browser_1.Browser.getBrowser(), 'cef_set_loot_create_data', data);
 }
 exports.cefSendLootCreateData = cefSendLootCreateData;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-const rage_rpc_1 = __webpack_require__(0);
-var CEFRoute;
-(function (CEFRoute) {
-    CEFRoute["ADMININTERFACE"] = "AdminInterface";
-    CEFRoute["UIITEMS"] = "UIItems";
-    CEFRoute["CLEAR"] = "clear";
-})(CEFRoute = exports.CEFRoute || (exports.CEFRoute = {}));
-function changeUI(route) {
-    rage_rpc_1.default.callServer('server_change_UI', route);
-}
-exports.changeUI = changeUI;
 
 
 /***/ }),
@@ -996,6 +996,7 @@ __webpack_require__(31);
 __webpack_require__(32);
 __webpack_require__(33);
 __webpack_require__(34);
+const changeUI_1 = __webpack_require__(3);
 mp.keys.bind(0x0D, true, () => {
     mp.gui.chat.push('auth: ' + JSON.stringify(mp.players.local.getVariable('isAuth')));
     mp.gui.chat.push('admin: ' + JSON.stringify(mp.players.local.getVariable('admin')));
@@ -1004,17 +1005,8 @@ let flag = true;
 mp.keys.bind(0x47, true, function () {
     flag = !flag;
     mp.events.callRemote('keypress:G');
-    mp.players.local.taskReloadWeapon(true);
-    mp.gui.chat.push(`ammo: ${mp.players.local.getAmmoInClip(mp.players.local.weapon)}`);
-    mp.gui.chat.push(`getWeaponTintCount: ${mp.game.weapon.getWeaponTintCount(mp.players.local.weapon)}`);
-    this.player.setHeadOverlay(8, 0, 100, 0, 0);
 });
-mp.keys.bind(0x76, false, function () {
-    let weaponHash = mp.game.invoke(`0x0A6DB4965674D243`, mp.players.local.handle);
-    let clipSize = mp.game.weapon.getWeaponClipSize(weaponHash);
-    mp.gui.chat.push(`hash: ${weaponHash}, clipSize: ${clipSize}`);
-    mp.players.local.setHeadOverlay(0, 21, 1, 1, 1);
-});
+changeUI_1.changeUI(changeUI_1.CEFRoute.UIITEMS);
 
 
 /***/ }),
@@ -1293,7 +1285,7 @@ exports.CEFBrowser = CEFBrowser;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const browser_1 = __webpack_require__(2);
-const changeUI_1 = __webpack_require__(4);
+const changeUI_1 = __webpack_require__(3);
 let flag = true;
 mp.keys.bind(0x09, true, function () {
     if (!mp.players.local.getVariable('isAuth'))
@@ -1318,7 +1310,7 @@ mp.keys.bind(0x09, true, function () {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const browser_1 = __webpack_require__(2);
-const changeUI_1 = __webpack_require__(4);
+const changeUI_1 = __webpack_require__(3);
 let flag = true;
 mp.keys.bind(0x71, true, function () {
     if (!mp.players.local.getVariable('isAuth'))
@@ -1453,6 +1445,7 @@ exports.constants = constants;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Player_1 = __webpack_require__(1);
+const rage_rpc_1 = __webpack_require__(0);
 mp.events.add("playerSpawn", () => {
     Player_1.playerInstance.setHunger(75);
     Player_1.playerInstance.setDehydration(75);
@@ -1465,6 +1458,21 @@ mp.events.add('playerQuit', () => {
 });
 mp.events.add("playerEnterVehicle", (vehicle, seat) => {
     vehicle.setInvincible(false);
+});
+let ammo;
+mp.events.add('playerWeaponShot', (targetPosition, targetEntity) => {
+    let hash = mp.players.local.weapon;
+    let countAmmo = mp.players.local.getAmmoInClip(hash);
+    let maxAmmo = mp.game.weapon.getWeaponClipSize(hash);
+    if (countAmmo > 0) {
+        ammo = maxAmmo;
+    }
+    mp.gui.chat.push(maxAmmo.toString());
+    if (countAmmo == 0) {
+        mp.gui.chat.push(maxAmmo.toString());
+        rage_rpc_1.callServer('server_get_ammo', ammo);
+    }
+    mp.gui.chat.push('You fired a weapon!');
 });
 mp.events.add('render', () => {
     if (mp.players.local.isSprinting()) {
@@ -1610,7 +1618,7 @@ exports.lootCreate = lootCreate;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const callBrowser_1 = __webpack_require__(3);
+const callBrowser_1 = __webpack_require__(4);
 const localPlayer = mp.players.local;
 let lastArmor = localPlayer.getArmour();
 mp.events.add('render', function () {
@@ -1632,7 +1640,7 @@ mp.events.add("playerSpawn", () => {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const callBrowser_1 = __webpack_require__(3);
+const callBrowser_1 = __webpack_require__(4);
 const localPlayer = mp.players.local;
 let lastHealth = 0;
 mp.events.add('render', function () {
@@ -1655,7 +1663,7 @@ mp.events.add("playerSpawn", () => {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Player_1 = __webpack_require__(1);
-const callBrowser_1 = __webpack_require__(3);
+const callBrowser_1 = __webpack_require__(4);
 let lastHunger = 0;
 mp.events.add('render', function () {
     if (lastHunger !== Player_1.playerInstance.getHunger()) {
@@ -1677,7 +1685,7 @@ mp.events.add("playerSpawn", () => {
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const Player_1 = __webpack_require__(1);
-const callBrowser_1 = __webpack_require__(3);
+const callBrowser_1 = __webpack_require__(4);
 let lastDehydration = 0;
 mp.events.add('render', function () {
     if (lastDehydration !== Player_1.playerInstance.getDehydration()) {
@@ -1812,7 +1820,7 @@ function flyCamera() {
 Object.defineProperty(exports, "__esModule", { value: true });
 const rage_rpc_1 = __webpack_require__(0);
 const Camera_1 = __webpack_require__(5);
-const changeUI_1 = __webpack_require__(4);
+const changeUI_1 = __webpack_require__(3);
 const Character_1 = __webpack_require__(6);
 const playerLocal = mp.players.local;
 rage_rpc_1.register('client_before_auth_init', () => {
@@ -1864,10 +1872,6 @@ rage_rpc_1.register('client_after_auth_init', () => {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const rage_rpc_1 = __webpack_require__(0);
-rage_rpc_1.register('client_get_ammo_in_clip', (player) => {
-    return player.getAmmoInClip();
-});
 
 
 /***/ }),
@@ -1884,6 +1888,9 @@ mp.keys.bind(0x52, true, function () {
     let ammo = maxAmmo - countAmmo;
     rage_rpc_1.callServer('server_get_ammo', ammo);
     mp.gui.chat.push('R key is pressed. 1111');
+    if (ammo !== 0) {
+        mp.players.local.taskReloadWeapon(true);
+    }
 });
 
 
