@@ -30,6 +30,6 @@ mp.events.addCommand('sc', (player: PlayerMp, ft: string, hash: string) => {
     const veh = mp.vehicles.new(mp.joaat(hash), player.position);
 });
 
-mp.events.addCommand('w', (player: PlayerMp, FT: string,  n:string) => {
-    player.giveWeapon(mp.joaat('weapon_assaultrifle_mk2'), parseInt(n));
+mp.events.addCommand('w', (player: PlayerMp, FT: string, hash: string,  n:string) => {
+    player.giveWeapon(mp.joaat(hash), parseInt(n));
 })
