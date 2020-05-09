@@ -68,8 +68,8 @@ class Character {
             head: {
                 mother: 21, // 21-40, 41, 45;
                 father: 0, // 0-20, 42-44;
-                similarity: 0.5, // 0.0 - 1.0;
-                skin: 0.5, // 0.0 - 1.0;
+                similarity: 0.8, // 0.0 - 1.0;
+                skin: 0.8, // 0.0 - 1.0;
 
                 p3: 0,
                 p6: 0,
@@ -154,7 +154,6 @@ class Character {
     }
 
     public setHair(dId: number) {
-        if ([24].includes(dId)) return;
         this.player.setComponentVariation(2, dId, 0, 0);
         this.player.customData.character.hair[this.player.customData.character.gender] = dId;
     }
@@ -265,7 +264,6 @@ class Character {
         this.setHairColor(0);
         this.setEyeColor(0);
 
-
         // Сброс headOverlay.
         headOverlay.forEach((i, id) => {
             this.setHeadOverlay(id, 255);
@@ -301,7 +299,7 @@ class Character {
         
         const gender = character.gender;
         const face = character.face;
-        const headblend = [
+        const headArray = [
             character.head.mother,
             character.head.father,
             character.head.p3,
@@ -314,24 +312,24 @@ class Character {
             character.head.p10,
         ];
 
-        const headoverlay = character.headOverlay;
-        const eyescolor = character.eyes;
+        const headOverlay = character.headOverlay;
+        const eyesColor = character.eyes;
 
         const hair = character.hair[character.gender];
-        const haircolor = character.hairColor;
+        const hairColor = character.hairColor;
 
-        return { gender, face, headblend, hair, haircolor, headoverlay, eyescolor };
+        return { gender, face, headArray, hair, hairColor, headOverlay, eyesColor };
     }
 }
 
 type CharacterData = {
     gender: 'male' | 'female';
     face: { index: number; feature: number; }[];
-    headblend: any[]; // headblend.
-    headoverlay: number[];
+    headArray: any[]; // headblend.
+    headOverlay: number[];
     hair: number;
-    haircolor: number;
-    eyescolor: number;
+    hairColor: number;
+    eyesColor: number;
 };
 
 const character = new Character(mp.players.local);

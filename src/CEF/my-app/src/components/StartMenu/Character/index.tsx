@@ -5,7 +5,7 @@ import { Previous } from "../Previous";
 import { push } from "connected-react-router";
 import { useDispatch, useSelector } from "react-redux";
 import ReactSlider from 'react-slider'
-import { setCharacterHeading, setCharacterGender, resetCharacter, serverRegister, updateCharacterCameraPosition, serverCharacterReady } from "../../../helpers/playerEvents/rpcCall";
+import { setCharacterHeading, setCharacterGender, resetCharacter } from "../../../helpers/playerEvents/rpcCall";
 import { CharacterFace } from "./CharacterFace";
 import { CharacterHead } from "./CharacterHead";
 import { setInitialCharacter, setGender } from "../../../actions/characterActions";
@@ -14,7 +14,6 @@ import { CharacterHair } from "./CharacterHair";
 import { CharacterHeading } from "./CharacterHeading";
 import { CharacterHeadOverlay } from "./CharacterHeadOverlay";
 import { CharacterEyes } from "./CharacterEyes";
-import { enqueueSnackbar, NotifyVariant } from "../../../actions/notificationActions";
 
 const { Bounce } = Animation;
 
@@ -22,15 +21,13 @@ function CharacterTitle(props: { title: string; }) {
     const { title } = props;
     
     return (
-        <div style={ {fontSize: '1.6rem', margin: '2rem 0', textAlign: 'center', textTransform: 'uppercase'} }>{ title }</div>
+        <div style={ {fontSize: '1.6rem', margin: '1.5rem 0', textAlign: 'center', textTransform: 'uppercase'} }>{ title }</div>
     );
 }
 
 function Character() {
     const state = useSelector((state: State) => state.character || []);
-    const registerState = useSelector((state: State) => state.auth.register || []);
     const dispatch = useDispatch();
-    const { login, email, password } = registerState;
 
     const onGenderClick = async (gender: 'male' | 'female') => {
         await resetCharacter();
@@ -43,37 +40,20 @@ function Character() {
         );
     };
 
+    const onClickPrevious = async () => {
+        await resetCharacter();
+        dispatch(
+            setInitialCharacter()
+        );
+        dispatch(push('StartMenu'));
+    };
+
     const onClickReset = async () => {
         // Отправка на клиент.
         await resetCharacter();
         dispatch(
             setInitialCharacter()
         );
-    };
-
-    const onReady = async () => {
-        const serverResult = await serverCharacterReady({
-            login: login.val, 
-            email: email.val, 
-            password: password.val,
-        });
-        // Занести данные в бд.
-
-        dispatch(
-            enqueueSnackbar({
-                message: serverResult.text,
-                    options: {
-                        key: new Date().getTime() + Math.random(),
-                        variant: serverResult.result ? NotifyVariant.SUCCESS : NotifyVariant.ERROR,
-                        anchorOrigin: {
-                            horizontal: 'center',
-                            vertical: 'bottom',
-                        }
-                },
-            })
-        );
-        
-        dispatch(push('clear'));
     };
 
     return (
@@ -86,6 +66,9 @@ function Character() {
                 className='character-drawer'
             >
                 <Drawer.Header>
+                    <span onClick={ () => onClickPrevious() }>
+                        <Previous />
+                    </span>
                     <span className='character-reset' onClick={ () => onClickReset() }>Сбросить</span>
                 </Drawer.Header>
                 <Drawer.Body>
@@ -96,18 +79,17 @@ function Character() {
                         </div>
                         <CharacterTitle title='Лицо' />
                         <CharacterHead />
-                        <CharacterTitle title='Лицо' />
-                        <CharacterFace />
                         <CharacterTitle title='Внешний вид' />
                         <CharacterEyes />
                         <CharacterHair />
                         <CharacterHeadOverlay />
-
+                        <CharacterTitle title='Лицо' />
+                        <CharacterFace />
                     </div>
                 </Drawer.Body>
                 <Drawer.Footer>
                     <div style={ {textAlign: 'center'} }>
-                        <Button appearance="ghost" size='lg' style={{textAlign: 'center', width: '8rem'}} onClick={ onReady }>ГОТОВО</Button>
+                        <Button appearance="ghost" size='lg' style={{textAlign: 'center', width: '8rem'}} onClick={() => dispatch(push('StartMenu'))}>ГОТОВО</Button>
                     </div>
                 </Drawer.Footer>
             </Drawer>

@@ -1,4 +1,4 @@
-import { Item, CharacterPlayerData } from "../types";
+import { Item, CharacterClientData } from "../types";
 import { callBrowsers, callClient } from 'rage-rpc';
 import { DisplayUI } from "../events/rpcRegister";
 
@@ -29,19 +29,13 @@ class CallRPC {
     }
 
     // Отправляет на клиент инфу что игрока зарегался или авторизовался.
-    public clientAfterRegisterInit() {
-        return callClient(this.player, 'client_after_register')
+    public clientAfterLoginInit() {
+        return callClient(this.player, 'client_after_auth_init')
         .catch(e => console.log('server -> client_after_auth_init -> e'.red, e));
     }
 
-    // Отправляет на клиент инфу что игрока зарегался или авторизовался.
-    public clientAfterLoginInit() {
-        return callClient(this.player, 'client_after_login')
-        .catch(e => console.log('server -> client_after_login -> e'.red, e));
-    }
-
     // Отправляет на клиент инфу, что юзер зарегался и получает.
-    public async clientCharacterReady(): Promise<CharacterPlayerData> {
+    public async clientCharacterReady(): Promise<CharacterClientData> {
         return await callClient(this.player, 'client_character_ready')
         .catch(e => console.log('server -> client_character_ready -> e'.red, e));
     }

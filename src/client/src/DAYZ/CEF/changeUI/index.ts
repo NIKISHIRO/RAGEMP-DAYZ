@@ -4,8 +4,6 @@ export enum CEFRoute {
     ADMININTERFACE = 'AdminInterface',
     UIITEMS = 'UIItems',
     CLEAR = 'clear',
-    START_MENU = 'StartMenu',
-    CHARACTER = 'CHARACTER',
 }
 
 function changeUI(route: CEFRoute) {

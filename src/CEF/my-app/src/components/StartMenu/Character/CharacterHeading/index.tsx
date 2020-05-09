@@ -38,10 +38,10 @@ function CharacterHeading() {
                         className="heading-slider"
                         thumbClassName="heading-thumb"
                         trackClassName="heading-track"
-                        min={ 15.5 }
-                        max={ 17.5 }
+                        min={ 15 }
+                        max={ 16.5 }
                         step={ .1 }
-                        defaultValue={ 16.5 }
+                        defaultValue={ 16 }
                         renderThumb={(props, state) => <div {...props}></div>}
                         onChange={ (v: any) => onSliderCameraChange('z', v) }
                     />
@@ -53,10 +53,10 @@ function CharacterHeading() {
                         className="heading-slider"
                         thumbClassName="heading-thumb"
                         trackClassName="heading-track"
-                        min={ 5179 }
-                        max={ 5180 }
+                        min={ 5180 }
+                        max={ 5181.7 }
                         step={ .1 }
-                        defaultValue={ 5179.5 }
+                        defaultValue={ 5181 }
                         renderThumb={(props, state) => <div {...props}></div>}
                         onChange={ (v: any) => onSliderCameraChange('y', v) }
                     />

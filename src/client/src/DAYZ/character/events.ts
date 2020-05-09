@@ -52,8 +52,3 @@ register('client_character_set_overlay', ({overlayId, index}: {overlayId: number
 register('client_Character_set_eyes', (val: number) => {
     character.setEyeColor(val);
 });
-
-register('update_character_camera_position', () => {
-    PlayerCamera.setCoord('character', new mp.Vector3(-2167, 5181, 16.1));
-    PlayerCamera.render('character', true);
-});

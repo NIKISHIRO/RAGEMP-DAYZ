@@ -22,7 +22,7 @@ mp.events.addCommand('w', (player: PlayerMp, ft: string, hash: string, ammo: str
 
 mp.events.addCommand('logout', (player: PlayerMp, ft: string) => {
     const plr = new Player(player);
-    // plr.logout();
+    plr.logout();
 });
 
 mp.events.addCommand('sc', (player: PlayerMp, ft: string, hash: string) => {

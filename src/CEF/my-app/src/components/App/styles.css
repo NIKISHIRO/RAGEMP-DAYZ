@@ -22,11 +22,30 @@
     top: 1rem;
 }
 
-.huds-eat img, .huds-health img, .huds-temperature img, .huds-dehydration img {
-    width: 2.2rem;
+.huds-health {
+    position: absolute;
+    right: 1rem;
+    top: 20rem;
 }
 
+.huds-eat {
+    position: absolute;
+    right: 1rem;
+    top: 26rem;
+}
 
-.CircularHudWithImage .MuiCircularProgress-colorSecondary {
-    color: green;
+.huds-temperature {
+    position: absolute;
+    right: 1rem;
+    top: 38rem;
+}
+
+.huds-dehydration {
+    position: absolute;
+    right: 1rem;
+    top: 32rem;
+}
+
+.huds-eat img, .huds-health img, .huds-temperature img, .huds-dehydration img {
+    width: 5.5rem;
 }
