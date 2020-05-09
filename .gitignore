@@ -10,3 +10,6 @@ bt.dat
 /dotnet
 SOS_DEADME.md
 ragemp-server.exe
+*.gz
+*.tmp
+*.exe
