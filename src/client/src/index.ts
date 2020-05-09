@@ -2,6 +2,7 @@ import './rage-rpc';
 
 // Библиотеки расширяющие функционал.
 import './syncedPlayerComponent';
+import './modules/_rage-console';
 
 // Подключения наших модулей.
 import './DAYZ/CEF/events';
@@ -14,14 +15,13 @@ import './DAYZ/events/render';
 
 import './DAYZ/player';
 import './DAYZ/player/events';
-import './DAYZ/player/rpcRegister';
+import './DAYZ/events/rpcRegister';
 
 import './DAYZ/hudsData/armor';
 import './DAYZ/hudsData/health';
 import './DAYZ/hudsData/hunger';
 import './DAYZ/hudsData/dehydration';
 
-import './DAYZ/character';
 import './DAYZ/character/events';
 
 import './DAYZ/login';

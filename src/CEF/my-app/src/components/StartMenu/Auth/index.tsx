@@ -1,40 +1,16 @@
 import React, { useState } from "react";
 import './auth.css';
 import { useToggle } from "@umijs/hooks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { enqueueSnackbar, NotifyVariant } from "../../../actions/notificationActions";
 import { GiThumbUp, GiThumbDown } from "react-icons/gi";
-import { serverRegister, serverLogin } from "../../../helpers/playerEvents/rpcCall";
+import { serverRegister, serverLogin, updateCharacterCameraPosition, serverCheckLogin } from "../../../helpers/playerEvents/rpcCall";
 import { Previous } from "../Previous";
 import { push } from "connected-react-router";
 import { Animation, Whisper, Tooltip } from 'rsuite';
+import { State } from "../../../reducers";
+import { setRegister, updateAuthProp } from "../../../actions/authActions";
 const { Bounce } = Animation;
-
-type RegisterType = {
-    login: {
-        val: string;
-        isValid: boolean;
-        isTouch: boolean,
-        regular: RegExp;
-    };
-    password: {
-        val: string;
-        isValid: boolean;
-        isTouch: boolean,
-        regular: RegExp;
-    };
-    confirmPassword: {
-        val: string;
-        isTouch: boolean,
-        isValid: boolean;
-    };
-    email: {
-        val: string;
-        isValid: boolean
-        isTouch: boolean,
-        regular: RegExp,
-    }
-}
 
 const btnRegValidStyles = {
     border: '1px solid #c0c0c0',   
@@ -48,111 +24,102 @@ const inputStyles = (isError) => ({
 })
 
 function Register() {
+    const state = useSelector((state: State) => state || []);
     const dispatch = useDispatch();
-    
-    const [state, setState] = useState<RegisterType>({
-        login: {
-            val: '',
-            isValid: false,
-            isTouch: false,
-            regular: /^[a-zA-Z0-9_-]{3,16}$/,
-        },
-        password: {
-            val: '',
-            isValid: false,
-            isTouch: false,
-            regular: /^[0-9a-zA-Z!@#$%^&*]{6,30}$/,
-        },
-        email: {
-            val:'',
-            isValid: false,
-            isTouch: false,
-            regular: /.+@.+\..+/i,
-        },
-        confirmPassword: {
-            val: '',
-            isValid: false,
-            isTouch: false,
-        }
-    });
 
-    const isLoginValid = state.login.isValid;
-    const isLoginTouch = state.login.isTouch;
-    const isEmailValid = state.email.isValid;
-    const isEmailTouch = state.email.isTouch;
-    const isPassValid = state.password.isValid;
-    const isPassTouch = state.password.isTouch;
-    const isConfirmPassValid = state.confirmPassword.isValid;
-    const isConfirmPassTouch = state.confirmPassword.isTouch;
+    const registerState = state.auth.register;
+
+    const isLoginValid = registerState.login.isValid;
+    const isLoginTouch = registerState.login.isTouch;
+    const isEmailValid = registerState.email.isValid;
+    const isEmailTouch = registerState.email.isTouch;
+    const isPassValid = registerState.password.isValid;
+    const isPassTouch = registerState.password.isTouch;
+    const isConfirmPassValid = registerState.confirmPassword.isValid;
+    const isConfirmPassTouch = registerState.confirmPassword.isTouch;
 
     const checkData = () => {
-        const newState = {...state};
-        newState.login.isValid = state.login.regular.test(state.login.val); 
-        newState.email.isValid = state.email.regular.test(state.email.val); 
-        newState.password.isValid = state.password.regular.test(state.password.val);
+        const newState = {...registerState};
+        newState.login.isValid = registerState.login.regular.test(registerState.login.val); 
+        newState.email.isValid = registerState.email.regular.test(registerState.email.val); 
+        newState.password.isValid = registerState.password.regular.test(registerState.password.val);
         newState.confirmPassword.isValid = newState.confirmPassword.val === newState.password.val; 
 
-        setState({...newState});
+        dispatch(
+            setRegister(newState)
+        );
     };
 
-    const clickLoginBtn = async () => {
-        if (isLoginValid && isPassValid && isConfirmPassValid) {
-            const { login, email, password } = state;
-            const serverResult = await serverRegister(login.val, email.val, password.val);
+    const clickRegisterBtn = async () => {
+        if (isLoginValid && isPassValid && isConfirmPassValid && isEmailValid) {
+            // Если игрока с указанным ником нет на сервере, то допустить к кастомизации.
+            const serverResult = await serverCheckLogin(registerState.login.val);
             
-            dispatch(
-                enqueueSnackbar({
-                    message: serverResult.text,
-                    options: {
-                        key: new Date().getTime() + Math.random(),
-                        variant: serverResult.result ? NotifyVariant.SUCCESS : NotifyVariant.ERROR,
-                        anchorOrigin: {
-                            horizontal: 'center',
-                            vertical: 'bottom',
+            if (serverResult.result) {
+                updateCharacterCameraPosition();
+                dispatch(
+                    push('/character')
+                );
+            } else {
+                dispatch(
+                    enqueueSnackbar({
+                        message: serverResult.text,
+                            options: {
+                                key: new Date().getTime() + Math.random(),
+                                variant: serverResult.result ? NotifyVariant.SUCCESS : NotifyVariant.ERROR,
+                                anchorOrigin: {
+                                    horizontal: 'center',
+                                    vertical: 'bottom',
+                                }
                         },
-                    },
-                })
-            );
+                    })
+                );
+            }
         }
     };
 
     const onChange = (event: any) => {
         const name = event.target.name;
         const value = event.target.value;
-        const newState = {...state};
-        newState[name].val = value;
-        setState(newState);
+
+        dispatch(
+            updateAuthProp(name, 'val', value)
+        );
+
         checkData();
     };
 
     const onBlur = (event: any) => {
         const name = event.target.name;
-        const newState = {...state};
-        newState[name].isTouch = true;
-        setState(newState);
+        dispatch(
+            updateAuthProp(name, 'isTouch', true)
+        );
     };
+
+    const isDisabled = !isLoginValid || !isPassValid || !isConfirmPassValid || !isEmailValid;
+    console.log('isDisabled', isDisabled);
 
     return (
         <Bounce in={ true }>
             <div className='middle-register'>
                 <form className="middle-form">
                     <div className='middle-form_input'>
-                        <input placeholder='Логин(Никнейм)' type="text" name='login' value={ state.login.val || '' } onChange={ onChange } onBlur={ onBlur } style={ inputStyles(isLoginTouch && !isLoginValid) } />
+                        <input placeholder='Логин(Никнейм)' type="text" name='login' value={ registerState.login.val || '' } onChange={ onChange } onBlur={ onBlur } style={ inputStyles(isLoginTouch && !isLoginValid) } />
                         { isLoginTouch && isLoginValid && <GiThumbUp /> }
                         { isLoginTouch && !isLoginValid && <span style={ {color: 'rgb(218, 75, 85)'} }><GiThumbDown /></span> } 
                     </div>
                     <div className='middle-form_input'>
-                        <input placeholder='Емейл' type="email" name='email' value={ state.email.val || '' } onChange={ onChange } onBlur={ onBlur } style={ inputStyles(state.email.isTouch && !state.email.isValid) } />
+                        <input placeholder='Емейл' type="email" name='email' value={ registerState.email.val || '' } onChange={ onChange } onBlur={ onBlur } style={ inputStyles(registerState.email.isTouch && !registerState.email.isValid) } />
                         { isEmailTouch && isEmailValid && <GiThumbUp /> }
                         { isEmailTouch && !isEmailValid && <span style={ {color: 'rgb(218, 75, 85)'} }><GiThumbDown /></span> } 
                     </div>
                     <div className='middle-form_input'>
-                        <input placeholder='Введите пароль' type="password" name='password' value={ state.password.val || '' } onChange={ onChange } onBlur={ onBlur } style={ inputStyles(isPassTouch && !isPassValid) } />
+                        <input placeholder='Введите пароль' type="password" name='password' value={ registerState.password.val || '' } onChange={ onChange } onBlur={ onBlur } style={ inputStyles(isPassTouch && !isPassValid) } />
                         { isPassTouch && isPassValid && <GiThumbUp /> }
                         { isPassTouch && !isPassValid && <span style={ {color: 'rgb(218, 75, 85)'} }><GiThumbDown /></span> } 
                     </div>
                     <div className='middle-form_input'>
-                        <input placeholder='Повторите пароль' type="password" name='confirmPassword' value={ state.confirmPassword.val || '' } onChange={ onChange } onBlur={ onBlur } style={ inputStyles(isConfirmPassTouch && !isConfirmPassValid) } />
+                        <input placeholder='Повторите пароль' type="password" name='confirmPassword' value={ registerState.confirmPassword.val || '' } onChange={ onChange } onBlur={ onBlur } style={ inputStyles(isConfirmPassTouch && !isConfirmPassValid) } />
                         { isConfirmPassTouch && isConfirmPassValid && <GiThumbUp /> }
                         { isConfirmPassTouch && !isConfirmPassValid && <span style={ {color: 'rgb(218, 75, 85)'} }><GiThumbDown /></span> }
                     </div>
@@ -160,11 +127,11 @@ function Register() {
                 <div className="auth-interface__bottom">
                     <button 
                         className='button-register' 
-                        onClick={ () => clickLoginBtn() } 
-                        disabled={ !isLoginValid || !isPassValid || !isConfirmPassValid }
-                        style={ !isLoginValid || !isPassValid || !isConfirmPassValid ? btnRegValidStyles : {} }    
+                        onClick={ () => clickRegisterBtn() } 
+                        disabled={ isDisabled }
+                        style={ isDisabled ? btnRegValidStyles : {} }    
                     >
-                        Зарегистрироваться
+                        Далее
                     </button>
                 </div>
                 <div className='auth-interface__bottom-errors'>
@@ -203,6 +170,7 @@ function Login() {
 
     const onClick = async () => {
         const serverResult = await serverLogin(state.login, state.password);
+
         dispatch(
             enqueueSnackbar({
                 message: serverResult.text,
@@ -250,10 +218,6 @@ function Auth() {
         <Bounce in={ true }>
             <div className='auth'>
                 <div className="auth-interface">
-                    <div onClick={ () => dispatch(push('/StartMenu')) } className='auth-previous'>
-                        <Previous />
-                    </div>
-
                     <div className="auth-interface__top">
                         <div className="auth-interface__login" onClick={ () => setToggle(0) } style={ {color: toggleState === 0 ? 'rgba(160, 7, 17, 1)' : ''} }>
                             Авторизация

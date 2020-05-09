@@ -1,11 +1,16 @@
 import { causesOfDeath } from "../causesOfDeath";
 import { Player } from "../player/Player";
 import { CallRPC } from "../CallRPC";
+import { Character } from "../character/Character";
+import { Auth } from "../auth/Auth";
 
 export const events = {
     "playerJoin": (player: PlayerMp) => {
         const plr = new Player(player);
         const cef = new CallRPC(player);
+        
+        const character = new Character(player);
+        console.log(character.getClothes());
 
         console.log(`${player.name}: Зашел на сервер.`);
         mp.players.broadcast(`!{#666666}${player.name}: Зашел на сервер.`);
@@ -18,22 +23,23 @@ export const events = {
     },
 
     "playerSpawn": (player: PlayerMp) => {
-        // Торс.
-        player.changeClothes(3, 15, 0, true);
-        // Ноги.
-        player.changeClothes(4, 14, 0, true);
     },
 
     "playerQuit": (player: PlayerMp, exitType: any, reason: any) => {
         const plr = new Player(player);
-        plr.logout();
+        const auth = new Auth(player);
+        auth.logout();
+        console.log('logout');
     },
 
     "playerDeath": (player: PlayerMp, reason: number) => {
         if (causesOfDeath.hasOwnProperty(reason)) {
             mp.players.forEach(p => p.notify(`<font color="#00D4FF">${player.name}</font> умер по причине: <font color="#FA00FF">${causesOfDeath[reason]}</font>.`))
         }
-                
+        
+        const character = new Character(player);
+        character.setFullClothes(player.getVariable('clothes')[player.getVariable('gender')]);
+
         const plr = new Player(player);
         plr.spawnRandomCoords();
     },

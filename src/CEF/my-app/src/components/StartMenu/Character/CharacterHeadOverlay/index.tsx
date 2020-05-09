@@ -87,7 +87,7 @@ function CharacterHeadOverlay() {
             }
 
             return (
-                <div>
+                <div key={ `${i.name}_${i.index}` }>
                     <AnySelect 
                         onLeftClick={ () => onLeft(i.overlayId, i.index) } 
                         onRightClick={ () => onRight(i.overlayId, i.index) } 

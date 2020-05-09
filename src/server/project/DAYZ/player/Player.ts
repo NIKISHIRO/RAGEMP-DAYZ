@@ -6,29 +6,21 @@ import { ReturnInformation, LootShapeInfo, CarReturnInformation } from "../inter
 import { Blip } from "../loot/entities/Blip";
 import { EItem } from "../loot/Item/Item";
 import { SPAWNS } from '../playerSpawns';
-import { Item, PlayerData, CharacterFace, CharacterClientData } from "../types";
+import { Item, PlayerData, CharacterFace } from "../types";
 import { CallRPC } from "../CallRPC";
 import { DisplayUI } from "../events/rpcRegister";
 import { postgres } from "../db";
+import { Character } from "../character/Character";
 
 type ServerResult = {
     result: boolean;
     text: string;
 };
 
-export type CharacterPlayerData = {
-    gender: 'male' | 'female';
-    face: CharacterFace[];
-    headblend: any[];
-    clothes: number[];
-    eyescolor: number;
-    headoverlay: number[];
-    haircolor: number;
-};
-
 export class Player {
     private player: PlayerMp;
     private callRpc: CallRPC;
+    private character: Character;
 
     constructor(player: PlayerMp) {
         this.player = player;
@@ -36,6 +28,8 @@ export class Player {
     }
 
     public init() {
+        this.player.setVariable('login', '');
+        this.player.setVariable('gender', 'male');
         this.player.setVariable('isAuth', false);
         this.player.setVariable('admin', 0);
         this.player.setVariable('itemPoints', []); // itemPoints - массив ИД-ов колшипов.
@@ -72,6 +66,7 @@ export class Player {
             101, // tops
         ];
         
+        this.player.setVariable('defaultClothes', {male, female});
         this.player.setVariable('clothes', {male, female});
     }
 
@@ -94,153 +89,6 @@ export class Player {
         invMaxWeight -= slots;
         this.player.setVariable('invMaxWeight', invMaxWeight);
         this.callRpc.cefSetInventoryWeight(invMaxWeight);
-    }
-
-    public getClothes(): number[] {
-        return [
-            this.player.getClothes(0)[0],
-            this.player.getClothes(1)[0],
-            this.player.getClothes(2)[0],
-            this.player.getClothes(3)[0],
-            this.player.getClothes(4)[0],
-            this.player.getClothes(5)[0],
-            this.player.getClothes(6)[0],
-            this.player.getClothes(7)[0],
-            this.player.getClothes(8)[0],
-            this.player.getClothes(9)[0],
-            this.player.getClothes(10)[0],
-        ];
-    }
-
-    // Инициал. всех переменных игрока.
-    public async registerInit() {
-        this.init();
-        this.player.health = 100;
-        this.player.armour = 0;
-        this.player.setVariable('isAuth', true);
-
-        await this.callRpc.clientAfterLoginInit();
-        // Спавнит игрока на рандом.коорд.
-        this.spawnRandomCoords();
-    }
-
-    // Инициал. св-в после авторизации.
-    public async loginInit(data: PlayerData) {
-        let { position: pos, login, health, armor, inventory, admin, hunger, dehydration, face, headblend, gender, clothes, eyescolor, headoverlay, haircolor } = data;
-
-        if (!health) {
-            health = 100;
-        }
-        if (!armor) {
-            armor = 0;
-        }
-        if (!hunger) {
-            hunger = 100;
-        }
-        if (!dehydration) {
-            dehydration = 100;
-        }
-
-        let position = new mp.Vector3(111, 111, 111);
-        if (pos) {
-            position = new mp.Vector3(pos.x, pos.y, pos.z)
-        }
-
-        this.init();
-        this.player.name = login;
-        this.player.position = position;
-        this.player.health = health;
-        this.player.armour = armor;
-        this.player.setInventory(inventory);
-        this.player.setVariable('isAuth', true);
-        this.player.setVariable('admin', admin);
-        this.player.setVariable('hunger', hunger);
-        this.player.setVariable('dehydration', dehydration);
-
-        await this.callRpc.clientAfterLoginInit();
-        // Отправляет на клиент инфу что игрок аутентифицирован.
-        await this.characterInit({ face, headblend, gender, clothes, eyescolor, headoverlay, haircolor });
-    }
-
-    // ИНИЦИАЛИЗАЦИЯ ВНЕШНОСТИ ПЕРСОНАЖА. ПРИ ОШИБКЕ УСТАНАВЛИВАЕТ ДЕФОЛТ.
-    public async characterInit(data: CharacterPlayerData) {
-        console.log('characterInit -> ', data);
-        let { face, headblend, gender, clothes, eyescolor, headoverlay, haircolor } = data;
-
-        if (face === null || 
-            headblend === null || 
-            clothes === null || 
-            gender === null || 
-            headoverlay === null || 
-            eyescolor === null ||
-            haircolor === null) {
-            console.log(`[${this.player.name}]:[characterInit]: Ошибка установления внешности.`.red);
-            this.player.outputChatBox('!{ff0000}Ошибка установления кастомизации. Сообщите пожалуйста администрации');
-            return;
-        }
-
-        const model = gender === 'male' ? mp.joaat('mp_m_freemode_01') : mp.joaat("mp_f_freemode_01");
-        // Установка модели.
-        this.player.model = model;
-        // Установка цвета глаз.
-        this.player.eyeColor = eyescolor;
-        // Установка цвета волос.
-        this.player.setHairColor(haircolor, 0);
-
-        // Установка лица перса.
-        data.face.forEach(i => {
-            this.player.setFaceFeature(i.index, i.feature);
-        });
-
-        // Установка парам. головы.
-        this.player.setHeadBlend(
-            headblend[0],
-            headblend[1],
-            headblend[2],
-            headblend[3],
-            headblend[4],
-            headblend[5],
-            headblend[6],
-            headblend[7],
-            headblend[8],
-        );
-
-        headoverlay.forEach((index, overlayId) => {
-            if (index === 0) index = 255;
-            this.player.setHeadOverlay(overlayId, [index, 100, 0, 0]);
-        });
-
-        // Установка одежды.
-        this.player.changeClothes(1, clothes[0], 0, true);
-        this.player.changeClothes(2, clothes[1], 0, true);
-        this.player.changeClothes(3, clothes[2], 0, true);
-        this.player.changeClothes(4, clothes[3], 0, true);
-        this.player.changeClothes(5, clothes[4], 0, true);
-        this.player.changeClothes(6, clothes[5], 0, true);
-        this.player.changeClothes(7, clothes[6], 0, true);
-        this.player.changeClothes(8, clothes[7], 0, true);
-        this.player.changeClothes(9, clothes[8], 0, true);
-        this.player.changeClothes(10, clothes[9], 0, true);
-        this.player.changeClothes(11, clothes[10], 0, true);
-    }
-
-    public async logout() {
-        const hunger = await this.callRpc.clientGetAnyProp('hunger');
-        const dehydration = await this.callRpc.clientGetAnyProp('dehydration');
-
-        await postgres<PlayerData>('players')
-            .where({
-                login: this.player.name,
-            })
-            .update({
-                health: parseInt(String(this.player.health)),
-                armor: parseInt(String(this.player.armour)),
-                inventory: this.player.getInventory(),
-                position: this.player.position,
-                hunger: hunger || 1,
-                dehydration: dehydration || 1,
-                clothes: this.getClothes(),
-            });
     }
 
     // Нужен для отображения каких-либо частей в верстке (НАПРИМЕР HUDS).
