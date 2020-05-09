@@ -15,7 +15,7 @@ register('client_before_auth_init', () => {
 
     // Координаты спавна игрока для кастомизации.
     const playerDefaultPos = new mp.Vector3(-2167, 5182, 15.2);
-    
+
     // Координаты камеры игрока для кастомизации.
     const cameraDefaultPos = new mp.Vector3(-2167, 5131, 20); // (-2167, 5181, 16.1)
 

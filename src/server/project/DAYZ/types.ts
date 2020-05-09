@@ -27,6 +27,7 @@ export enum ItemKey {
     ITEM_WEAPON_AK47 = 'ITEM_WEAPON_AK47',
     ITEM_ARMOR = 'ITEM_ARMOR',
     ITEM_AMMO_SHOTGUN = 'ITEM_AMMO_SHOTGUN',
+    ITEM_AMMO_AK47 = 'ITEM_AMMO_AK47',
     ITEM_CLOTHES_MASK_1 = 'ITEM_CLOTHES_MASK_1',
     ITEM_CLOTHES_MASK_2 = 'ITEM_CLOTHES_MASK_2',
     ITEM_CLOTHES_MASK_3 = 'ITEM_CLOTHES_MASK_3',
@@ -70,6 +71,23 @@ export type PlayerData = {
     clothes: number[];
     headoverlay: number[];
     hair: number;
+}
+
+export type PositionCoords = {
+    x: number;
+    y: number; 
+    z: number;
+}
+
+export type VehicleData = {
+    id:number;
+    hash: string;
+    description: string;
+    color: number[];
+    defaultposition: PositionCoords;
+    saveposition: PositionCoords;
+    rotation: PositionCoords;
+    isExplode: boolean;
 }
 
 export type CharacterFace = {

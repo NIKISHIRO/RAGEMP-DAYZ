@@ -32,8 +32,18 @@ export async function up(knex: Knex): Promise<any> {
         // table.integer('playerid').notNullable();
         // table.foreign('playerid').references('players.id').onDelete('cascade');
     });
-}
 
+    await knex.schema.createTable('vehiclespawn', (table) => {
+        table.increments().primary();
+        table.text('hash').notNullable();
+        table.text('description').notNullable();
+        table.specificType('color', 'integer[]').notNullable();
+        table.jsonb('defaultposition').notNullable();
+        table.jsonb('saveposition').notNullable();
+        table.jsonb('rotation').notNullable();
+        table.boolean('isExplode').notNullable().defaultTo(false);
+    });
+}
 export async function down(knex: Knex): Promise<any> {
-    return knex.schema.dropTable('spawnlootinfo').dropTable('players');
+    return knex.schema.dropTable('spawnlootinfo').dropTable('players').dropTable('vehiclespawn');
 }

@@ -15,6 +15,11 @@ export interface ReturnInformation {
     info: Info;
 }
 
+export interface CarReturnInformation {
+    result: boolean;
+    info: string;
+}
+
 // Тип созданного колшипа.
 export enum LootSpawn {
     SPAWN = 'SPAWN',

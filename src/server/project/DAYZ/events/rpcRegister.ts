@@ -3,6 +3,8 @@ import { Player } from '../player/Player';
 import { CallRPC } from '../CallRPC';
 import { Hash } from 'crypto';
 import { Auth } from '../auth/Auth';
+import { Item } from '../types';
+import { WeaponData } from './../types';
 
 type TakeData = {
     serverId: string;
@@ -108,3 +110,31 @@ register('server_set_hud_prop', ({name, value}: {name: string, value: number}, i
         player.setVariable(name, value);
     }
 })
+
+register('server_get_ammo', (ammo: number, info: any) => {
+    const player:PlayerMp = info.player;
+    console.log(player.weapon);
+    console.log(ammo);
+    let itemKey;
+    switch(player.weapon){
+        case RageEnums.Hashes.Weapon.ASSAULTRIFLE_MK2:
+            itemKey = 'ITEM_AMMO_AK47'
+    }
+    const inventory: Item[] = player.getInventory();
+    inventory.forEach(item => {
+        console.log(itemKey);
+        console.log(item.key);
+        if(item.key == itemKey){
+            let index = player.getItemIndex(itemKey)
+            if(item.amount >= ammo){
+                player.giveWeapon(player.weapon, ammo);
+                console.log('Выдали', ammo);
+                player.removeItem(index, ammo)
+            }else{
+                player.giveWeapon(player.weapon, item.amount);
+                console.log('Выдали', item.amount);
+                player.removeItem(index, item.amount)
+            }
+        }
+    })
+});

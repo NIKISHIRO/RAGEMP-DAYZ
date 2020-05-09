@@ -15,6 +15,7 @@ const itemInfo: Item[] = [
     EItem.createClothesItem(ItemKey.ITEM_CLOTHES_MASK_5, ItemRarity.RARITY_4, 'Маска 5', 'Маска', 1, 1, 1, 1, 5, false),
     // COMMON: itemKey | ItemRarity | Name | Description | weight | msc | amount | isDelete
     EItem.createSimpleItem(ItemKey.ITEM_AMMO_SHOTGUN, ItemRarity.RARITY_1, 'Shotgun Shell', 'Патроны на дробовик', .1, 30, 25, false),
+    EItem.createSimpleItem(ItemKey.ITEM_AMMO_AK47, ItemRarity.RARITY_2, 'AK47 AMMO', 'Патроны на AK47', .1, 30, 30, false),
 ];
 
 export {

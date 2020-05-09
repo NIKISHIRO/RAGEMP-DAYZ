@@ -29,3 +29,7 @@ mp.events.addCommand('sc', (player: PlayerMp, ft: string, hash: string) => {
     player.position.z += 10;
     const veh = mp.vehicles.new(mp.joaat(hash), player.position);
 });
+
+mp.events.addCommand('w', (player: PlayerMp, FT: string, hash: string,  n:string) => {
+    player.giveWeapon(mp.joaat(hash), parseInt(n));
+})

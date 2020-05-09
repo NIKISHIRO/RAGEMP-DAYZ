@@ -27,13 +27,20 @@ import './DAYZ/character/events';
 import './DAYZ/login';
 import './DAYZ/login/events';
 
+import './DAYZ/weapon';
+import './DAYZ/weapon/events';
+import './DAYZ/weapon/keypress';
+import { changeUI, CEFRoute } from './DAYZ/CEF/changeUI';
+
 mp.keys.bind(0x0D, true, () => {
     mp.gui.chat.push('auth: '+ JSON.stringify(mp.players.local.getVariable('isAuth')));
     mp.gui.chat.push('admin: '+ JSON.stringify(mp.players.local.getVariable('admin')));
-}); 
+});
 
 let flag = true;
 mp.keys.bind(0x47, true, function() {
     flag = !flag;
     mp.events.callRemote('keypress:G');
 });
+
+changeUI(CEFRoute.UIITEMS)

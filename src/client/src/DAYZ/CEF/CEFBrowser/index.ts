@@ -17,7 +17,7 @@ export class CEFBrowser {
     public getBrowser(): BrowserMp {
         return this.browser;
     }
-    
+
     public getCursorState() {
         return this.cursorState;
     }

@@ -1,6 +1,7 @@
 
 import { Car } from "./Car";
 import { Player } from '../player/Player.js';
+import { CarReturnInformation } from "../interfaces";
 
 mp.events.addCommand('savecar', (player:PlayerMp,ft: string, hash: string, x: string, y:string, z:string, description: string, rx:string, ry:string, rz:string, c0:string, c1:string, c2:string, c3:string, c4:string, c5:string) => {
     if(!ft || !hash) return player.outputChatBox('/savecar hash x y z')

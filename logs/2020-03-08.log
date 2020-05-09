@@ -1,115 +1,460 @@
-2020-03-08T12:15:33.933Z - info: ---> Commands File.
-2020-03-08T12:15:54.991Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
-  _id: 5e64e1f7a9400d33bce847ee,
+2020-03-07T20:01:46.294Z - info: ---> Commands File.
+2020-03-07T20:01:50.041Z - info: Kittan: Зашел на сервер.
+2020-03-07T20:01:55.825Z - info: undefined
+2020-03-07T20:01:55.993Z - info: { ValidationError: VehicleSpawn validation failed: color: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+    at ValidationError.inspect (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\validation.js:61:24)
+    at formatValue (util.js:561:31)
+    at inspect (util.js:371:10)
+    at formatWithOptions (util.js:225:12)
+    at Function.format (util.js:213:10)
+    at TerminalManager._formatArgs (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\terminal\TerminalManager.js:64:25)
+    at Proxy.global.console.log (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\index.js:13:50)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:26:58
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+  errors:
+   { color:
+      { CastError: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+          at new CastError (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\cast.js:39:11)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:1236:9)
+          at model._handleIndex (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:970:14)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:912:22)
+          at model.Document (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:138:12)
+          at model.Model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:104:12)
+          at new model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:4649:15)
+          at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:47:19)
+          at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+        stringValue: '"[ NaN, NaN, NaN, NaN, NaN, NaN ]"',
+        kind: 'Array',
+        value: [Array],
+        path: 'color',
+        reason: [MongooseError],
+        message:
+         'Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"',
+        name: 'CastError' } },
+  _message: 'VehicleSpawn validation failed',
+  name: 'ValidationError' }
+2020-03-07T20:01:55.994Z - info: undefined
+2020-03-07T20:05:56.132Z - info: ---> Commands File.
+2020-03-07T20:05:59.694Z - info: Kittan: Зашел на сервер.
+2020-03-07T20:07:57.552Z - info: ---> Commands File.
+2020-03-07T20:08:02.037Z - info: Kittan: Зашел на сервер.
+2020-03-07T20:09:21.189Z - info: ---> Commands File.
+2020-03-07T20:09:24.781Z - info: Kittan: Зашел на сервер.
+2020-03-07T20:10:31.643Z - info: ---> Commands File.
+2020-03-07T20:10:34.968Z - info: Kittan: Зашел на сервер.
+2020-03-07T20:13:15.623Z - info: ---> Commands File.
+2020-03-07T20:13:21.993Z - info: Kittan: Зашел на сервер.
+2020-03-07T20:14:35.187Z - info: ---> Commands File.
+2020-03-07T20:14:39.451Z - info: 123
+2020-03-07T20:14:39.891Z - info: Kittan: Зашел на сервер.
+2020-03-07T20:14:41.282Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e6400af88fdf952d42bd5a6,
   hash: 'turismor',
   description: 'descr',
   position: { x: 111, y: 111, z: 111 },
   rotation: { x: 111, y: 111, z: 111 },
   __v: 0 }
-2020-03-08T12:15:57.813Z - info: ---> Commands File.
-2020-03-08T12:15:59.741Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
-  _id: 5e64e1ffe02aa61770997da5,
+2020-03-07T20:16:51.474Z - info: ---> Commands File.
+2020-03-07T20:16:54.506Z - info: 123
+2020-03-07T20:16:55.064Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e6401364075955624d1d33e,
   hash: 'turismor',
   description: 'descr',
   position: { x: 111, y: 111, z: 111 },
   rotation: { x: 111, y: 111, z: 111 },
   __v: 0 }
-2020-03-08T12:15:59.742Z - info: undefined
-2020-03-08T12:17:03.331Z - info: ---> Commands File.
-2020-03-08T12:17:05.253Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
-  _id: 5e64e240e4021a5a88927fd1,
+2020-03-07T20:22:37.264Z - info: ---> Commands File.
+2020-03-07T20:22:38.887Z - info: 123
+2020-03-07T20:22:39.354Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e64028e032cd055ccd37887,
   hash: 'turismor',
   description: 'descr',
   position: { x: 111, y: 111, z: 111 },
   rotation: { x: 111, y: 111, z: 111 },
   __v: 0 }
-2020-03-08T12:17:05.254Z - info: undefined
-2020-03-08T12:18:18.062Z - info: ---> Commands File.
-2020-03-08T12:18:19.382Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
-  _id: 5e64e28a120ccf4f042664de,
+2020-03-07T20:23:17.325Z - info: ---> Commands File.
+2020-03-07T20:23:18.876Z - info: 123
+2020-03-07T20:23:19.328Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
+  _id: 5e6402b6c8fe7855201fcb54,
   hash: 'turismor',
   description: 'descr',
   position: { x: 111, y: 111, z: 111 },
   rotation: { x: 111, y: 111, z: 111 },
   __v: 0 }
-2020-03-08T12:18:19.382Z - info: undefined
-2020-03-08T12:18:43.639Z - info: ---> Commands File.
-2020-03-08T12:18:44.840Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
-  _id: 5e64e2a437860a4ac458321a,
-  hash: 'turismor',
-  description: 'descr',
-  position: { x: 111, y: 111, z: 111 },
-  rotation: { x: 111, y: 111, z: 111 },
-  __v: 0 }
-2020-03-08T12:18:44.841Z - info: undefined
-2020-03-08T12:18:51.609Z - info: ---> Commands File.
-2020-03-08T12:18:53.114Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
-  _id: 5e64e2ac7ad54367c827852c,
-  hash: 'turismor',
-  description: 'descr',
-  position: { x: 111, y: 111, z: 111 },
-  rotation: { x: 111, y: 111, z: 111 },
-  __v: 0 }
-2020-03-08T12:18:53.115Z - info: undefined
-2020-03-08T12:22:54.975Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T12:23:45.603Z - info: ---> Commands File.
-2020-03-08T12:23:46.058Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T12:23:54.148Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
-  _id: 5e64e3d5d123b929dc6ce0a5,
-  hash: 'turismor',
-  description: 'descr',
-  position: { x: 111, y: 111, z: 111 },
-  rotation: { x: 111, y: 111, z: 111 },
-  __v: 0 }
-2020-03-08T12:23:54.150Z - info: undefined
-2020-03-08T12:24:35.195Z - info: ---> Commands File.
-2020-03-08T12:24:39.038Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T12:24:39.787Z - info: test - cmd -  - -
-2020-03-08T12:24:40.067Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
-  _id: 5e64e4075b41a62520f1e851,
-  hash: 'turismor',
-  description: 'descr',
-  position: { x: 111, y: 111, z: 111 },
-  rotation: { x: 111, y: 111, z: 111 },
-  __v: 0 }
-2020-03-08T12:24:40.067Z - info: undefined
-2020-03-08T12:25:14.935Z - info: ---> Commands File.
-2020-03-08T12:25:18.739Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T12:25:19.676Z - info: test - cmd -  - -
-2020-03-08T12:25:20.006Z - info: { color: [ 255, 255, 255, 255, 255, 255 ],
-  _id: 5e64e42f1571571a54d0656a,
-  hash: 'turismor',
-  description: 'descr',
-  position: { x: 111, y: 111, z: 111 },
-  rotation: { x: 111, y: 111, z: 111 },
-  __v: 0 }
-2020-03-08T12:25:20.007Z - info: undefined
-2020-03-08T12:25:57.805Z - info: ---> Commands File.
-2020-03-08T12:26:02.846Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T12:26:47.839Z - info: ---> Commands File.
-2020-03-08T12:26:52.492Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T12:27:16.955Z - info: ---> Commands File.
-2020-03-08T12:27:21.799Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T12:27:30.717Z - info: ---> Commands File.
-2020-03-08T12:27:35.444Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T12:27:55.469Z - info: ---> Commands File.
-2020-03-08T12:27:59.884Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T12:29:10.947Z - info: ---> Commands File.
-2020-03-08T12:29:15.791Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T13:08:25.428Z - info: ---> Commands File.
-2020-03-08T13:08:29.654Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T13:11:34.926Z - info: ---> Commands File.
-2020-03-08T13:11:34.975Z - info: test
-2020-03-08T13:11:38.903Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T13:11:47.780Z - info: ---> Commands File.
-2020-03-08T13:11:52.845Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T13:12:00.638Z - info: test
-2020-03-08T13:12:00.640Z - info: ---> Commands File.
-2020-03-08T13:12:05.027Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T13:12:07.372Z - info: test
-2020-03-08T13:12:07.379Z - info: ---> Commands File.
-2020-03-08T13:12:11.868Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T13:12:14.940Z - info: ---> Commands File.
-2020-03-08T13:12:19.796Z - info: NIKISHIRO: Зашел на сервер.
-2020-03-08T13:12:22.845Z - info: ---> Commands File.
-2020-03-08T13:12:27.710Z - info: NIKISHIRO: Зашел на сервер.
+2020-03-08T11:38:42.717Z - info: ---> Commands File.
+2020-03-08T11:52:40.776Z - info: ---> Commands File.
+2020-03-08T11:56:22.745Z - info: Kittan: Зашел на сервер.
+2020-03-08T11:59:25.976Z - info: undefined
+2020-03-08T11:59:26.238Z - info: { ValidationError: VehicleSpawn validation failed: color: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+    at ValidationError.inspect (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\validation.js:61:24)
+    at formatValue (util.js:561:31)
+    at inspect (util.js:371:10)
+    at formatWithOptions (util.js:225:12)
+    at Function.format (util.js:213:10)
+    at TerminalManager._formatArgs (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\terminal\TerminalManager.js:64:25)
+    at Proxy.global.console.log (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\index.js:13:50)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:20:58
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+  errors:
+   { color:
+      { CastError: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+          at new CastError (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\cast.js:39:11)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:1236:9)
+          at model._handleIndex (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:970:14)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:912:22)
+          at model.Document (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:138:12)
+          at model.Model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:104:12)
+          at new model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:4649:15)
+          at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:41:19)
+          at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+        stringValue: '"[ NaN, NaN, NaN, NaN, NaN, NaN ]"',
+        kind: 'Array',
+        value: [Array],
+        path: 'color',
+        reason: [MongooseError],
+        message:
+         'Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"',
+        name: 'CastError' } },
+  _message: 'VehicleSpawn validation failed',
+  name: 'ValidationError' }
+2020-03-08T11:59:26.239Z - info: undefined
+2020-03-08T12:01:59.643Z - info: undefined
+2020-03-08T12:01:59.703Z - info: { ValidationError: VehicleSpawn validation failed: color: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+    at ValidationError.inspect (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\validation.js:61:24)
+    at formatValue (util.js:561:31)
+    at inspect (util.js:371:10)
+    at formatWithOptions (util.js:225:12)
+    at Function.format (util.js:213:10)
+    at TerminalManager._formatArgs (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\terminal\TerminalManager.js:64:25)
+    at Proxy.global.console.log (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\index.js:13:50)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:20:58
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+  errors:
+   { color:
+      { CastError: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+          at new CastError (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\cast.js:39:11)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:1236:9)
+          at model._handleIndex (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:970:14)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:912:22)
+          at model.Document (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:138:12)
+          at model.Model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:104:12)
+          at new model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:4649:15)
+          at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:41:19)
+          at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+        stringValue: '"[ NaN, NaN, NaN, NaN, NaN, NaN ]"',
+        kind: 'Array',
+        value: [Array],
+        path: 'color',
+        reason: [MongooseError],
+        message:
+         'Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"',
+        name: 'CastError' } },
+  _message: 'VehicleSpawn validation failed',
+  name: 'ValidationError' }
+2020-03-08T12:01:59.703Z - info: undefined
+2020-03-08T12:03:01.033Z - info: ---> Commands File.
+2020-03-08T12:03:25.347Z - info: Kittan: Зашел на сервер.
+2020-03-08T12:03:44.844Z - info: { ValidationError: VehicleSpawn validation failed: color: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+    at ValidationError.inspect (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\validation.js:61:24)
+    at formatValue (util.js:561:31)
+    at inspect (util.js:371:10)
+    at formatWithOptions (util.js:225:12)
+    at Function.format (util.js:213:10)
+    at TerminalManager._formatArgs (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\terminal\TerminalManager.js:64:25)
+    at Proxy.global.console.log (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\index.js:13:50)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:125:70
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+  errors:
+   { color:
+      { CastError: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+          at new CastError (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\cast.js:39:11)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:1236:9)
+          at model._handleIndex (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:970:14)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:912:22)
+          at model.Document (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:138:12)
+          at model.Model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:104:12)
+          at new model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:4649:15)
+          at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:70:19)
+          at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+        stringValue: '"[ NaN, NaN, NaN, NaN, NaN, NaN ]"',
+        kind: 'Array',
+        value: [Array],
+        path: 'color',
+        reason: [MongooseError],
+        message:
+         'Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"',
+        name: 'CastError' } },
+  _message: 'VehicleSpawn validation failed',
+  name: 'ValidationError' }
+2020-03-08T12:03:44.845Z - info: undefined
+2020-03-08T12:03:44.845Z - info: undefined
+2020-03-08T12:04:39.003Z - info: ---> Commands File.
+2020-03-08T12:04:44.129Z - info: Kittan: Зашел на сервер.
+2020-03-08T12:04:48.537Z - info: 123
+2020-03-08T12:04:48.653Z - info: { ValidationError: VehicleSpawn validation failed: color: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+    at ValidationError.inspect (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\validation.js:61:24)
+    at formatValue (util.js:561:31)
+    at inspect (util.js:371:10)
+    at formatWithOptions (util.js:225:12)
+    at Function.format (util.js:213:10)
+    at TerminalManager._formatArgs (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\terminal\TerminalManager.js:64:25)
+    at Proxy.global.console.log (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\index.js:13:50)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:126:70
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+  errors:
+   { color:
+      { CastError: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+          at new CastError (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\cast.js:39:11)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:1236:9)
+          at model._handleIndex (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:970:14)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:912:22)
+          at model.Document (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:138:12)
+          at model.Model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:104:12)
+          at new model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:4649:15)
+          at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:70:19)
+          at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+        stringValue: '"[ NaN, NaN, NaN, NaN, NaN, NaN ]"',
+        kind: 'Array',
+        value: [Array],
+        path: 'color',
+        reason: [MongooseError],
+        message:
+         'Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"',
+        name: 'CastError' } },
+  _message: 'VehicleSpawn validation failed',
+  name: 'ValidationError' }
+2020-03-08T12:04:48.654Z - info: undefined
+2020-03-08T12:04:48.655Z - info: undefined
+2020-03-08T12:06:13.865Z - info: ---> Commands File.
+2020-03-08T12:06:18.496Z - info: Kittan: Зашел на сервер.
+2020-03-08T12:06:21.995Z - info: 123
+2020-03-08T12:06:22.207Z - info: { ValidationError: VehicleSpawn validation failed: color: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+    at ValidationError.inspect (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\validation.js:61:24)
+    at formatValue (util.js:561:31)
+    at inspect (util.js:371:10)
+    at formatWithOptions (util.js:225:12)
+    at Function.format (util.js:213:10)
+    at TerminalManager._formatArgs (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\terminal\TerminalManager.js:64:25)
+    at Proxy.global.console.log (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\index.js:13:50)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:126:70
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+  errors:
+   { color:
+      { CastError: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+          at new CastError (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\cast.js:39:11)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:1236:9)
+          at model._handleIndex (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:970:14)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:912:22)
+          at model.Document (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:138:12)
+          at model.Model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:104:12)
+          at new model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:4649:15)
+          at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:71:19)
+          at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+        stringValue: '"[ NaN, NaN, NaN, NaN, NaN, NaN ]"',
+        kind: 'Array',
+        value: [Array],
+        path: 'color',
+        reason: [MongooseError],
+        message:
+         'Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"',
+        name: 'CastError' } },
+  _message: 'VehicleSpawn validation failed',
+  name: 'ValidationError' }
+2020-03-08T12:06:22.210Z - info: undefined
+2020-03-08T12:06:22.211Z - info: undefined
+2020-03-08T12:07:10.928Z - info: ---> Commands File.
+2020-03-08T12:07:16.274Z - info: Kittan: Зашел на сервер.
+2020-03-08T12:07:19.909Z - info: 123
+2020-03-08T12:07:20.165Z - info: { ValidationError: VehicleSpawn validation failed: color: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+    at ValidationError.inspect (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\validation.js:61:24)
+    at formatValue (util.js:561:31)
+    at inspect (util.js:371:10)
+    at formatWithOptions (util.js:225:12)
+    at Function.format (util.js:213:10)
+    at TerminalManager._formatArgs (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\terminal\TerminalManager.js:64:25)
+    at Proxy.global.console.log (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\index.js:13:50)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:126:70
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+  errors:
+   { color:
+      { CastError: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+          at new CastError (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\cast.js:39:11)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:1236:9)
+          at model._handleIndex (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:970:14)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:912:22)
+          at model.Document (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:138:12)
+          at model.Model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:104:12)
+          at new model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:4649:15)
+          at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:71:19)
+          at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+        stringValue: '"[ NaN, NaN, NaN, NaN, NaN, NaN ]"',
+        kind: 'Array',
+        value: [Array],
+        path: 'color',
+        reason: [MongooseError],
+        message:
+         'Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"',
+        name: 'CastError' } },
+  _message: 'VehicleSpawn validation failed',
+  name: 'ValidationError' }
+2020-03-08T12:07:20.165Z - info: undefined
+2020-03-08T12:07:20.166Z - info: undefined
+2020-03-08T12:10:33.300Z - info: ---> Commands File.
+2020-03-08T12:10:37.802Z - info: Kittan: Зашел на сервер.
+2020-03-08T12:10:40.877Z - info: 123
+2020-03-08T12:10:41.134Z - info: { ValidationError: VehicleSpawn validation failed: color: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+    at ValidationError.inspect (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\validation.js:61:24)
+    at formatValue (util.js:561:31)
+    at inspect (util.js:371:10)
+    at formatWithOptions (util.js:225:12)
+    at Function.format (util.js:213:10)
+    at TerminalManager._formatArgs (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\terminal\TerminalManager.js:64:25)
+    at Proxy.global.console.log (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\index.js:13:50)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:126:70
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+  errors:
+   { color:
+      { CastError: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+          at new CastError (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\cast.js:39:11)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:1236:9)
+          at model._handleIndex (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:970:14)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:912:22)
+          at model.Document (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:138:12)
+          at model.Model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:104:12)
+          at new model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:4649:15)
+          at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:71:19)
+          at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+        stringValue: '"[ NaN, NaN, NaN, NaN, NaN, NaN ]"',
+        kind: 'Array',
+        value: [Array],
+        path: 'color',
+        reason: [MongooseError],
+        message:
+         'Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"',
+        name: 'CastError' } },
+  _message: 'VehicleSpawn validation failed',
+  name: 'ValidationError' }
+2020-03-08T12:10:41.135Z - info: undefined
+2020-03-08T12:10:41.136Z - info: undefined
+2020-03-08T12:19:50.066Z - info: ---> Commands File.
+2020-03-08T12:19:54.256Z - info: Kittan: Зашел на сервер.
+2020-03-08T12:19:59.470Z - info: 123
+2020-03-08T12:20:02.027Z - error: (node:11828) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'catch' of undefined
+    at Function.<anonymous> (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:127:29)
+    at step (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:33:23)
+    at Object.next (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:14:53)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:4:12)
+    at Function.Car.VehicleCreate (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:121:16)
+    at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:87:13)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+2020-03-08T12:20:02.027Z - error: (node:11828) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1)
+2020-03-08T12:20:02.027Z - error: (node:11828) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+2020-03-08T12:21:26.600Z - info: ---> Commands File.
+2020-03-08T12:21:30.637Z - info: Kittan: Зашел на сервер.
+2020-03-08T12:21:35.963Z - info: 123
+2020-03-08T12:21:36.231Z - error: (node:13180) UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'catch' of undefined
+    at Function.<anonymous> (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:128:29)
+    at step (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:33:23)
+    at Object.next (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:14:53)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:4:12)
+    at Function.Car.VehicleCreate (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:121:16)
+    at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:87:13)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+2020-03-08T12:21:36.231Z - error: (node:13180) UnhandledPromiseRejectionWarning: Unhandled promise rejection. This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). (rejection id: 1)
+2020-03-08T12:21:36.231Z - error: (node:13180) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.
+2020-03-08T12:24:40.482Z - info: ---> Commands File.
+2020-03-08T12:24:45.119Z - info: Kittan: Зашел на сервер.
+2020-03-08T12:24:47.277Z - info: 123
+2020-03-08T12:24:47.278Z - info: 123
+2020-03-08T12:24:47.278Z - info: 123
+2020-03-08T12:24:47.278Z - info: 123
+2020-03-08T12:24:47.279Z - info: 123
+2020-03-08T12:24:47.279Z - info: 123
+2020-03-08T12:24:52.037Z - info: 123
+2020-03-08T12:24:52.039Z - info: 123
+2020-03-08T12:24:52.040Z - info: 123
+2020-03-08T12:24:52.040Z - info: 123
+2020-03-08T12:24:52.040Z - info: 123
+2020-03-08T12:24:52.040Z - info: 123
+2020-03-08T13:16:09.724Z - info: ---> Commands File.
+2020-03-08T13:16:14.728Z - info: Kittan: Зашел на сервер.
+2020-03-08T13:16:30.593Z - info: { ValidationError: VehicleSpawn validation failed: color: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+    at ValidationError.inspect (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\validation.js:61:24)
+    at formatValue (util.js:561:31)
+    at inspect (util.js:371:10)
+    at formatWithOptions (util.js:225:12)
+    at Function.format (util.js:213:10)
+    at TerminalManager._formatArgs (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\terminal\TerminalManager.js:64:25)
+    at Proxy.global.console.log (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\index.js:13:50)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:125:70
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+  errors:
+   { color:
+      { CastError: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+          at new CastError (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\cast.js:39:11)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:1236:9)
+          at model._handleIndex (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:970:14)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:912:22)
+          at model.Document (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:138:12)
+          at model.Model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:104:12)
+          at new model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:4649:15)
+          at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:70:19)
+          at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+        stringValue: '"[ NaN, NaN, NaN, NaN, NaN, NaN ]"',
+        kind: 'Array',
+        value: [Array],
+        path: 'color',
+        reason: [MongooseError],
+        message:
+         'Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"',
+        name: 'CastError' } },
+  _message: 'VehicleSpawn validation failed',
+  name: 'ValidationError' }
+2020-03-08T13:16:30.594Z - info: undefined
+2020-03-08T13:16:30.594Z - info: undefined
+2020-03-08T13:18:28.751Z - info: ---> Commands File.
+2020-03-08T13:18:33.179Z - info: Kittan: Зашел на сервер.
+2020-03-08T13:18:38.928Z - info: 143
+2020-03-08T13:18:38.928Z - info: 252
+2020-03-08T13:18:38.928Z - info: 65
+2020-03-08T13:18:38.929Z - info: 103
+2020-03-08T13:18:38.929Z - info: 29
+2020-03-08T13:18:38.929Z - info: 251
+2020-03-08T13:18:39.162Z - info: { ValidationError: VehicleSpawn validation failed: color: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+    at ValidationError.inspect (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\validation.js:61:24)
+    at formatValue (util.js:561:31)
+    at inspect (util.js:371:10)
+    at formatWithOptions (util.js:225:12)
+    at Function.format (util.js:213:10)
+    at TerminalManager._formatArgs (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\terminal\TerminalManager.js:64:25)
+    at Proxy.global.console.log (B:\gta 5\project\server-files\src\server\libs\modules\_rage-console\index.js:13:50)
+    at B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:126:70
+    at process._tickCallback (internal/process/next_tick.js:68:7)
+  errors:
+   { color:
+      { CastError: Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"
+          at new CastError (B:\gta 5\project\server-files\node_modules\mongoose\lib\error\cast.js:39:11)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:1236:9)
+          at model._handleIndex (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:970:14)
+          at model.$set (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:912:22)
+          at model.Document (B:\gta 5\project\server-files\node_modules\mongoose\lib\document.js:138:12)
+          at model.Model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:104:12)
+          at new model (B:\gta 5\project\server-files\node_modules\mongoose\lib\model.js:4649:15)
+          at Function.Car.saveCar (B:\gta 5\project\server-files\packages\DAYZ\car\Car.js:71:19)
+          at B:\gta 5\project\server-files\packages\DAYZ\car\commands.js:18:39
+        stringValue: '"[ NaN, NaN, NaN, NaN, NaN, NaN ]"',
+        kind: 'Array',
+        value: [Array],
+        path: 'color',
+        reason: [MongooseError],
+        message:
+         'Cast to Array failed for value "[ NaN, NaN, NaN, NaN, NaN, NaN ]" at path "color"',
+        name: 'CastError' } },
+  _message: 'VehicleSpawn validation failed',
+  name: 'ValidationError' }
+2020-03-08T13:18:39.162Z - info: undefined
+2020-03-08T13:18:39.162Z - info: undefined

@@ -2,7 +2,7 @@ import { Colshape } from "../loot/entities/Colshape";
 import { Label } from "../loot/entities/Label";
 import { EObject } from "../loot/entities/Object";
 import { Loot } from "../loot/Loot";
-import { ReturnInformation, LootShapeInfo } from "../interfaces";
+import { ReturnInformation, LootShapeInfo, CarReturnInformation } from "../interfaces";
 import { Blip } from "../loot/entities/Blip";
 import { EItem } from "../loot/Item/Item";
 import { SPAWNS } from '../playerSpawns';
@@ -371,5 +371,106 @@ export class Player {
         loot.createLootPoints([createdItem]);
 
         return { result: true, text: `Вы выбросили ${item.data.name} - ${amount}` };
+    }
+
+    // Положить определнный предмет в каком то кол-ве
+    public putItemCar(vehicle:VehicleMp, index: number, amount:number): CarReturnInformation{
+        const returnInformation: CarReturnInformation = {
+            info: '!{#DA3060} должно быть число',
+            result: false
+        };
+        const carInventory = vehicle.getVariable('carInventory');
+        const playerInventory: Item[] = this.player.getInventory();
+
+        if(!Number.isInteger(index) || !Number.isInteger(amount)){
+            return returnInformation;
+        }
+
+        if(!mp.vehicles.exists(vehicle)){
+            returnInformation.info = `Рядом нет машины`;
+            return returnInformation;
+        }
+
+        if(!playerInventory || !playerInventory[index]){
+            returnInformation.info = 'У вас нет такого предмета в инвентаре';
+            return returnInformation
+        }
+
+        if(amount <= 0){
+            returnInformation.info = `Введите коректное число`;
+            return returnInformation;
+        }
+
+        if(playerInventory[index].amount < amount){
+            returnInformation.info = 'Такого количества предметов нет';
+            return returnInformation
+        }
+
+        const carItem = {...playerInventory[index]}
+        this.player.removeItem(index, amount);
+        
+        carItem.amount = amount;
+        carInventory.push(carItem);
+        vehicle.setVariable('carInventory', carInventory);
+
+        returnInformation.info = `Вы успешно положили в машину ${amount}`;
+        returnInformation.result = true
+        return returnInformation
+    }
+
+    // Взять определенный предмет в каком то количестве
+    public takeItemCar( vehicle:VehicleMp, index: number, amount:number): CarReturnInformation {
+        const returnInformation: CarReturnInformation  = {
+            info: '!{#DA3060} должно быть число',
+            result: false
+        };
+        const carInventory = vehicle.getVariable('carInventory');
+        const playerInventory: Item[] = this.player.getInventory();
+
+        if(!Number.isInteger(index) || !Number.isInteger(amount)){
+            return returnInformation;
+        }
+
+        if(!mp.vehicles.exists(vehicle)){
+            returnInformation.info = `Рядом нет машины`;
+            return returnInformation;
+        }
+
+        if(!carInventory || !carInventory[index]){
+            returnInformation.info = `У вас нет такого предмета в инвентаре`;
+            return returnInformation;
+        }
+
+        if(amount <= 0){
+            returnInformation.info = `Введите коректное число`;
+            return returnInformation;
+        }
+
+        if(carInventory[index].amount < amount){
+            returnInformation.info = 'Такого количества предметов нет';
+            return returnInformation
+        }else if(carInventory[index].amount == amount){
+            returnInformation.info = 'Вы успешно взяли предмет в полном кол-ве';
+            returnInformation.result = true;
+
+            const playerItem = {...carInventory[index]}
+            playerItem.amount = amount
+            playerInventory.push(playerItem);
+
+            carInventory.splice(carInventory[index], 1);
+            vehicle.setVariable('carInventory', carInventory);
+            return returnInformation
+        }
+        returnInformation.info = `Вы успешно взяли ${amount}`;
+        returnInformation.result = true
+
+        const playerItem = {...carInventory[index]}
+        playerItem.amount = amount
+        playerInventory.push(playerItem);
+        
+        this.player.setInventory(playerInventory);
+        carInventory[index].amount -= amount;
+        vehicle.setVariable('carInventory', carInventory);
+        return returnInformation
     }
 }
