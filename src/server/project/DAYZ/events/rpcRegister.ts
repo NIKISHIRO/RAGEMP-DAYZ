@@ -76,11 +76,35 @@ register('server_set_health', (health: number, info: any) => {
 register('server_register', (data: ServerRegister, info: any) => {
     const player = info.player;
     const auth = new Auth(player);
-    auth.register(data.login, data.email, data.password);
+    return auth.register(data.login, data.email, data.password);
 });
 
 register('server_login', (data: LoginRegister, info: any) => {
     const player = info.player;
     const auth = new Auth(player);
-    auth.login(data.login, data.password);
+    return auth.login(data.login, data.password);
 });
+
+register('server_check_login', (login: string, info: any) => {
+    const player = info.player;
+    const auth = new Auth(player);
+    return auth.checkLogin(login);
+});
+
+register('server_character_ready', ({login, email, password}: {login: string; email: string; password: string}, info: any) => {
+    const player = info.player;
+    
+    // Создание перса после регистрации.
+    if (!player.getVariable('isAuth')) {
+        const auth = new Auth(player);
+        auth.register(login, email, password);
+    }
+});
+
+register('server_set_hud_prop', ({name, value}: {name: string, value: number}, info) => {
+    const player: any = info.player;
+
+    if (name == 'hunger' || name == 'dehydration' || name === 'temperature') {
+        player.setVariable(name, value);
+    }
+})

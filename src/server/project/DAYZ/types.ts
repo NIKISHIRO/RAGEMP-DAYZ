@@ -4,14 +4,15 @@ export type Item = {
     data: ItemData | BodyArmourData | WeaponData | ClothesData;
 };
 
-export type CharacterClientData = {
+export type CharacterPlayerData = {
     gender: 'male' | 'female';
     face: { index: number; feature: number; }[];
-    headArray: any[]; // headblend.
-    headOverlay: number[];
+    headblend: any[]; // headblend.
+    headoverlay: number[];
+    clothes: number[];
     hair: number;
-    hairColor: number;
-    eyesColor: number;
+    haircolor: number;
+    eyescolor: number;
 };
 
 /* ОПИСАНИЕ ПРЕДМЕТА */
@@ -47,23 +48,28 @@ export type SpawnLootData = {
 };
 
 export type PlayerData = {
+    id: number;
     login: string;
     passwordHash: string;
     email: string;
-    gender: 'male' | 'female';
-    hunger: number;
-    dehydration: number;
     health: number;
     armor: number;
     admin: number;
-    haircolor:number;
-    eyescolor: number;
     position: { x: number; y: number; z: number };
     inventory: Item[];
+
+    hunger: number;
+    dehydration: number;
+    temperature: number;
+
+    gender: 'male' | 'female';
+    haircolor:number;
+    eyescolor: number;
     face: CharacterFace[];
     headblend: any[],
     clothes: number[];
     headoverlay: number[];
+    hair: number;
 }
 
 export type CharacterFace = {

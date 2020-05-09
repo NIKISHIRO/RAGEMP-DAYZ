@@ -4,6 +4,14 @@
     width: 100%;
 }
 
+.character-drawer .rs-drawer-body {
+    margin: 1.5rem 1.2rem !important;
+}
+
+.character-drawer .rs-drawer-header {
+    padding: .5rem;
+}
+
 .character-drawer .rs-drawer-content {
     background-color: rgba(0, 0, 0, .8) ;
 }
@@ -47,14 +55,13 @@
 }
 
 .character-gender {
-    margin-bottom: 1rem;
+    margin: 1rem 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .character-gender button {
-    width: 10rem;
-    padding: .5rem;
+    width: 8rem;
     font-size: 1.5rem;
 }
 
@@ -97,7 +104,7 @@
 .character-reset {
     position: absolute;
     top: 0;
-    right: 0;
+    right: 1rem;
     font-size: 1.2rem;
 }
 

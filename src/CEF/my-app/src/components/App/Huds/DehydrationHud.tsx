@@ -1,4 +1,4 @@
-import React from "react"
+import React, { CSSProperties } from "react"
 
 import img_icon_100 from '../../../assets/huds/dehydration/100.svg';
 import img_icon_70 from '../../../assets/huds/dehydration/70.svg';
@@ -17,19 +17,15 @@ function DehydrationHud(props: Props) {
     let imgIcon = img_icon_100;
     if (dehydration < 70) {
         imgIcon = img_icon_70;
-        styles = {filter: 'hue-rotate(-30deg)'};
     }    
     if (dehydration < 40) {
         imgIcon = img_icon_40;
-        styles = {filter: 'hue-rotate(-40deg)'};
     }
     if (dehydration < 10) {
         imgIcon = img_icon_10;
-        styles = {filter: 'hue-rotate(-50deg)'};
     }
     if (dehydration < 1) {
         imgIcon = img_icon_empty;
-        styles = {filter: 'hue-rotate(-60deg)'};
     }
 
     return (
