@@ -1,0 +1,12 @@
+/bridge
+.idea
+*.dll
+node_modules/
+package-lock.json
+packages/
+server.exe
+bt.dat
+/bin
+/dotnet
+SOS_DEADME.md
+ragemp-server.exe
