@@ -13,3 +13,4 @@ ragemp-server.exe
 *.gz
 *.tmp
 *.exe
+src/server/project/DAYZ/db/knexfile.ts
