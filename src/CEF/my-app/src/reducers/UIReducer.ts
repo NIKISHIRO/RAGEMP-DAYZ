@@ -41,65 +41,65 @@ export type UIState = {
 }
 
 const getData = (): Item[] => [
-    // {
-    //     key: ItemKey.ITEM_WEAPON_AK47, 
-    //     amount: 1,
-    //     data: {
-    //         type: ItemType.WEAPON,
-    //         name: 'Kalash',
-    //         description: 'Убивац',
-    //         maxStackCount: 1,
-    //         serverId: shortid.generate(),
-    //         shortid: shortid.generate(),
-    //         isDelete: false,
-    //         weight: 4,
-    //     }
-    // },
+    {
+        key: ItemKey.ITEM_WEAPON_AK47, 
+        amount: 1,
+        data: {
+            type: ItemType.WEAPON,
+            name: 'Kalash',
+            description: 'Убивац',
+            maxStackCount: 1,
+            serverId: shortid.generate(),
+            shortid: shortid.generate(),
+            isDelete: false,
+            weight: 4,
+        }
+    },
 
-    // {
-    //     key: ItemKey.ITEM_AMMO_SHOTGUN, 
-    //     amount: 25,
-    //     data: {
-    //         type: ItemType.COMMON,
-    //         name: 'SHOTGUN SHELL',
-    //         description: 'Пережаризац',
-    //         maxStackCount: 30,
-    //         serverId: shortid.generate(),
-    //         shortid: shortid.generate(),
-    //         isDelete: false,
-    //         weight: 0.1,
-    //     }
-    // },
+    {
+        key: ItemKey.ITEM_AMMO_SHOTGUN, 
+        amount: 25,
+        data: {
+            type: ItemType.COMMON,
+            name: 'SHOTGUN SHELL',
+            description: 'Пережаризац',
+            maxStackCount: 30,
+            serverId: shortid.generate(),
+            shortid: shortid.generate(),
+            isDelete: false,
+            weight: 0.1,
+        }
+    },
 
-    // {
-    //     key: ItemKey.ITEM_ARMOR, 
-    //     amount: 1, 
-    //     data: {
-    //         type: ItemType.ARMOR,
-    //         name: 'ARMOR',
-    //         description: 'Защищац',
-    //         maxStackCount: 1,
-    //         serverId: shortid.generate(),
-    //         shortid: shortid.generate(),
-    //         isDelete: false,
-    //         weight: 6,
-    //     }
-    // },
+    {
+        key: ItemKey.ITEM_ARMOR, 
+        amount: 1, 
+        data: {
+            type: ItemType.ARMOR,
+            name: 'ARMOR',
+            description: 'Защищац',
+            maxStackCount: 1,
+            serverId: shortid.generate(),
+            shortid: shortid.generate(),
+            isDelete: false,
+            weight: 6,
+        }
+    },
 
-    // {
-    //     key: ItemKey.ITEM_CLOTHES_MASK_1, 
-    //     amount: 1, 
-    //     data: {
-    //         type: ItemType.CLOTHES,
-    //         name: 'Маска 1',
-    //         description: 'Одевац',
-    //         maxStackCount: 1,
-    //         serverId: shortid.generate(),
-    //         shortid: shortid.generate(),
-    //         isDelete: true,
-    //         weight: 2,
-    //     }
-    // },
+    {
+        key: ItemKey.ITEM_CLOTHES_MASK_1, 
+        amount: 1, 
+        data: {
+            type: ItemType.CLOTHES,
+            name: 'Маска 1',
+            description: 'Одевац',
+            maxStackCount: 1,
+            serverId: shortid.generate(),
+            shortid: shortid.generate(),
+            isDelete: true,
+            weight: 2,
+        }
+    },
 ];
 
 const initialState: UIState = {
@@ -118,7 +118,7 @@ const initialState: UIState = {
         isBleeding: true,
     },
     displayUI: {
-        huds: false,
+        huds: true,
     },
     notifications: [],
     inventory: {

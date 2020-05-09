@@ -44,7 +44,7 @@ function App() {
   return (
     <div className="app">
       { huds && <Huds />}
-      <NotifyComp />
+      <NotifyComp />      
       <Switch>
         <Route exact path='/clear' component={ Clear } />
         <Route exact path='/UIItems' component={ ItemsUI } />
@@ -53,7 +53,7 @@ function App() {
         <Route exact path='/character' component={ Character } />
         <Route exact path='/StartMenu' component={ StartMenu } />
       </Switch>
-      <Redirect to="/character" />
+      <Redirect to="/StartMenu" />
       {/* <RoutesComp /> */}
     </div>
   );

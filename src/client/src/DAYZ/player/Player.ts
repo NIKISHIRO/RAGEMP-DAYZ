@@ -1,5 +1,6 @@
+import { serverSetHealth } from "./CallServer";
 import { constants } from "../constants";
-import { callRPC } from "../CallRPC";
+import { Browser } from "../CEF/browser";
 
 class Player {
     private player: PlayerMp;
@@ -49,13 +50,12 @@ class Player {
                     self.dehydrationDecrementIntervalId = setInterval(() => {
                         const currentHealth = self.player.getHealth();
                         const newHealth = currentHealth - constants.DECREMENT_DEHYDRATION_HEALTH;
-                        callRPC.serverSetHealth(newHealth);
+                        serverSetHealth(newHealth);
                     }, constants.DECREMENT_TIME);
                 }
             }
 
             self.setDehydration(newDehydration);
-            callRPC.serverSetHudProp('dehydration', newDehydration);
         }, constants.CHECK_TIME);
     }
 
@@ -104,13 +104,12 @@ class Player {
                     self.hungerDecrementIntervalId = setInterval(() => {
                         const currentHealth = self.player.getHealth();
                         const newHealth = currentHealth - constants.DECREMENT_HUNGER_HEALTH;
-                        callRPC.serverSetHealth(newHealth);
+                        serverSetHealth(newHealth);
                     }, constants.DECREMENT_DEHYDRATION_TIME);
                 } 
             }
 
             self.setHunger(newHunger);
-            callRPC.serverSetHudProp('hunger', newHunger);
             mp.gui.chat.push(`self.getHunger(): ${self.getHunger()}`);
         }, constants.CHECK_DEHYDRATION_TIME);
     }

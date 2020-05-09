@@ -59,7 +59,7 @@ async function serverRegister(login: string, email: string, password: string): P
 // Отправляет данные на сервер для авторизации.
 async function serverLogin(login: string, password: string): Promise<Result> {
     // return callServer('server_login', {login, password});
-    // return { result: true, text: 'Вы успешно авторизовались!' };
+    return { result: true, text: 'Вы успешно авторизовались!' };
 }
 
 // Изменяет положение игрока на клиенте.
@@ -109,45 +109,15 @@ async function setCharacterEyes(val: number) {
     // return callClient('client_Character_set_eyes', val);
 }
 
-async function updateCharacterCameraPosition() {
-    // return callClient('update_character_camera_position');
-}
-
-async function serverCheckLogin(login: string): Promise<{result: boolean; text: string}> {
-    // return callServer('server_check_login', login);
-    return {result: false, text: 'pizda vcem'};
-}
-
-async function serverCharacterReady(data: {login: string; email: string; password: string}) {
-    // return callServer('server_character_ready', data);
-    return { text: 'test', result: true };
-}
-
-export type CharactersDataResult = {
-    maxCharacters: number;
-    hasCharacters: number;
-};
-
-export type CharactersServerResult = {
-    result: boolean; 
-    text: string; 
-    data: CharactersDataResult;
-};
-
 export {
     takeInventoryItemToServer,
     dropInventoryItemToServer,
     usesInventoryItemByServerId,
-
     lootCreate,
     setLootCreateRotation,
     setLootCreateHash,
-
     serverRegister,
     serverLogin,
-    serverCheckLogin,
-    serverCharacterReady,
-
     setCharacterHeading,
     setCharacterFaceFeature,
     setCharacterGender,
@@ -159,6 +129,4 @@ export {
     setCharacterHairColor,
     setCharacterHeadOverlay,
     setCharacterEyes,
-
-    updateCharacterCameraPosition,
 }

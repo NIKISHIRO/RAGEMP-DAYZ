@@ -1,4 +1,6 @@
+import { playerInstance } from "../player/Player";
 import { PlayerCamera } from "../Camera/Camera";
+import { character } from "../character/Character";
 
 flyCamera();
 const playerLocal = mp.players.local;

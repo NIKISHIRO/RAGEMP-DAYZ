@@ -52,7 +52,7 @@ function AnySelect(props: Props) {
         transform: 'translateX(-50%)',
         width: '100%',
         color: '#fff',
-        textShadow: '0px 2px 9px #000000',
+        textShadow: '0px 2px 9px #000000;',
     };
 
     return (
