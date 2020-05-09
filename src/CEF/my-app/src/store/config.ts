@@ -22,6 +22,8 @@ const store = createStore(
     ),
 );
 
+console.log('store', store);
+
 PlayerEvents(store.dispatch, store.getState);
 
 export {

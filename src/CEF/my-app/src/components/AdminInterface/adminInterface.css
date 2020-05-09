@@ -1,0 +1,110 @@
+.admin {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.admin-interface {
+    background-color: rgba(0, 0, 0, .8);
+    color: rgba(255, 255, 255, 1);
+    font-size: 1.2rem;
+    height: 35rem;
+    margin-top: 5rem;
+}
+
+.admin-interface__container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.AI-sidebar {
+    width: 15rem;
+    font-size: 1.1rem;
+}
+
+.AI-content {
+    width: 30rem;
+    padding: 0 1rem;
+    background-color: rgba(0, 0, 0, .2);
+    height: 35rem;
+    overflow: auto;
+}
+
+.AI-content__title {
+    text-align: center;
+    font-size: 1.4rem;
+    margin: .8rem 0;
+}
+
+.AI-sidebar ul {
+    margin: .5rem;
+    margin-top: 1.8rem;
+    padding: 0;
+    list-style: none;
+}
+
+.AI-sidebar li {
+    margin: 0;
+    margin-bottom: .3rem;
+}
+
+.AI-sidebar li a {
+    transition: all .1s;
+    text-decoration: none;
+    color: #fff;
+}
+
+.AI-sidebar li a:hover {
+    opacity: .8;
+}
+
+.AI-content-inner__title {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.loot-create__object-title {
+    margin-bottom: 0.5rem;
+}
+
+.vector-data input {
+    width: 10rem;
+}
+
+.loot-create__object-descr {
+    font-size: .9rem;
+}
+
+.loot-create__data {
+    height: 6rem;
+    overflow: auto;
+}
+
+.loot-create__object-btn {
+    background-color: rgba(0, 0, 0, .5);
+    color: rgba(255, 255, 255, 1);
+    padding: 0.5rem;
+    border: none;
+}
+
+.loot-create__object-btn:hover {
+    opacity: .8;
+}
+
+#loot-create__label {
+    color: #fff;
+}
+
+#loot-create__select {
+    color: #fff;
+}
+
+.loot-slider__root {
+    width: 80% !important;
+    vertical-align: middle;
+    margin-left: 1rem;
+}

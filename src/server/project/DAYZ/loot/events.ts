@@ -1,20 +1,13 @@
 import { Player } from "../player/Player";
 import { Item } from "../types";
-import { CEF } from "../CEF";
+import { CallRPC } from "../CallRPC";
 
 mp.events.add({
-    'playerJoin': (player: PlayerMp) => {
-        // itemPoints - массив ИД-ов колшипов.
-        player.setVariable('itemPoints', []);
-        // Макс. вес для предметов игрока.
-        player.setVariable('invMaxWeight', 100000000);
-    },
-
     'playerEnterColshape': (player: PlayerMp, shape: ColshapeMp) => {
         player.outputChatBox('event -> playerEnterColshape');
 
         const plr = new Player(player);
-        const cef = new CEF(player);
+        const cef = new CallRPC(player);
 
         plr.addItemPoint(shape.id);
         plr.addPlayerInColshape(shape, player);
@@ -30,7 +23,7 @@ mp.events.add({
         player.outputChatBox('event -> playerExitColshape');
 
         const plr = new Player(player);
-        const cef = new CEF(player);
+        const cef = new CallRPC(player);
 
         plr.removePlayerInColshape(shape, player);
         player.outputChatBox(JSON.stringify(shape.getVariable('playersIdsOnColshape')));

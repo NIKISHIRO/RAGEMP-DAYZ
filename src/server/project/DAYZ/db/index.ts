@@ -1,9 +1,8 @@
-import {VehicleSpawn} from './schema';
-// import * as mongoose from 'mongoose';
-const mongoose = require("mongoose");
+import knex from 'knex';
+const dbConfig = require('./knexfile');
 
-// подключение
-mongoose.connect("mongodb://localhost:27017/dayz", { 
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+const postgres = knex(dbConfig.development);
+
+export {
+    postgres,
+}

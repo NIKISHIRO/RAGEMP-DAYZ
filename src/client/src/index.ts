@@ -1,18 +1,46 @@
-import { callBrowsers } from './rage-rpc';
+import './rage-rpc';
 
 // Библиотеки расширяющие функционал.
-import './_rage-console';
 import './syncedPlayerComponent';
 
 // Подключения наших модулей.
-import './CEF';
+import './DAYZ/CEF/events';
+import './DAYZ/CEF/browser';
+import './DAYZ/CEF/keypress/UIItems';
+import './DAYZ/CEF/keypress/AdminInterface';
+import './DAYZ/CEF/keypress/huds';
+
 import './DAYZ/events/render';
-import './DAYZ/peds';
-import './DAYZ/loot';
-import './DAYZ/events';
 
+import './DAYZ/player';
+import './DAYZ/player/events';
+import './DAYZ/player/rpcRegister';
 
+import './DAYZ/hudsData/armor';
+import './DAYZ/hudsData/health';
+import './DAYZ/hudsData/hunger';
+import './DAYZ/hudsData/dehydration';
+
+import './DAYZ/character';
+import './DAYZ/character/events';
+
+import './DAYZ/login';
+import './DAYZ/login/events';
+
+import './DAYZ/weapon';
+import './DAYZ/weapon/events';
+import './DAYZ/weapon/keypress';
+import { changeUI, CEFRoute } from './DAYZ/CEF/changeUI';
+
+mp.keys.bind(0x0D, true, () => {
+    mp.gui.chat.push('auth: '+ JSON.stringify(mp.players.local.getVariable('isAuth')));
+    mp.gui.chat.push('admin: '+ JSON.stringify(mp.players.local.getVariable('admin')));
+});
+
+let flag = true;
 mp.keys.bind(0x47, true, function() {
-    callBrowsers('testrpc', false);
+    flag = !flag;
     mp.events.callRemote('keypress:G');
 });
+
+changeUI(CEFRoute.UIITEMS)

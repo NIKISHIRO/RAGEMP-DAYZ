@@ -1,11 +1,51 @@
-/*  COLORS:
-
-white - rgba(233, 235, 240, 1);
-black - rgba(15, 19, 26, .8);
-blue - rgba(128, 221, 255, 1);
-
-*/
-
 .app {
     background-color: transparent;
+}
+
+.huds {
+    position: absolute;
+    background: transparent;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.huds-menu-data {
+    color: rgba(233, 235, 240, 1);
+    padding: .5rem;
+    width: 15rem;
+    display: inline-block;
+    background-color: rgba(15, 19, 26, .8);
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+}
+
+.huds-health {
+    position: absolute;
+    right: 1rem;
+    top: 20rem;
+}
+
+.huds-eat {
+    position: absolute;
+    right: 1rem;
+    top: 26rem;
+}
+
+.huds-temperature {
+    position: absolute;
+    right: 1rem;
+    top: 38rem;
+}
+
+.huds-dehydration {
+    position: absolute;
+    right: 1rem;
+    top: 32rem;
+}
+
+.huds-eat img, .huds-health img, .huds-temperature img, .huds-dehydration img {
+    width: 5.5rem;
 }

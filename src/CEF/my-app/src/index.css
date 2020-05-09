@@ -1,6 +1,17 @@
+@font-face {
+  font-family: 'etelka-bold';
+  src: url(./assets/fonts/etelka-bold.ttf) format('woff');
+}
+
+@font-face {
+  font-family: 'etelka-light';
+  src: url(./assets/fonts/etelka-light.ttf) format('woff');
+}
+
 * {
   box-sizing: border-box;
   user-select: none;
+  outline: none;
 }
 
 html {
@@ -15,11 +26,11 @@ html, body, #root, .app {
 body {
   background-color: transparent;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'etelka-light';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  overflow: hidden;
 }
 
 code {

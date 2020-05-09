@@ -200,9 +200,11 @@ mp.Player.prototype.getTotalItemAmount = function() {
  * @return {Boolean}         True if successful, false otherwise.
  * @fires itemAdded
  */
+
 mp.Player.prototype.giveItem = function(itemKey, amount, data) {
     if (inventoryScript.hasItem(itemKey) && Number.isInteger(amount) && amount > 0) {
-        const itemIdx = this.getItemIndexWithData(itemKey, data);
+        //const itemIdx = this.getItemIndexWithData(itemKey, data);
+        const itemIdx = this.getItemIndex(itemKey);
 
         if (itemIdx !== -1) {
             this._inventory[itemIdx].amount += amount;

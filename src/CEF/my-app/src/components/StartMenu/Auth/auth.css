@@ -1,0 +1,136 @@
+.auth {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.auth-interface {
+    position: relative;
+    background-color: rgba(0, 0, 0, .8);
+    color: #fff;
+    height: 35rem;
+    height: 40rem;
+    width: 50rem;
+}
+
+.auth-interface__top {
+    background-color: rgba(0, 0, 0, .2);
+}
+
+.auth-interface__register {
+    text-align: center;
+    display: inline-block;
+    width: 50%;
+}
+
+.auth-interface__login {
+    text-align: center;
+    display: inline-block;
+    width: 50%;
+}
+
+.auth-interface__login, .auth-interface__register {
+    padding: .5rem 0;
+    font-size: 2rem;
+    transition: all .1s;
+}
+
+.auth-interface__login:hover {
+    opacity: .5;
+}
+
+
+.auth-interface__register:hover {
+    opacity: .5;
+}
+
+.middle-title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+.middle-form {
+    margin-top: 3rem;
+}
+
+.middle-form_input {
+    position: relative;
+    width: 17rem;
+    margin: 0 auto;
+}
+
+.middle-form_input svg {
+    position: absolute;
+    top: .5rem;
+    right: 0;
+    font-size: 1.5rem;
+}
+
+.middle-form input {
+    width: 12rem;
+    padding: .2rem;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: .8rem;
+    font-size: 1.4rem;
+    border: 1px dashed #34c3ff;
+    background: transparent;
+    padding: 0.8rem;
+    color: #34c3ff;
+}
+
+.auth-interface__bottom button {
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    display: block;
+    margin: 0 auto;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    padding: .8rem;
+    width: 12rem;
+    outline: none;
+    transition: all .1s;
+}
+
+.auth-interface__bottom button:hover {
+    border: 1px solid rgba(160, 7, 17, 1);
+    color: rgba(160, 7, 17, 1);
+}
+
+.login-errors {
+    width: 20rem;
+    margin: 0 auto;
+    margin-top: 1rem;
+}
+
+.login-errors__error {
+    margin-bottom: .5rem;
+}
+
+.auth-interface__bottom-errors {
+    width: 30rem;
+    margin: 0 auto;
+    margin-top: 1rem;
+}
+
+.auth-interface__bottom-errors > div {
+    margin-bottom: .5rem;
+}
+
+.auth-interface__bottom-errors {
+    color: rgb(218, 75, 85);
+}
+
+.auth-previous {
+    position: absolute;
+    top: 5rem;
+    left: 2rem;
+}

@@ -1,45 +1,76 @@
-import { Player } from "../player/Player";
 import { Item } from "../types";
-
-let fs = require('fs');
+import { VehicleData} from "../types";
+import { postgres } from "../db";
 
 export class Car {
-    static spawnCar(hash: string, position: Vector3Mp, rotation?: Vector3Mp, color?: number[]): VehicleMp {
-        let veh: VehicleMp = mp.vehicles.new(mp.joaat(hash), position);
+    static async spawnCar(id?:number){
+        let data
+        if(!id){
+            data = await postgres<VehicleData>('vehiclespawn').select('*');
+        }else{
+            data = await postgres<VehicleData>('vehiclespawn').select('*').where({id:id});
+        }
+        data.map(car => {
+            console.log(car)
+            const pos = new mp.Vector3(car.defaultposition.x,car.defaultposition.y,car.defaultposition.z);
+            let veh: VehicleMp = mp.vehicles.new(mp.joaat(car.hash), pos);
+            const items: Item[] = [];
 
-        const items: Item[] = [];
-        veh.setVariable('vehInventory', items);
-        veh.getVariable('vehInventory');
-        
+            if(!car.rotation.x) car.rotation.x = 0;
+            if(!car.rotation.y) car.rotation.x = 0;
+            if(!car.rotation.z) car.rotation.z = Car.random(1,360)
+            car.color.map((n, i) => {
+                    if(!n) car.color[i] = Car.random(1,255);
+            });
 
-        if (rotation) veh.rotation = rotation;
-        else veh.rotation = new mp.Vector3(0, 0, Car.random(1,360))
-        if(color) veh.setColorRGB(color[0],color[1],color[2],color[3],color[4],color[5]);
-        else veh.setColorRGB(Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255));
-        
-        return veh;
+            veh.rotation = new mp.Vector3(car.rotation.x, car.rotation.y, car.rotation.z)
+            veh.setColorRGB(car.color[0], car.color[1], car.color[2], car.color[3], car.color[4], car.color[5]);
+
+            veh.setVariable('carInventory', items);
+            veh.setVariable('isExplode', false);
+            veh.setVariable('id', car.id)
+        })
+    }
+    
+    // Добавляет объект машины в файл vehicleCoords.json.
+    static async saveCar(player: PlayerMp, hash: string, position: Vector3Mp,rotation: Vector3Mp, color: number[], description?: string){
+
+        if(!rotation.x) rotation.x = 0;
+        if(!rotation.y) rotation.x = 0;
+        if(!rotation.z) rotation.z = Car.random(1,360)
+        color.map((n, i) => {
+            if(isNaN(n)) color[i] = Car.random(1,255)
+        })
+        if(!description) description = "Машина была добавлена без описания";
+
+        await postgres<VehicleData>('vehiclespawn').insert({ 
+            hash: hash,
+            description: description,
+            color: [color[0], color[1], color[2], color[3], color[4], color[5]],
+            defaultposition: {
+                x: position.x,
+                y: position.y,
+                z: position.z,
+            },
+            saveposition: {
+                x: position.x,
+                y: position.y,
+                z: position.z,
+            },
+            rotation: {
+                x: rotation.x,
+                y: rotation.y,
+                z: rotation.z,
+            },
+            isExplode: false
+        });
+        player.outputChatBox('Машина успешно сохранена')
     }
 
-    // Добавляет объект машины в файл vehicleCoords.json.
-    static saveCar(hash: string, position: Vector3Mp, rotation?: Vector3Mp, color?: number[], description?: string): void {
-        if(!rotation) rotation = new mp.Vector3(Car.random(1,360), Car.random(1,360), 90)
-        if(!color) color = [Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255), Car.random(1,255)];
-        if(!description) description = "Машина была добавлена без описания";
-        
-        const path: string = "src/server/project/DAYZ/car/vehicleCoords.json";
-        fs.readFile(path, 'utf-8', (err: any, result: any) => {
-            if(err) return console.log(err)
-            let objFile = JSON.parse(result);
-            
-            objFile.push({hash, position, rotation, color, description});
-            
-            fs.writeFile(path, JSON.stringify(objFile, null, 2), (err: string) => {
-                if(err) {
-                    return console.log(err);
-                }
-                console.log(`Файл был сохранен: '${path}'`);
-            });
-        });
+    static async updateCar(id: string, position: Vector3Mp,rotation: Vector3Mp, color: number[]) {
+        await postgres<VehicleData>('vehiclespawn')
+        .update({saveposition:position, rotation:rotation, color:color})
+        .where({ id:parseInt(id)})
     }
 
     // Функция возвращает рандомное число.
@@ -48,11 +79,11 @@ export class Car {
         return random
     } 
     
-    // Возвращаем массив машин в 10 метрах
-    static getCar(player: PlayerMp) {
+    // Возвращает массив машин в 10 метрах
+    static getCar(player: PlayerMp, distance:number) {
         const returnVehicles: any[] = [];
 
-        mp.vehicles.forEachInRange(player.position, 10, (vehicle) => {
+        mp.vehicles.forEachInRange(player.position, distance, (vehicle) => {
                 returnVehicles.push(vehicle);
             }
         );
@@ -62,7 +93,7 @@ export class Car {
     // Массив обьектов машин с ключами сортированными по дистанции от меньшего к большему
     static arrayCars(player: PlayerMp){
         let vehicles: any[] = [];
-        let cars = Car.getCar(player);
+        let cars = Car.getCar(player, 10);
 
         cars.forEach((elem) => {
             vehicles.push({
@@ -74,25 +105,15 @@ export class Car {
         vehicles.sort((a, b) => a.distance-b.distance)
         
         return vehicles;
-    }
-    static putItem(player:PlayerMp ,vehicle:VehicleMp, index: number){
-        const carInventory = vehicle.getVariable('carInventory');
-        const playerInventory: Item[] = player.getInventory();
-        if(!playerInventory || !playerInventory[index]){
-            return player.outputChatBox('У вас нет такого предмета в инвентаре')
-        }
-        const itemKey = playerInventory[index].key;
+    };
 
-        playerInventory.forEach(item => {
-            if(item.key === itemKey){
-                carInventory.push(item);
-                vehicle.setVariable('carInventory',carInventory)
-                player.removeItem(player.getItemIndex(itemKey), 1)
-            }
-        })
-    }
-
-    static takeItem(vehicle: VehicleMp) {
-        
+    static async respawnVehicle(id: number){
+        const car = await postgres<VehicleData>('vehiclespawn')
+            .select('*')
+            .where({id: id});
+            Car.spawnCar(id)
+            await postgres<VehicleData>('vehiclespawn')
+            .update({saveposition:car[0].defaultposition})
+            .where({id: id})
     }
 }

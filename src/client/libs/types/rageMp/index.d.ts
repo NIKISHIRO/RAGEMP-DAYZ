@@ -381,6 +381,12 @@ interface PickupMp extends EntityMp {
 }
 
 interface PlayerMp extends EntityMp {
+	//////
+
+	customData: any;
+	adminData: any;
+
+	//////
 	armour: number;
 	eyeColour: number;
 	hairColour: number;

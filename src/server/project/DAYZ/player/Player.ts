@@ -1,43 +1,259 @@
-import { logger } from "../shared/logger";
 import { Colshape } from "../loot/entities/Colshape";
 import { Label } from "../loot/entities/Label";
 import { EObject } from "../loot/entities/Object";
 import { Loot } from "../loot/Loot";
-import { ReturnInformation, LootShapeInfo } from "../interfaces";
+import { ReturnInformation, LootShapeInfo, CarReturnInformation } from "../interfaces";
 import { Blip } from "../loot/entities/Blip";
 import { EItem } from "../loot/Item/Item";
-import {SPAWNS} from '../playerSpawns';
-import { Item } from "../types";
-import { CEF } from "../CEF";
+import { SPAWNS } from '../playerSpawns';
+import { Item, PlayerData, CharacterFace, CharacterClientData } from "../types";
+import { CallRPC } from "../CallRPC";
+import { DisplayUI } from "../events/rpcRegister";
+import { postgres } from "../db";
 
 type ServerResult = {
     result: boolean;
     text: string;
-}
+};
+
+export type CharacterPlayerData = {
+    gender: 'male' | 'female';
+    face: CharacterFace[];
+    headblend: any[];
+    clothes: number[];
+    eyescolor: number;
+    headoverlay: number[];
+    haircolor: number;
+};
 
 export class Player {
+    private player: PlayerMp;
+    private callRpc: CallRPC;
 
     constructor(player: PlayerMp) {
         this.player = player;
+        this.callRpc = new CallRPC(player);
     }
 
-    public player: PlayerMp;
+    public init() {
+        this.player.setVariable('isAuth', false);
+        this.player.setVariable('admin', 0);
+        this.player.setVariable('itemPoints', []); // itemPoints - массив ИД-ов колшипов.
+        this.setInventorySlots(10); // Устанавливает макс. кол-во слотов игроку.
+        this.player.setVariable('displayUI', { // Отображение частей в CEF.
+            huds: false,
+        });
 
-    public setSkin() {
-        const clothes = {
-            male: {
-                masks: { id: 1, data: [1, 2, 10, 8, 21, 44, 45, 63, 68, 74, 97, 168, 27, 35, 48, 51, 64, 85, 104, 107, 105, 109, 113, 114, 115, 125, 136, 147, 152, 159, 160, 171, 177] },
-                hair: { id: 2, data: [] },
-                torsos: { id: 3, data: [] },
-                legs: { id: 4, data: [] },
-                bags: { id: 5, data: [] },
-                shoes: { id: 5, data: [] },
-                armors: { id: 9, data: [] },
-                decals: { id: 9, data: [] },
-            },
-            femal: {},
-        };
+        // Дефолтная одежда.
+        const male: number[] = [
+            0, // masks
+            0, // hair
+            15, // torsos
+            21, // legs
+            0, // bags
+            5, // shoes
+            0, // accessories
+            15, // Undershirts 
+            0, // body armor
+            0, // decals
+            15, // tops
+        ];
+        const female: number[] = [
+            0, // masks
+            0, // hair
+            15, // torsos
+            16, // legs
+            0, // bags
+            5, // shoes
+            0, // accessories
+            7, // Undershirts 
+            0, // body armor
+            0, // decals
+            101, // tops
+        ];
         
+        this.player.setVariable('clothes', {male, female});
+    }
+
+    // Устанавливает слоты и отправляет в CEF.
+    public setInventorySlots(slots: number) {
+        this.player.setVariable('invMaxWeight', slots); // Макс. вес для предметов игрока.
+        this.callRpc.cefSetInventoryWeight(slots);
+    }
+
+    public addInventorySlots(slots: number) {
+        let invMaxWeight = this.player.getVariable('invMaxWeight'); // Макс. вес для предметов игрока.
+        invMaxWeight += slots;
+        console.log('invMaxWeight',invMaxWeight);
+        this.player.setVariable('invMaxWeight', invMaxWeight);
+        this.callRpc.cefSetInventoryWeight(invMaxWeight);
+    }
+
+    public removeInventorySlots(slots: number) {
+        let invMaxWeight = this.player.getVariable('invMaxWeight'); // Макс. вес для предметов игрока.
+        invMaxWeight -= slots;
+        this.player.setVariable('invMaxWeight', invMaxWeight);
+        this.callRpc.cefSetInventoryWeight(invMaxWeight);
+    }
+
+    public getClothes(): number[] {
+        return [
+            this.player.getClothes(0)[0],
+            this.player.getClothes(1)[0],
+            this.player.getClothes(2)[0],
+            this.player.getClothes(3)[0],
+            this.player.getClothes(4)[0],
+            this.player.getClothes(5)[0],
+            this.player.getClothes(6)[0],
+            this.player.getClothes(7)[0],
+            this.player.getClothes(8)[0],
+            this.player.getClothes(9)[0],
+            this.player.getClothes(10)[0],
+        ];
+    }
+
+    // Инициал. всех переменных игрока.
+    public async registerInit() {
+        this.init();
+        this.player.health = 100;
+        this.player.armour = 0;
+        this.player.setVariable('isAuth', true);
+
+        await this.callRpc.clientAfterLoginInit();
+        // Спавнит игрока на рандом.коорд.
+        this.spawnRandomCoords();
+    }
+
+    // Инициал. св-в после авторизации.
+    public async loginInit(data: PlayerData) {
+        let { position: pos, login, health, armor, inventory, admin, hunger, dehydration, face, headblend, gender, clothes, eyescolor, headoverlay, haircolor } = data;
+
+        if (!health) {
+            health = 100;
+        }
+        if (!armor) {
+            armor = 0;
+        }
+        if (!hunger) {
+            hunger = 100;
+        }
+        if (!dehydration) {
+            dehydration = 100;
+        }
+
+        let position = new mp.Vector3(111, 111, 111);
+        if (pos) {
+            position = new mp.Vector3(pos.x, pos.y, pos.z)
+        }
+
+        this.init();
+        this.player.name = login;
+        this.player.position = position;
+        this.player.health = health;
+        this.player.armour = armor;
+        this.player.setInventory(inventory);
+        this.player.setVariable('isAuth', true);
+        this.player.setVariable('admin', admin);
+        this.player.setVariable('hunger', hunger);
+        this.player.setVariable('dehydration', dehydration);
+
+        await this.callRpc.clientAfterLoginInit();
+        // Отправляет на клиент инфу что игрок аутентифицирован.
+        await this.characterInit({ face, headblend, gender, clothes, eyescolor, headoverlay, haircolor });
+    }
+
+    // ИНИЦИАЛИЗАЦИЯ ВНЕШНОСТИ ПЕРСОНАЖА. ПРИ ОШИБКЕ УСТАНАВЛИВАЕТ ДЕФОЛТ.
+    public async characterInit(data: CharacterPlayerData) {
+        console.log('characterInit -> ', data);
+        let { face, headblend, gender, clothes, eyescolor, headoverlay, haircolor } = data;
+
+        if (face === null || 
+            headblend === null || 
+            clothes === null || 
+            gender === null || 
+            headoverlay === null || 
+            eyescolor === null ||
+            haircolor === null) {
+            console.log(`[${this.player.name}]:[characterInit]: Ошибка установления внешности.`.red);
+            this.player.outputChatBox('!{ff0000}Ошибка установления кастомизации. Сообщите пожалуйста администрации');
+            return;
+        }
+
+        const model = gender === 'male' ? mp.joaat('mp_m_freemode_01') : mp.joaat("mp_f_freemode_01");
+        // Установка модели.
+        this.player.model = model;
+        // Установка цвета глаз.
+        this.player.eyeColor = eyescolor;
+        // Установка цвета волос.
+        this.player.setHairColor(haircolor, 0);
+
+        // Установка лица перса.
+        data.face.forEach(i => {
+            this.player.setFaceFeature(i.index, i.feature);
+        });
+
+        // Установка парам. головы.
+        this.player.setHeadBlend(
+            headblend[0],
+            headblend[1],
+            headblend[2],
+            headblend[3],
+            headblend[4],
+            headblend[5],
+            headblend[6],
+            headblend[7],
+            headblend[8],
+        );
+
+        headoverlay.forEach((index, overlayId) => {
+            if (index === 0) index = 255;
+            this.player.setHeadOverlay(overlayId, [index, 100, 0, 0]);
+        });
+
+        // Установка одежды.
+        this.player.changeClothes(1, clothes[0], 0, true);
+        this.player.changeClothes(2, clothes[1], 0, true);
+        this.player.changeClothes(3, clothes[2], 0, true);
+        this.player.changeClothes(4, clothes[3], 0, true);
+        this.player.changeClothes(5, clothes[4], 0, true);
+        this.player.changeClothes(6, clothes[5], 0, true);
+        this.player.changeClothes(7, clothes[6], 0, true);
+        this.player.changeClothes(8, clothes[7], 0, true);
+        this.player.changeClothes(9, clothes[8], 0, true);
+        this.player.changeClothes(10, clothes[9], 0, true);
+        this.player.changeClothes(11, clothes[10], 0, true);
+    }
+
+    public async logout() {
+        const hunger = await this.callRpc.clientGetAnyProp('hunger');
+        const dehydration = await this.callRpc.clientGetAnyProp('dehydration');
+
+        await postgres<PlayerData>('players')
+            .where({
+                login: this.player.name,
+            })
+            .update({
+                health: parseInt(String(this.player.health)),
+                armor: parseInt(String(this.player.armour)),
+                inventory: this.player.getInventory(),
+                position: this.player.position,
+                hunger: hunger || 1,
+                dehydration: dehydration || 1,
+                clothes: this.getClothes(),
+            });
+    }
+
+    // Нужен для отображения каких-либо частей в верстке (НАПРИМЕР HUDS).
+    public setDisplayUI(name: string, bool: boolean) {
+        const displayUI: DisplayUI = this.player.getVariable('displayUI');
+
+        if (displayUI.hasOwnProperty(name)) {
+            displayUI[name] = bool;
+            this.player.setVariable('displayUI', displayUI);
+            this.callRpc.setDisplayUI(displayUI);
+        } else {
+            mp.players.broadcast(`setDisplayUI: ${name} - нет такого интерфейса!`);
+        }
     }
 
     // Получить вес массива предметов предметов в инвентаре.
@@ -45,8 +261,26 @@ export class Player {
         return items.reduce((acc, item) => acc + (item.amount * item.data.weight), 0);
     }
 
+    // Использование предмета в инвентаре по shortid.
+    public useItemByServerId(serverId: string): ServerResult {
+        const inventory = [...this.player.getInventory()];
+        const idx = inventory.findIndex(i => i.data.serverId === serverId);
+        
+        if (idx !== -1) {
+            const result = this.player.useItem(idx);
+
+            if (result) {
+                return { result: true, text: 'Вы использовали предмет ' + inventory[idx].data.name };
+            }
+            
+            return { result: false, text: 'Ошибка использования предмета' };
+        } else {
+            return { result: false, text: 'Такого предмета нет' };
+        }
+    }
+
     // С CEF приходит shortid. По shortid найти предмет.
-    public takeItemByShortId(shortid: string, amount: number): ServerResult {
+    public takeItemByServerId(serverId: string, amount: number): ServerResult {
         const colshapes = this.getColshapesObjectsGround();
 
         // Поиск предмета и колшип, который пытается взять игрок.
@@ -55,20 +289,23 @@ export class Player {
         colshapes.forEach(shape => {
             const itemList: Item[] = shape.getVariable('itemList');
             itemList.forEach(item => {
-                if (item.data.shortid === shortid) {
+                if (item.data.serverId === serverId && item.amount === amount) {
                     findItem = item;
                     findShape = shape;
                 }
             });
         });
         
+        console.log('---> findItem', findItem);
+        console.log('---> findShape', findShape);
+
         if (findItem !== undefined && findShape !== undefined) {
             const playersIdsOnColshape: number[] = findShape.getVariable('playersIdsOnColshape');
             const itemList = findShape.getVariable('itemList');
 
-            const idx = itemList.findIndex(item => item.data.shortid === findItem.data.shortid);
+            const idx = itemList.findIndex(item => item.data.serverId === findItem.data.serverId);
 
-            // Если в предметах колшипа не был найден предмет с данные shortid.
+            // Если в предметах колшипа не был найден предмет с данные serverId.
             if (idx === -1) {
                 return { result: false, text: 'Такого предмета здесь нету.' };
             }
@@ -77,39 +314,35 @@ export class Player {
             const invMaxWeight: number = this.player.getVariable('invMaxWeight');
             const plrInventory = [...this.player.getInventory()];
             plrInventory.push({...newItem});
-            this.player.outputChatBox(JSON.stringify(newItem))
             // Вес инвентаря с новым предметом.
             const weightWithItem = this.getItemsWeight(plrInventory);
-            this.player.outputChatBox(`weightWithItem ${weightWithItem}`);
+
             if (weightWithItem > invMaxWeight) {
                 return { result: false, text: 'Не хватает места в инвентаре.' };
             }
 
             if (newItem.amount > amount) {
                 newItem.amount -= amount;
-                itemList.splice(idx, 1, EItem.createItem(newItem.key, newItem.amount, newItem.data));
-                console.log(' ---> newItem.amount >= amount', amount);
+                itemList.splice(idx, 1, newItem);
             } 
             else if (newItem.amount <= amount) {
                 itemList.splice(idx, 1);
-                console.log(' ---> newItem.amount <= amount', amount);
             }
-            
+
             // Перезаписать предмет в колшипе с которого он берется.
             findShape.setVariable('itemList', itemList);
 
-            // Перерисовать UI. Ground.
+            // Перерисовать UI-Ground.
             playersIdsOnColshape.forEach(plrId => {
                 const player = mp.players.at(plrId);
                 const plr = new Player(player);
-                const cef = new CEF(player);
                 
                 if (!itemList.length) {
                     plr.removeItemPoint(findShape.id);
                 }
 
                 const items = plr.getItemsPlayerAround();
-                cef.cefSetGroundItems(items);
+                this.callRpc.cefSetGroundItems(items);
             });
 
             // Если список предметов после манипуляция стал пуст - удалить кошлип и все сущности связанные с ним.
@@ -119,14 +352,16 @@ export class Player {
             }
             
             const createdItem = EItem.createItem(newItem.key, newItem.amount, newItem.data);
-            console.log('createdItem', createdItem);
-            this.player.outputChatBox(JSON.stringify(createdItem));
-            this.player.giveItem(createdItem.key, amount, createdItem.data);
+            this.player.outputChatBox(`K: ${createdItem.key}, A: ${amount}`);
+            
+            if (!this.player.giveItem(createdItem.key, amount, createdItem.data)) {
+                return { result: false, text: `Код ошибки #001` };
+            }
 
             return { result: true, text: `${createdItem.data.name} + ${amount}` };
         }
 
-        return { result: false, text: 'Такого предмета здесь нету.' };
+        return { result: false, text: 'Такого предмета здесь нет.' };
     }
 
     public removeAllLootShapeEntity(colshape: ColshapeMp) {
@@ -179,9 +414,7 @@ export class Player {
         colshape.setVariable('playersIdsOnColshape', plrIndexes);
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-    static spawnRandomCoords(player: PlayerMp) {
+    public spawnRandomCoords() {
         // Массив координат спавна игрока.
         // Получение рандом. числа для индекса массива с коордами.
         const min: number = 0;
@@ -189,7 +422,7 @@ export class Player {
         const randomNumber: number = Math.floor(min + Math.random() * (max + 1 - min));
         // рандомная коорината.
         const coordSpawn: number[] = SPAWNS[randomNumber];
-        player.spawn(new mp.Vector3(coordSpawn[0], coordSpawn[1], coordSpawn[2]));
+        this.player.spawn(new mp.Vector3(coordSpawn[0], coordSpawn[1], coordSpawn[2]));
     }
 
     // Возвращает массив колшип-идов.
@@ -258,147 +491,6 @@ export class Player {
         return item;
     }
 
-    public takeColshapesItem() {
-        
-    }
-
-    // Из itemPoints берет itemList из колшипа под индексом = cellId 
-    // и берет из массива itemList предмет под индексом itemId
-    public takeColshapeItem(cellId: number, itemId: number, amount: number): ReturnInformation {
-        const item = this.getItem(cellId, itemId);
-
-        const returnInformation = {
-            info: {
-                text: 'Ввелите корректное, целое число!',
-                data: {
-                    takenItem: {},
-                },
-            },
-            result: false
-        };
-
-        // Если хоть 1 число приходит не в нужном виде - return;
-        if (!Number.isInteger(cellId) || !Number.isInteger(itemId) || !Number.isInteger(amount)) {
-            return returnInformation;
-        }
-        
-        if (item) {
-            const colshapes: ColshapeMp[] = this.getColshapesObjectsGround();
-            const colshape: ColshapeMp = colshapes[cellId];
-            const colshapeId: number = colshape.id;
-            const lootShapeInfo: LootShapeInfo = colshape.getVariable('lootShapeInfo');
-            const instColshape = new Colshape(colshape);
-            
-            const itemPoints: number[] = this.getItemPoints();
-            const itemListOrFalse = this.getItemListByIndex(cellId);
-
-            // Проверка - находится ли игрок в пределах колшипа.
-            if (!colshape.isPointWithin(this.player.position)) {
-                returnInformation.info.text = 'Поблизости нет точки с лутом';
-                returnInformation.result = false;
-                return returnInformation;
-            }
-
-            // Если у игрока есть такой колшип, удалить его ид из массива
-            // и сам колшип с карты.
-            const idx = itemPoints.findIndex(i => i === colshapeId);
-            if (idx !== -1) {
-                // Если массив предметов в колшипе больше нуля, удалить выбранный предмет.
-                if (itemListOrFalse && itemListOrFalse.length > 0) {
-                    const itemList: Item[] = itemListOrFalse; // Явное приведение к itemList.
-
-                    const item = itemList[itemId];
-                    // Если в текущем колшипе нет amount предметов - return;
-                    if (item.amount < amount) {
-                        returnInformation.info.text = 'В этой точке нет ' + amount + 'шт. ' + item.key;
-                        returnInformation.result = false;
-                        return returnInformation;
-                    } else { // Иначе удалить 'amount'шт. из этого предмета.
-                        item.amount -= amount;
-                    }
-
-                    // Если кол-во предметов = 0, то удалить item из itemList.
-                    if (item.amount === 0) {
-                        itemList.splice(itemId, 1);
-                    }
-
-                    colshape.setVariable('itemList', itemList);
-                    
-                    returnInformation.info.text = 'Предмет был удален из этой точки. Осталось всего: ' + itemList.length + 'предметов.';
-                    returnInformation.result = true;
-                }
-                // Если массив пуст, то удалить сам колшип.
-                if (itemListOrFalse && !itemListOrFalse.length) {
-                    this.player.setVariable('itemPoints', itemPoints);
-
-                    // Перебор массива itemPoint каждого игрока.
-                    // Если у игрока есть ИД такого колшипа - удалить его из массива ТОЧЕК.
-                    mp.players.forEach(p => {
-                        const itemPoints = p.getVariable('itemPoints');
-                        
-                        if (itemPoints.length) {
-                            const idx = itemPoints.findIndex(id => id === colshapeId);
-                            
-                            if (idx !== -1) {
-                                itemPoints.splice(idx, 1);
-                                p.setVariable('itemPoints', itemPoints);
-                            }   
-                        }
-                    });
-
-                    // Если получилось уничтожить colshape.
-                    if (instColshape.destroy()) {
-                        console.log('lootShapeInfo', lootShapeInfo);
-                        const labelId = lootShapeInfo.labelId;
-                        const objId = lootShapeInfo.objectId;
-                        const blipId = lootShapeInfo.blipId;
-
-                        // Если label с таким ИД на серваке нету - вывести в консоль об этом.
-                        if (!mp.labels.exists(labelId)) {
-                            logger('red', 'Player', 'takeItem', 'mp.labels.exists', 'Такого Label не существует.');
-                        } else { // Уничтожить..
-                            Label.destroy(labelId);
-                        }
-
-                        // Если object с таким ИД на серваке нету - вывести в консоль об этом.
-                        if (!mp.objects.exists(objId)) {
-                            logger('red', 'Player', 'takeItem', 'mp.objects.exists', 'Такого Object не существует.');
-                        } else { // Уничтожить.
-                            EObject.destroy(objId);
-                        }
-
-                        // Если object с таким ИД на серваке нету - вывести в консоль об этом.
-                        if (!mp.blips.exists(blipId)) {
-                            logger('red', 'Player', 'takeItem', 'mp.objects.exists', 'Такого Object не существует.');
-                        } else { // Уничтожить.
-                            Blip.destroy(blipId);
-                        }
-
-                        returnInformation.info.text = `Эта точка была удалена.`;
-                        returnInformation.result = true;
-
-                        logger('green', 'colshape', colshapeId.toString(), 'Удален.');
-                    }
-                }
-
-                if (this.player.giveItem(item.key, amount, item.data)) {
-                    returnInformation.info.data.takenItem = EItem.createItem(item.key, amount, item.data);
-                    returnInformation.info.text = 'Вы подобрали ' + amount + 'шт. ' + item.key;
-                    returnInformation.result = true;
-                } else {
-                    returnInformation.info.text = 'ОШИБКА ВЗЯТИЯ ПРЕДМЕТА. '+item.key+' не зарегистрирован (он был удален)!';
-                    returnInformation.result = false;
-                } 
-            }
-        } else { // Если item = false.
-            returnInformation.info.text = 'Такого предмета или точки здесь нет!';
-            returnInformation.result = false;
-            return returnInformation;
-        }
-
-        return returnInformation;
-    }
-
     // Выкидывает предмет из инвентаря.
     public dropItem(itemKey: string, amount: number): ServerResult {
         const inventory = this.player.getInventory();
@@ -428,8 +520,109 @@ export class Player {
         const loot = new Loot(colshape, object, label, blip);
 
         const createdItem = EItem.createItem(item.key, amount, item.data);
-        loot.createLootPoint([createdItem]);
+        loot.createLootPoints([createdItem]);
 
         return { result: true, text: `Вы выбросили ${item.data.name} - ${amount}` };
+    }
+
+    // Положить определнный предмет в каком то кол-ве
+    public putItemCar(vehicle:VehicleMp, index: number, amount:number): CarReturnInformation{
+        const returnInformation: CarReturnInformation = {
+            info: '!{#DA3060} должно быть число',
+            result: false
+        };
+        const carInventory = vehicle.getVariable('carInventory');
+        const playerInventory: Item[] = this.player.getInventory();
+
+        if(!Number.isInteger(index) || !Number.isInteger(amount)){
+            return returnInformation;
+        }
+
+        if(!mp.vehicles.exists(vehicle)){
+            returnInformation.info = `Рядом нет машины`;
+            return returnInformation;
+        }
+
+        if(!playerInventory || !playerInventory[index]){
+            returnInformation.info = 'У вас нет такого предмета в инвентаре';
+            return returnInformation
+        }
+
+        if(amount <= 0){
+            returnInformation.info = `Введите коректное число`;
+            return returnInformation;
+        }
+
+        if(playerInventory[index].amount < amount){
+            returnInformation.info = 'Такого количества предметов нет';
+            return returnInformation
+        }
+
+        const carItem = {...playerInventory[index]}
+        this.player.removeItem(index, amount);
+        
+        carItem.amount = amount;
+        carInventory.push(carItem);
+        vehicle.setVariable('carInventory', carInventory);
+
+        returnInformation.info = `Вы успешно положили в машину ${amount}`;
+        returnInformation.result = true
+        return returnInformation
+    }
+
+    // Взять определенный предмет в каком то количестве
+    public takeItemCar( vehicle:VehicleMp, index: number, amount:number): CarReturnInformation {
+        const returnInformation: CarReturnInformation  = {
+            info: '!{#DA3060} должно быть число',
+            result: false
+        };
+        const carInventory = vehicle.getVariable('carInventory');
+        const playerInventory: Item[] = this.player.getInventory();
+
+        if(!Number.isInteger(index) || !Number.isInteger(amount)){
+            return returnInformation;
+        }
+
+        if(!mp.vehicles.exists(vehicle)){
+            returnInformation.info = `Рядом нет машины`;
+            return returnInformation;
+        }
+
+        if(!carInventory || !carInventory[index]){
+            returnInformation.info = `У вас нет такого предмета в инвентаре`;
+            return returnInformation;
+        }
+
+        if(amount <= 0){
+            returnInformation.info = `Введите коректное число`;
+            return returnInformation;
+        }
+
+        if(carInventory[index].amount < amount){
+            returnInformation.info = 'Такого количества предметов нет';
+            return returnInformation
+        }else if(carInventory[index].amount == amount){
+            returnInformation.info = 'Вы успешно взяли предмет в полном кол-ве';
+            returnInformation.result = true;
+
+            const playerItem = {...carInventory[index]}
+            playerItem.amount = amount
+            playerInventory.push(playerItem);
+
+            carInventory.splice(carInventory[index], 1);
+            vehicle.setVariable('carInventory', carInventory);
+            return returnInformation
+        }
+        returnInformation.info = `Вы успешно взяли ${amount}`;
+        returnInformation.result = true
+
+        const playerItem = {...carInventory[index]}
+        playerItem.amount = amount
+        playerInventory.push(playerItem);
+        
+        this.player.setInventory(playerInventory);
+        carInventory[index].amount -= amount;
+        vehicle.setVariable('carInventory', carInventory);
+        return returnInformation
     }
 }

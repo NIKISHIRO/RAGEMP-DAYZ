@@ -1,45 +1,31 @@
-import React, { useState } from "react";
+import React from "react";
 import { Droppable } from "react-beautiful-dnd";
-import { connect } from "react-redux";
-import { State } from "../../../../reducers";
-import { UIState } from "../../../../reducers/UIReducer";
 import { InventoryCell } from "../InventoryCell";
-import { Item } from "../../../../types";
-import { SelectedItem } from "../SelectedItem";
+import { useSelector } from "react-redux";
+import { UIState } from '../../../../reducers/UIReducer';
+const shortString = 'inventoryCells_';
 
-const shortString = '__inventoryCells';
+const getListStyle = (isDraggingOver) => {
+    console.log('isDraggingOver', isDraggingOver);
+    
+    return {
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        height: '32rem',
+        border: isDraggingOver ? '3px dotted green' : '3px dotted transparent',
+    }
+};
 
-type Props = {
-    UIState: UIState;
-}
-
-const getListStyle = (isDraggingOver) => ({
-    overflow: 'auto',
-    height: '100%',
-});
-
-const InventoryCells = (props: Props) => {
-    const { UIState } = props;
+const InventoryCells = (props) => {
+    const UIState = useSelector((state: any): UIState => {
+        return state.UI || [];
+    });
     const { inventory } = UIState;
     const { items } = inventory;
-
-    const [currentItem, setCurrentItem] = useState<Item | null>(null);
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    const onSelectItem = (item: Item, e: any) => {
-        setCurrentItem(item);
-        setAnchorEl(e.currentTarget);
-    };
-
-    const onPopClose = () => {
-        setCurrentItem(null);
-        setAnchorEl(null);
-    }
 
     const getItems = () => {
         return items.map((item, id) => {
             return <InventoryCell 
-                onSelectItem={ onSelectItem } 
                 key={ `${shortString}${item.data.shortid}` } 
                 id={ id } 
                 item={ item } 
@@ -50,8 +36,6 @@ const InventoryCells = (props: Props) => {
     
     return (
         <>
-            {!!currentItem && <SelectedItem onPopClose={ onPopClose } anchorEl={ anchorEl } item={ currentItem } />}
-            
             <Droppable droppableId="droppable1">
                 {(provided, snapshot) => (
                     <div ref={ provided.innerRef } style={ getListStyle(snapshot.isDraggingOver) } { ...provided.droppableProps }>
@@ -64,14 +48,6 @@ const InventoryCells = (props: Props) => {
     );
 };
 
-const mapStateToProps = (state: State) => ({
-    UIState: state.UI,
-});
-
-const InventoryCellsConnect = connect(
-    mapStateToProps,
-)(InventoryCells);
-
 export {
-    InventoryCellsConnect as InventoryCells,
+    InventoryCells,
 }

@@ -6,7 +6,8 @@ export class Colshape {
     constructor(colshape: ColshapeMp) {
         this.colshape = colshape;
     }
-
+    
+    // Уничтожает массив.
     public destroy(): boolean {
         console.log(' -> shape destroy');
 

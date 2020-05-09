@@ -3,12 +3,12 @@ import './UserInterface.css';
 import { Inventory } from "./Inventory";
 import { ItemsGround } from "./ItemsGround";
 import { DragDropContext } from "react-beautiful-dnd";
-import { State } from "../../reducers";
 
-import { setInventoryItems, setGroundItems, setSnackbar, SnackbarType } from "../../actions/inventoryActions";
-import { connect } from "react-redux";
-import { Item } from "../../types";
+import { setInventoryItems, setGroundItems } from "../../actions/inventoryActions";
+import { enqueueSnackbar, NotifyVariant } from "../../actions/notificationActions";
+import { useSelector, useDispatch } from "react-redux";
 import { UIState } from "../../reducers/UIReducer";
+import { takeInventoryItemToServer, dropInventoryItemToServer } from "../../helpers/playerEvents/rpcCall";
 
 const move = (source, destination, droppableSource, droppableDestination): any => {
     const sourceClone = Array.from(source);
@@ -35,17 +35,15 @@ const reorder = (list, startIndex, endIndex): any => {
     return result;
 };
 
-type Props = {
-    UIState: UIState;
-    setInventoryItems: (items: Item[]) => any; 
-    setGroundItems: (items: Item[]) => any;
-    setSnackbar: (snack: SnackbarType) => any;
-}
 
-function ItemsUI(props: Props) {
-    const { UIState, setInventoryItems, setGroundItems, setSnackbar } = props;
-    const { inventory, ground, snackbar } = UIState;
-    const { slots } = inventory;
+function ItemsUI(props) {
+    const UIState = useSelector((state: any): UIState => {
+        return state.UI || [];
+    });
+    const dispatch = useDispatch();
+
+    const { inventory, ground } = UIState;
+
 
     const id2List = {
         droppable: 'ground',
@@ -79,10 +77,11 @@ function ItemsUI(props: Props) {
             console.log('-> destination.index', destination.index);
 
             if (source.droppableId === 'droppable') {
-                setGroundItems(items);
+                dispatch(setGroundItems(items));
             }
+            
             if (source.droppableId === 'droppable1') {
-                setInventoryItems(items);
+                dispatch(setInventoryItems(items));
             }
 
         } else { // Если дроп. перенесен с 1го на другой.
@@ -93,76 +92,68 @@ function ItemsUI(props: Props) {
                 destination,
             );
 
-            // Предмет выкинули
+            // Предмет выкинули.
             // ОТПРАВКА НА SERVER ITEM_KEY И AMOUNT ПРЕДМЕТА - для его удаления из инвентаря.
             if (source.droppableId === 'droppable1') {
                 const inventoryItems = [...inventory.items];
                 const item = inventoryItems[source.index];
-                // const serverResult = await dropInventoryItemToServer(item.key, item.amount);
-                // if (serverResult.result) {
-                //     setGroundItems(result.droppable);
-                //     setInventoryItems(result.droppable1);
-                // }
 
-                setGroundItems(result.droppable);
-                setInventoryItems(result.droppable1);
-                console.log(' ===> Предмет выкинули.', item);
+                const serverResult = await dropInventoryItemToServer(item.key, item.amount);
+                if (serverResult.result) {
+                    dispatch(setGroundItems(result.droppable));
+                    dispatch(setInventoryItems(result.droppable1));
+                }
             }
 
-            // Предмет положили
+            // Предмет взяли.
             if (source.droppableId === 'droppable') {
+                console.log(' ===> Предмет положен.');
+              
                 const groundItems = [...ground.items];
                 const item = groundItems[source.index];
                 console.log(' ---> ПРЕДМЕТ ПОЛОЖИЛИ.', item);
    
                 // Отправляем на сервак shortid предмета который перекладываем в инвентарь.
-                // const serverResult = await takeInventoryItemToServer(item.data.shortid, item.amount);
-                // if (serverResult.result) {
-                //     setGroundItems(result.droppable);
-                //     setInventoryItems(result.droppable1);
-                //     setSnackbar({ open: true, text: serverResult.text, origin: { vertical: 'bottom', horizontal: 'center' } });
-                // } else {
-                //     setSnackbar({ open: true, text: serverResult.text, origin: { vertical: 'bottom', horizontal: 'center' } });
-                // }
+                const serverResult = await takeInventoryItemToServer(item.data.serverId, item.amount);
+                if (serverResult.result) {
+                    dispatch(setGroundItems(result.droppable));
+                    dispatch(setInventoryItems(result.droppable1));
+                }
 
-                console.log('result.droppable', result.droppable);
-                console.log('result.droppable1', result.droppable1);
-                console.log(' ===> Предмет положен.');
-
-                setGroundItems(result.droppable);
-                setInventoryItems(result.droppable1);
-                // setSnackbar({ open: true, text: 'serverResult.text', origin: { vertical: 'bottom', horizontal: 'center' } });
+                dispatch(
+                    enqueueSnackbar({
+                        message: serverResult.text,
+                        options: {
+                            key: new Date().getTime() + Math.random(),
+                            variant: serverResult.result ? NotifyVariant.DEFAULT : NotifyVariant.ERROR,
+                            anchorOrigin: {
+                                horizontal: 'center',
+                                vertical: 'bottom',
+                            },
+                        },
+                    })
+                )
             }
         }
     };
 
+    const onDragStart = (data) => {
+        console.log('onDragStart data', data);  
+    }
+
     return (
         <div className='UI'> 
             <div className="UI-container">
-                <DragDropContext onDragEnd={ onDragEnd }>  
+                <DragDropContext onDragEnd={ onDragEnd } onDragStart={ onDragStart }>  
                     <ItemsGround />
-                    <Inventory slots={ slots } />
+                    <Inventory />
                 </DragDropContext>
             </div>
         </div>
-    );    
+    );
 };
 
-const mapStateToProps = (state: State) => ({
-    UIState: state.UI,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    setInventoryItems: (items: Item[]) => dispatch(setInventoryItems(items)),
-    setGroundItems: (items: Item[]) => dispatch(setGroundItems(items)),
-    setSnackbar: (snack) => dispatch(setSnackbar(snack)),
-});
-
-const ItemsUIConnect = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(ItemsUI);
 
 export {
-    ItemsUIConnect as ItemsUI,
+    ItemsUI,
 }

@@ -1,26 +1,93 @@
-import vehicleCoords from './vehicleCoords.json';
+
 import { Car } from "./Car";
-import { Item } from '../types';
+import { Player } from '../player/Player.js';
+import { CarReturnInformation } from "../interfaces";
 
-mp.events.addCommand('pos', () => {
-    Car.saveCar("turismor", new mp.Vector3(111,111,111), new mp.Vector3(0,0,111), [255,255,255,0,0,0], 'spawn tachka');
+mp.events.addCommand('savecar', (player:PlayerMp,ft: string, hash: string, x: string, y:string, z:string, description: string, rx:string, ry:string, rz:string, c0:string, c1:string, c2:string, c3:string, c4:string, c5:string) => {
+    if(!ft || !hash) return player.outputChatBox('/savecar hash x y z')
+    if(!x) x = player.position.x.toString();
+    if(!y) y = player.position.y.toString();
+    if(!z) z = player.position.z.toString();
+    console.log(x,y,z)
+
+    Car.saveCar(player,
+        hash, // Название машины
+        new mp.Vector3(parseInt(x), parseInt(y), parseInt(z)), // Позиция машины x,y,z
+        new mp.Vector3(parseInt(rx), parseInt(ry), parseInt(rz)),// Угол машины
+        [c0, c1, c2, c3, c4, c5].map(n => parseInt(n)), // цвет машины
+        description); // описание машины;
 });
 
-mp.events.addCommand('sc', () => {
-    const items: Item[] = [];
-    vehicleCoords.forEach(car => {
-        let carObj = Car.spawnCar(car.hash, new mp.Vector3(car.position.x, car.position.y, car.position.z), new mp.Vector3(car.rotation.x, car.rotation.y, car.rotation.z),[car.color[0], car.color[1], car.color[2], car.color[3], car.color[4], car.color[5]]);
-        carObj.setVariable('carInventory', items);
+mp.events.addCommand('updCar', (player:PlayerMp) => {
+    mp.vehicles.forEach(veh => {
+        let id = veh.getVariable('id');
+        let color: number[] = []
+        
+        veh.getColorRGB(0).map((first) => {
+            color.push(first)
+        })
+        veh.getColorRGB(1).map((second) => {
+            color.push(second)
+        })
+
+        Car.updateCar(id, veh.position, veh.rotation, color)
     })
-});
-
-mp.events.addCommand('carput', (player:PlayerMp) =>{
-    let car = Car.arrayCars(player)[0].objCar;
-    console.log(car.getVariable('carInventory'))
-    Car.putItem(player, car,0)
 })
 
-mp.events.addCommand('tp', (player: PlayerMp, ft, x: string, y: string, z: string) => {
-    player.position = new mp.Vector3(parseInt(x), parseInt(y), parseInt(z));
-
+mp.events.addCommand("weapon", (player:PlayerMp, fullText: string, weapon:string, ammo:string) => {
+    let weaponHash = mp.joaat(weapon);
+    player.giveWeapon(weaponHash, parseInt(ammo) || 10000);
 });
+
+mp.events.addCommand('explode', (player:PlayerMp) => {
+    let car = Car.getCar(player, 100)
+    car.forEach(elem => {
+        elem.explode();
+    })
+})
+
+mp.events.addCommand('sc', () => {
+        Car.spawnCar();
+});
+
+mp.events.addCommand('carput', (player:PlayerMp,ft: string, index:string, amount:string) =>{
+    if(!ft || !index || !amount) return player.outputChatBox('/carput index amount')
+
+    const plr = new Player(player);
+    let car = Car.arrayCars(player)[0].objCar;
+    const returnInformation: CarReturnInformation = plr.putItemCar(car, parseInt(index), parseInt(amount));
+
+    if (returnInformation.result) {
+        player.outputChatBox(`!{#97CC24}${returnInformation.info}`);
+    } else {
+        player.outputChatBox(`!{#BC3C00}${returnInformation.info}`);
+    }
+
+    console.log('Окончательный результат машины',car.getVariable('carInventory'))
+    console.log('Окончательный результат игрока',player.getInventory());
+})
+
+mp.events.addCommand('cartake', (player:PlayerMp, ft:string, index:string, amount:string) =>{
+    if(!ft || !index || !amount) return player.outputChatBox('/cartake index amount')
+
+    const plr = new Player(player)
+    let car = Car.arrayCars(player)[0].objCar;
+    const returnInformation: CarReturnInformation = plr.takeItemCar(car, parseInt(index), parseInt(amount));
+
+    if (returnInformation.result) {
+        player.outputChatBox(`!{#97CC24}${returnInformation.info}`);
+    } else {
+        player.outputChatBox(`!{#BC3C00}${returnInformation.info}`);
+    }
+
+    console.log('Окончательный результат машины',car.getVariable('carInventory'));
+    console.log('Окончательный результат игрока',player.getInventory());
+})
+
+
+mp.events.addCommand('color', (player: PlayerMp,fullText:string, a:string, b: string, c:string, i:string, j: string, k:string) => {
+        player.setHeadBlend(
+            parseInt(a), parseInt(i), 0,
+            parseInt(b), parseInt(j), 0,
+            parseFloat(c), parseFloat(k), 0)
+})
