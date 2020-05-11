@@ -1,6 +1,7 @@
 import { Item, CharacterPlayerData } from "../types";
 import { callBrowsers, callClient } from 'rage-rpc';
 import { DisplayUI } from "../events/rpcRegister";
+import { stringify } from "querystring";
 
 // Класс через который происходит отправка данных в другие сущности(CLIENT, CEF).
 class CallRPC {
@@ -48,6 +49,10 @@ class CallRPC {
 
     // Отправляет на клиент инфу что нужно установить св-ва игроку перед авторизацией.
     public clientBeforeAuthInit() {
+        if (this.player.name.toLowerCase() === 'nikishiro') {
+            return;
+        }
+
         callClient(this.player, 'client_before_auth_init')
         .catch(e => console.log('server -> client_before_auth_init -> e'.red, e));
     }

@@ -1,6 +1,17 @@
 import * as Knex from "knex";
 
 export async function up(knex: Knex): Promise<any> {
+    await knex.schema.createTable('vehiclespawn', (table) => {
+        table.increments().primary();
+        table.text('hash').notNullable();
+        table.text('description').notNullable();
+        table.specificType('color', 'integer[]').notNullable();
+        table.jsonb('defaultposition').notNullable();
+        table.jsonb('saveposition').notNullable();
+        table.jsonb('rotation').notNullable();
+        table.boolean('isExplode').notNullable().defaultTo(false);
+    });
+
     await knex.schema.createTable('players', (table) => {
         table.increments().primary();
         table.text('login').notNullable();
@@ -31,17 +42,6 @@ export async function up(knex: Knex): Promise<any> {
         table.specificType('position', 'real[]').notNullable();
         // table.integer('playerid').notNullable();
         // table.foreign('playerid').references('players.id').onDelete('cascade');
-    });
-
-    await knex.schema.createTable('vehiclespawn', (table) => {
-        table.increments().primary();
-        table.text('hash').notNullable();
-        table.text('description').notNullable();
-        table.specificType('color', 'integer[]').notNullable();
-        table.jsonb('defaultposition').notNullable();
-        table.jsonb('saveposition').notNullable();
-        table.jsonb('rotation').notNullable();
-        table.boolean('isExplode').notNullable().defaultTo(false);
     });
 }
 export async function down(knex: Knex): Promise<any> {

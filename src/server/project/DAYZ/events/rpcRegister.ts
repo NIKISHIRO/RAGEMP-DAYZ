@@ -40,14 +40,14 @@ register('server_take_inventory_item', (jsonData: string, info: any) => {
     const data: TakeData = JSON.parse(jsonData);
     const player = info.player;
     const plr = new Player(player);
-    return plr.takeItemByServerId(data.serverId, data.amount);
+    // return plr.takeItemByServerId(data.serverId, data.amount);
 });
 
 register('server_drop_inventory_item', (jsonData: string, info: any) => {
     const player = info.player;
     const plr = new Player(player);
     const data: DropData = JSON.parse(jsonData);
-    return plr.dropItem(data.itemKey, data.amount);
+    // return plr.dropItem(data.itemKey, data.amount);
 });
 
 register('server_set_display', (jsonData: string, info: any) => {

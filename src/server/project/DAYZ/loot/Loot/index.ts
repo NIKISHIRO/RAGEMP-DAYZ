@@ -1,10 +1,10 @@
-import { Colshape } from "../entities/Colshape";
 import { LootSpawn, LootShapeInfo } from "../../interfaces";
 import { EItem } from "../Item/Item";
 import { Item, SpawnLootData, ItemRarity} from "../../types";
 import { itemInfo } from "../Item/itemInfo";
 import { randomInteger } from '../../helpers';
 import { postgres } from "../../db";
+import { EObject } from "../entities/Object";
 
 type RarityItems = {
     [ItemRarity.RARITY_1]: Item[];
@@ -14,48 +14,16 @@ type RarityItems = {
 }
 
 class Loot {
-    static range: number = 2;
-    
-    private colshape: ColshapeMp;
-    private label: TextLabelMp;
-    private object: ObjectMp
-    private blip: BlipMp;
-
-    constructor(colshape: ColshapeMp, object: ObjectMp, label: TextLabelMp, blip: BlipMp) {
-        this.colshape = colshape;
-        this.object = object;
-        this.label = label;
-        this.blip = blip;
-
-        const lootShapeInfo: LootShapeInfo = {
-            type: LootSpawn.SPAWN,
-            labelId: this.label.id,
-            objectId: this.object.id,
-            blipId: this.blip.id,
-        };
-        
-        this.colshape.setVariable('lootShapeInfo', lootShapeInfo);
-        this.colshape.setVariable('itemList', []);
-        this.colshape.setVariable('playersIdsOnColshape', []);
-    }
-    
-    static createColshape(pos: Vector3Mp) {
-        pos.z -= .9;
-        return mp.colshapes.newSphere(pos.x, pos.y, pos.z, this.range);
+    // Создает объект.
+    static createObject(pos: Vector3Mp, hash: string = 'prop_michael_backpack') {
+        const object = mp.objects.new(hash, pos);
+        return object;
     }
 
-    static createObject(pos: Vector3Mp) {
-        return mp.objects.new('prop_michael_backpack', pos);
-    }
-
-    static createLabel(pos: Vector3Mp) {
-        pos.z += 1;
-        return mp.labels.new('labelText', pos, {drawDistance: this.range});
-    }
-
+    // Создает блип.
     static createBlip(pos: Vector3Mp) {
         return mp.blips.new(1, pos, {
-            scale: .5,
+            scale: .4,
             color: 3,
         });
     }
@@ -67,10 +35,10 @@ class Loot {
     }
 
     // Возвращает все созданные точки с лутом, либо false.
-    static async getSpawnLootPoints(): Promise<SpawnLootData[] | false> {        
+    static async getSpawnLootPoints(): Promise<SpawnLootData[] | false> {
         if (await postgres.schema.hasTable('spawnlootinfo')) {
             return postgres<SpawnLootData>('spawnlootinfo').select('*');
-        } 
+        }
         
         return false;
     }
@@ -89,11 +57,14 @@ class Loot {
         spawnData.forEach(spawn => { 
             // Создание сущностей в одной точке.
             const vector3 = new mp.Vector3(spawn.position[0], spawn.position[1], spawn.position[2]);
-            const colshape = Loot.createColshape(vector3);
             const object = Loot.createObject(vector3);
-            const label = Loot.createLabel(vector3);
             const blip = Loot.createBlip(vector3);
-            const loot = new Loot(colshape, object, label, blip);
+
+            const objectId = object.id;
+            const blipId = blip.id;
+    
+            object.setVariable('lootEntityIndexes', {objectId, blipId});
+            object.setVariable('lootItems', []);
     
             // Массив рандомных предметов, разделенные по редкости.
             const items: any = spawn.items.map(rarity => {
@@ -113,22 +84,27 @@ class Loot {
                 }
             })
             .filter(i => i !== null);
-            loot.createLootPoints(items);
+            
+            // Добавляет предметы в объект.
+            Loot.addItems(object.id, items);
         });
     }
 
-    public getColshape(): ColshapeMp {
-        return this.colshape;
-    }
+    static addItems(objId: number, items: Item[]): boolean {
+        if (!items.length) {
+            return false;
+        }
 
-    public getLabel(): TextLabelMp {
-        return this.label;
-    }
-    
-    // СОЗДАЕТ ТОЧКУ ДЛЯ ЛУТА.
-    public createLootPoints(items: Item[]) {
-        const instColshape = new Colshape(this.colshape);
-        instColshape.addItem([...items]);
+        const object = mp.objects.at(objId);
+        if (!mp.objects.exists(objId)) {
+            return false;
+        }
+
+        const lootItems: Item[] = object.getVariable('lootItems');
+        lootItems.push(...items);
+        object.setVariable('lootItems', lootItems);
+        
+        return true;
     }
 }
 

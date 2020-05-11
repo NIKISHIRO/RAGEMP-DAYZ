@@ -4,17 +4,16 @@ import './rage-rpc';
 import './syncedPlayerComponent';
 import './modules/_rage-console';
 
+import './DAYZ/player';
+import './DAYZ/player/events';
+
 // Подключения наших модулей.
 import './DAYZ/CEF/events';
-import './DAYZ/CEF/browser';
 import './DAYZ/CEF/keypress/UIItems';
 import './DAYZ/CEF/keypress/AdminInterface';
 import './DAYZ/CEF/keypress/huds';
 
 import './DAYZ/events/render';
-
-import './DAYZ/player';
-import './DAYZ/player/events';
 import './DAYZ/events/rpcRegister';
 
 import './DAYZ/hudsData/armor';
@@ -30,17 +29,8 @@ import './DAYZ/login/events';
 import './DAYZ/weapon';
 import './DAYZ/weapon/events';
 import './DAYZ/weapon/keypress';
-import { changeUI, CEFRoute } from './DAYZ/CEF/changeUI';
 
-mp.keys.bind(0x0D, true, () => {
-    mp.gui.chat.push('auth: '+ JSON.stringify(mp.players.local.getVariable('isAuth')));
-    mp.gui.chat.push('admin: '+ JSON.stringify(mp.players.local.getVariable('admin')));
-});
+import './DAYZ/loot/lootItem';
+import './DAYZ/lookingEntity';
 
-let flag = true;
-mp.keys.bind(0x47, true, function() {
-    flag = !flag;
-    mp.events.callRemote('keypress:G');
-});
-
-changeUI(CEFRoute.UIITEMS)
+mp.players.local.position = new mp.Vector3(-1167, 4923, 222);

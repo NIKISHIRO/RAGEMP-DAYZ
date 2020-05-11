@@ -1,5 +1,5 @@
 import { callBrowser } from "../../rage-rpc";
-import { Browser } from "../CEF/browser";
+import { Browser } from "../CEF/CEFBrowser";
 
 export enum HudsType {
     CEF_SET_HEALTH_HUDS = 'cef_set_health_huds',

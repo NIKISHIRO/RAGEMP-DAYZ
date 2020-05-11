@@ -8,7 +8,7 @@ module.exports = {
       user: 'postgres',
       host: 'localhost',
       database: DEV_DB,
-      password: 'Kittan',
+      password: 'niishiro29122000',
       port: 5432,
     },
     migrations: {
@@ -26,7 +26,7 @@ module.exports = {
       user: 'postgres',
       host: 'localhost',
       database: PROD_DB,
-      password: 'Kittan',
+      password: 'niishiro29122000',
       port: 5432,
     },
     pool: {
