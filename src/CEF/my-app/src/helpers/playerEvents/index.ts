@@ -1,7 +1,6 @@
 import { push } from 'connected-react-router';
 import { emitter } from '../emitter';
 import { Item } from '../../types';
-import { setGroundItems, setInventorySlots } from '../../actions/inventoryActions';
 import { enqueueSnackbar } from '../../actions/notificationActions';
 import { NotifyOrigin } from '../../actions/notificationActions';
 import { DisplayUI } from '../../reducers/UIReducer';
@@ -19,10 +18,6 @@ function PlayerEvents(dispatch, getState) {
 
     emitter.on('goToEntityCreate', () => {
         dispatch(push('/goToEntityCreate'));
-    });
-
-    emitter.on('eventSetGroundItems', (items: Item[]) => {
-        dispatch(setGroundItems(items));
     });
 
     emitter.on('setNotify', (msg: string, variant: string, origin: NotifyOrigin) => {
@@ -68,12 +63,6 @@ function PlayerEvents(dispatch, getState) {
     emitter.on('cef_set_dehydration_huds', (hunger: number) => {
         dispatch(
             setHudsData(HudType.SET_DEHYDRATION_HUDS, hunger)
-        );
-    });
-
-    emitter.on('cef_set_inventory_weight', (weight: number) => {
-        dispatch(
-            setInventorySlots(weight)
         );
     });
 }
