@@ -53,7 +53,7 @@ function App() {
         <Route exact path='/character' component={ Character } />
         <Route exact path='/StartMenu' component={ StartMenu } />
       </Switch>
-      <Redirect to="/character" />
+      <Redirect to="/UIItems" />
       {/* <RoutesComp /> */}
     </div>
   );
