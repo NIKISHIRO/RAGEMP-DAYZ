@@ -25,7 +25,7 @@ mp.keys.bind(playerInstance.getSettingsKeyCode(KeysSettings.ACTION), true, funct
         if (data.type === 'vehicle') {
             const vehicle = mp.vehicles.atRemoteId(data.remoteId);
             const lootItems = vehicle.getVariable('lootItems');
-            
+
             if (lootItems) {
                 // Отправляем данные лута в CEF.
                 callRPC.cefSendLootItemsGround(lootItems);

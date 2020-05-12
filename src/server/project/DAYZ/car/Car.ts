@@ -26,7 +26,7 @@ export class Car {
             veh.rotation = new mp.Vector3(car.rotation.x, car.rotation.y, car.rotation.z)
             veh.setColorRGB(car.color[0], car.color[1], car.color[2], car.color[3], car.color[4], car.color[5]);
 
-            veh.setVariable('carInventory', items);
+            veh.setVariable('lootItems', items);
             veh.setVariable('isExplode', false);
             veh.setVariable('id', car.id)
         })
@@ -78,34 +78,6 @@ export class Car {
         let random = Math.floor((Math.random() * Maximum) + Minimal);
         return random
     } 
-    
-    // Возвращает массив машин в 10 метрах
-    static getCar(player: PlayerMp, distance:number) {
-        const returnVehicles: any[] = [];
-
-        mp.vehicles.forEachInRange(player.position, distance, (vehicle) => {
-                returnVehicles.push(vehicle);
-            }
-        );
-        return returnVehicles;
-    };
-    
-    // Массив обьектов машин с ключами сортированными по дистанции от меньшего к большему
-    static arrayCars(player: PlayerMp){
-        let vehicles: any[] = [];
-        let cars = Car.getCar(player, 10);
-
-        cars.forEach((elem) => {
-            vehicles.push({
-                'distance' : player.dist(elem.position),
-                'objCar' : elem
-            })
-        });
-
-        vehicles.sort((a, b) => a.distance-b.distance)
-        
-        return vehicles;
-    };
 
     static async respawnVehicle(id: number){
         const car = await postgres<VehicleData>('vehiclespawn')

@@ -98,15 +98,14 @@ export class Player {
             return lootItems[idx].amount - amount;
         }
 
-        switch (typeEntity) {
-            // Если сущность является объектом.
-            case 'object': {
-                let findObject: any;
-                let findItem: any;
-                let result;
+        let findObject: any;
+        let findItem: any;
+        let result;
 
-                // Перебираем объекты вокруг игрока.
-                mp.objects.forEachInRange(this.player.position, 10, (object) => {
+        switch(typeEntity){
+            // Перебираем объекты вокруг игрока/машины.
+            case 'object':
+                mp.objects.forEachInRange(self.player.position, 10, (object) => {
                     const lootItems = object.getVariable('lootItems');
                     if (!lootItems) return;
 
@@ -116,53 +115,8 @@ export class Player {
                     findItem = {...takenItem};
                     findObject = object;
                 });
-
-                if (!findItem || !findObject) {
-                    return result = {
-                        result: false,
-                        text: 'Здесь нет такого предмета.',
-                    }
-                }
-
-                const lootItems: Item[] = findObject.getVariable('lootItems');
-                
-                if (!hasInventoryWeight(findItem)) {
-                    return result = {
-                        result: false,
-                        text: 'В инвентаре недостаточно места!',
-                    }
-                }
-
-                const rest = getRestItemAmount(lootItems, findItem, amount);
-                const idx = lootItems.findIndex(i => i.data.serverId === findItem.data.serverId);
-                if (rest <= 0) {
-                    lootItems.splice(idx, 1);
-                    amount = findItem.amount;
-                    // entity.destroy();
-                }
-                if (rest > 0) {
-                    lootItems[idx].amount = rest;
-                }
-
-                findObject.setVariable('lootItems', lootItems);
-
-                // Выдать игроку предмет.
-                if (self.player.giveItem(findItem.key, amount, findItem.data)) {
-                    const callRPC = new CallRPC(self.player);
-                    callRPC.cefSetGroundItems(lootItems);
-
-                    return result = {
-                        result: true,
-                        text: `Вы подобрали x${amount} ${findItem.data.name}`,
-                    }
-                }
-
-                return result;
-            }
-
-            case 'vehicle': {
-                let findItem;
-                let findObject;
+            break;
+            case 'vehicle':
                 mp.vehicles.forEachInRange(self.player.position, 10, (vehicle) => {
                     const lootItems = vehicle.getVariable('lootItems');
                     if (!lootItems) return;
@@ -173,26 +127,50 @@ export class Player {
                     findItem = {...takenItem};
                     findObject = vehicle;
                 });
-
-                if (!findItem || !findObject) {
-                    return {
-                        result: false,
-                        text: 'Здесь нет такого предмета.',
-                    }
-                }
-
-                return self.takeItemCar(findObject, serverId, amount);
-            }
-
-            default: {
-                return {
-                    result: false,
-                    text: 'Ошибка!',
-                }
+            break;
+        }
+        if (!findItem || !findObject) {
+            return result = {
+                result: false,
+                text: 'Здесь нет такого предмета.',
             }
         }
-    }
 
+        const lootItems: Item[] = findObject.getVariable('lootItems');
+        
+        if (!hasInventoryWeight(findItem)) {
+            return result = {
+                result: false,
+                text: 'В инвентаре недостаточно места!',
+            }
+        }
+
+        const rest = getRestItemAmount(lootItems, findItem, amount);
+        const idx = lootItems.findIndex(i => i.data.serverId === findItem.data.serverId);
+        if (rest <= 0) {
+            lootItems.splice(idx, 1);
+            amount = findItem.amount;
+            // entity.destroy();
+        }
+        if (rest > 0) {
+            lootItems[idx].amount = rest;
+        }
+
+        findObject.setVariable('lootItems', lootItems);
+
+        // Выдать игроку предмет.
+        if (self.player.giveItem(findItem.key, amount, findItem.data)) {
+            const callRPC = new CallRPC(self.player);
+            callRPC.cefSetGroundItems(lootItems);
+
+            return result = {
+                result: true,
+                text: `Вы подобрали x${amount} ${findItem.data.name}`,
+            }
+        }
+
+        return result;
+    }  
     // Устанавливает слоты и отправляет в CEF.
     public setInventorySlots(slots: number) {
         this.player.setVariable('invMaxWeight', slots); // Макс. вес для предметов игрока.
@@ -264,106 +242,5 @@ export class Player {
         // рандомная коорината.
         const coordSpawn: number[] = SPAWNS[randomNumber];
         this.player.spawn(new mp.Vector3(coordSpawn[0], coordSpawn[1], coordSpawn[2]));
-    }
-
-    // Положить определнный предмет в каком то кол-ве
-    public putItemCar(vehicle:VehicleMp, index: number, amount:number): CarReturnInformation{
-        const returnInformation: CarReturnInformation = {
-            info: '!{#DA3060} должно быть число',
-            result: false
-        };
-        const carInventory = vehicle.getVariable('lootItems');
-        const playerInventory: Item[] = this.player.getInventory();
-
-        if(!Number.isInteger(index) || !Number.isInteger(amount)){
-            return returnInformation;
-        }
-
-        if(!mp.vehicles.exists(vehicle)){
-            returnInformation.info = `Рядом нет машины`;
-            return returnInformation;
-        }
-
-        if(!playerInventory || !playerInventory[index]){
-            returnInformation.info = 'У вас нет такого предмета в инвентаре';
-            return returnInformation
-        }
-
-        if(amount <= 0){
-            returnInformation.info = `Введите коректное число`;
-            return returnInformation;
-        }
-
-        if(playerInventory[index].amount < amount){
-            returnInformation.info = 'Такого количества предметов нет';
-            return returnInformation
-        }
-
-        const carItem = {...playerInventory[index]}
-        this.player.removeItem(index, amount);
-        
-        carItem.amount = amount;
-        carInventory.push(carItem);
-        vehicle.setVariable('lootItems', carInventory);
-
-        returnInformation.info = `Вы успешно положили в машину ${amount}`;
-        returnInformation.result = true
-        return returnInformation
-    }
-
-    // Взять определенный предмет в каком то количестве
-    public takeItemCar( vehicle:VehicleMp, serverId: string, amount:number): CarReturnInformation {
-        const returnInformation: CarReturnInformation  = {
-            text: '!{#DA3060} должно быть число',
-            result: false
-        };
-        const carInventory = vehicle.getVariable('lootItems');
-        const playerInventory: Item[] = this.player.getInventory();
-
-        if(!Number.isInteger(index) || !Number.isInteger(amount)){
-            return returnInformation;
-        }
-
-        if(!mp.vehicles.exists(vehicle)){
-            returnInformation.text = `Рядом нет машины`;
-            return returnInformation;
-        }
-
-        if(!carInventory || !carInventory[index]){
-            returnInformation.text = `У вас нет такого предмета в инвентаре`;
-            return returnInformation;
-        }
-
-        if(amount <= 0){
-            returnInformation.text = `Введите коректное число`;
-            return returnInformation;
-        }
-
-        if(carInventory[index].amount < amount){
-            returnInformation.text = 'Такого количества предметов нет';
-            return returnInformation
-        }else if(carInventory[index].amount == amount){
-            returnInformation.text = 'Вы успешно взяли предмет в полном кол-ве';
-            returnInformation.result = true;
-
-            const playerItem = {...carInventory[index]}
-            playerItem.amount = amount
-            playerInventory.push(playerItem);
-
-            carInventory.splice(carInventory[index], 1);
-            vehicle.setVariable('lootItems', carInventory);
-            return returnInformation
-        }
-        returnInformation.text = `Вы успешно взяли ${amount}`;
-        returnInformation.result = true
-
-        const playerItem = {...carInventory[index]}
-        playerItem.amount = amount
-        playerInventory.push(playerItem);
-        
-        this.player.setInventory(playerInventory);
-        carInventory[index].amount -= amount;
-        vehicle.setVariable('lootItems', carInventory);
-        return returnInformation
     }
 }
