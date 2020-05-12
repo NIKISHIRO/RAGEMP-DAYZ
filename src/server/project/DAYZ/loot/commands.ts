@@ -28,19 +28,6 @@ mp.events.addCommand('use', (player: PlayerMp, ft: string, idx: string) => {
     }
 });
 
-// Выводит места для лута (ИДЫ КОЛШИПОВ).
-mp.events.addCommand('items', (player: PlayerMp, ft: string) => {
-    const plr = new Player(player);
-    const itemPoints = plr.getItemPoints();
-
-    player.outputChatBox(`!{#20db63}(ItemPoints): [${itemPoints.length}]`);
-    player.outputChatBox(`!{#20db63}Смотреть содержимое через /take.`);
-    itemPoints.forEach((shapeId, idx) => {
-        player.outputChatBox(`!{#20db63}-> [${idx}]: ID - ${shapeId}`);
-    });
-    player.outputChatBox(`!{#20db63}---------------------------`);
-});
-
 mp.events.addCommand('weight', (player: PlayerMp, ft: string, id: string, amount: string, cellId: string) => {
     const plr = new Player(player);
     const invMaxWeight: number = player.getVariable('invMaxWeight');

@@ -1,6 +1,11 @@
 import { constants } from "../constants";
 import { callRPC } from "../CallRPC";
 
+export enum KeysSettings {
+    ACTION = 'ACTION',
+    OPEN_INVENTORY = 'OPEN_INVENTORY',
+};
+
 class Player {
     private player: PlayerMp;
 
@@ -23,16 +28,54 @@ class Player {
                     data: [], // для LootCreate класса.
                 }
             },
-            character: {
-                gender: null,
-                face: [],
-                eyes: 0, // 0 - 31;
+            character: {},
+            lookingAtEntity: null, // Entity || null.
+
+            settings: { // KEYS:
+                ACTION: 0x45, // E.
+                OPEN_INVENTORY: 0x09 // TAB.
             },
         };
         mp.players.local['customData'] = customData;
 
         this.setHunger(100);
         this.setDehydration(100);
+    }
+
+    public getSettingsKeyCode(name: KeysSettings) {
+        return this.player.customData.settings[name];
+    }
+
+    public getLookingAtEntity(distance: number = 1000): RaycastResult | null {
+        let startPosition = this.player.getBoneCoords(12844, 0.5, 0, 0);
+        let res = mp.game.graphics.getScreenActiveResolution(1, 1);
+        let endPosition = mp.game.graphics.screen2dToWorld3d(new mp.Vector3(res.x / 2, res.y / 2, 0));
+    
+        if (!endPosition) return null;
+        
+        const result = mp.raycasting.testPointToPoint(startPosition, endPosition, this.player);
+    
+        if (result) {
+            let entPos = result.entity.position;
+            let plrPos = this.player.position;
+
+            if (!entPos) return null;
+
+            if (mp.game.gameplay.getDistanceBetweenCoords(entPos.x, entPos.y, entPos.z, plrPos.x, plrPos.y, plrPos.z, true) > distance) {
+                return null;
+            }
+    
+            return result;
+        }
+        return null;
+    }
+
+    public getLookingData(): EntityMp | null {
+        return this.player.customData.lookingAtEntity;
+    }
+
+    public setLookingData(entity: EntityMp | null) {
+        this.player.customData.lookingAtEntity = entity;
     }
 
     public dehydrationInit() {

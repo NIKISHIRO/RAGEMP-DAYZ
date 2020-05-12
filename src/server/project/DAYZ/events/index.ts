@@ -5,19 +5,22 @@ import { Character } from "../character/Character";
 import { Auth } from "../auth/Auth";
 
 export const events = {
+    "playerReady": (player: PlayerMp) => {
+        console.log(`[${player.name}]: скачал ресурсы.`);
+    },
+
     "playerJoin": (player: PlayerMp) => {
         const plr = new Player(player);
         const cef = new CallRPC(player);
         
         const character = new Character(player);
-        console.log(character.getClothes());
 
         console.log(`${player.name}: Зашел на сервер.`);
         mp.players.broadcast(`!{#666666}${player.name}: Зашел на сервер.`);
+
         // Установка всех дефолтных св-в игроку.
         plr.init();
-        // Выключает худы.
-        plr.setDisplayUI('huds', false);
+
         // Устанавливает св-ва игроку для авторизации. Отключает чат, курсор, худы и т.д.
         cef.clientBeforeAuthInit();
     },

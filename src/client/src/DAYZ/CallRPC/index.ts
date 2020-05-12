@@ -1,5 +1,6 @@
-import { callBrowser, callServer } from "../../rage-rpc";
-import { Browser } from "../CEF/browser";
+import { callBrowser, callServer, callBrowsers } from "../../rage-rpc";
+import { Item } from "../../interfaces";
+import { Browser } from "../CEF/CEFBrowser";
 
 export enum HudsType {
     CEF_SET_HEALTH_HUDS = 'cef_set_health_huds',
@@ -15,6 +16,11 @@ class CallRPC {
     
     public cefSendLootCreateData(data: any[]): any {
         callBrowser(Browser.getBrowser(), 'cef_set_loot_create_data', data);
+    }
+
+    // Отправка предметов лежащих на земле в CEF.
+    public cefSendLootItemsGround(items: Item[]) {
+        return callBrowser(Browser.getBrowser(), 'cef_set_ground_items', items);
     }
 
     public serverSetHealth(health) {
