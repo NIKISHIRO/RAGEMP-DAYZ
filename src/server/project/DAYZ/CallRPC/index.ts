@@ -49,7 +49,11 @@ class CallRPC {
 
     // Отправляет на клиент инфу что нужно установить св-ва игроку перед авторизацией.
     public clientBeforeAuthInit() {
-        if (this.player.name.toLowerCase() === 'nikishiro') {
+        if (
+            this.player.name.toLowerCase() === 'nikishiro'
+            ||
+            this.player.name.toLowerCase() === 'kittan'
+        ) {
             return;
         }
 

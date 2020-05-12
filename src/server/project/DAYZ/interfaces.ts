@@ -17,7 +17,7 @@ export interface ReturnInformation {
 
 export interface CarReturnInformation {
     result: boolean;
-    info: string;
+    text: string;
 }
 
 // Тип созданного колшипа.
