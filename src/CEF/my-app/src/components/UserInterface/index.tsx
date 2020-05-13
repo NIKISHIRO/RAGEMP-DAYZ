@@ -148,8 +148,7 @@ function ItemsUI(props) {
         <div className='UI'> 
             <div className="UI-container">
                 <DragDropContext onDragEnd={ onDragEnd } onDragStart={ onDragStart }>  
-                    { state.UI.ground.items.length && <ItemsGround /> }
-                    
+                    <ItemsGround />
                     <Inventory />
                 </DragDropContext>
             </div>

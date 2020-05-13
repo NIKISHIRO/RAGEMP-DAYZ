@@ -53,25 +53,38 @@ class Loot {
         }
     }
 
+    static setLootableObject(
+        object: ObjectMp, 
+        collisionId: number | null, 
+        blipId: number, 
+        lootItemName: string, 
+        isOpeningStorage: boolean) 
+    {
+        object.setVariable('lootItems', []);
+        object.setVariable('lootCollisionId', collisionId);
+        object.setVariable('lootObjectId', object.id);
+        object.setVariable('lootBlipId', blipId);
+        object.setVariable('lootItemName', lootItemName);
+        object.setVariable('isOpeningStorage', isOpeningStorage);
+    }
+
     static createLootObject(item: Item, position: Vector3Mp) {
         const createdItem = EItem.createItem(item.key, item.amount, item.data);
         const blip = Loot.createBlip(position);
 
         let collisionObject: any = null;
-        const lootObject = Loot.createObject(position, item.data.hash);
+        const object = Loot.createObject(position, item.data.hash);
 
-        if (item.data.isCollision) {
-            collisionObject = Loot.createObject(position, 'bkr_prop_meth_ammonia');
-            collisionObject.setVariable('lootItems', []);
-            collisionObject.setVariable('lootEntityIndexes', {collisionObjectId: collisionObject.id, lootObjectId: lootObject.id, blipId: blip.id});
-            collisionObject.alpha = 0;
+        if (item.data.isCollision) { // Предмет с коллизией.
+            collisionObject = Loot.createObject(position, 'p_ld_am_ball_01');
+            collisionObject.alpha = 50;
+            Loot.setLootableObject(collisionObject, collisionObject.id, blip.id, createdItem.data.name, false);
 
             Loot.addItems(collisionObject.id, [createdItem]);
-        } else {
-            lootObject.setVariable('lootItems', []);
-            lootObject.setVariable('lootEntityIndexes', {collisionObjectId: collisionObject ? collisionObject.id : null, lootObjectId: lootObject.id, blipId: blip.id});
+        } else { // Если предмет без коллизии.
+            Loot.setLootableObject(object, null, blip.id, createdItem.data.name, false);
 
-            Loot.addItems(lootObject.id, [createdItem]);
+            Loot.addItems(object.id, [createdItem]);
         }
     }
 

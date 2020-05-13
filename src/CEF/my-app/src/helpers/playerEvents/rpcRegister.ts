@@ -5,14 +5,12 @@ import { DisplayUI } from '../../reducers/UIReducer';
 import { emitter } from '../emitter';
 
 type NotifyData = {
-    msg: string; 
+    text: string; 
     variant: string; 
     origin: NotifyOrigin;
 };
 
 function rpcRegister() {
-    console.log(' ---> rpcRegister');
-    
     register('cef_set_ground_items', (items: Item[]) => {
         emitter.emit('eventSetGroundItems', items);
     });
@@ -25,9 +23,11 @@ function rpcRegister() {
         emitter.emit('eventSetInventorySlots', slots);
     });
 
-    register('cef_set_notify', (jsonData: string) => {
-        const data: NotifyData = JSON.parse(jsonData);
-        emitter.emit('setNotify', data.msg, data.variant, data.origin);
+    register('cef_set_notify', (data: NotifyData) => {
+        console.log('----------------------------------');
+        console.log('----------------------------------');
+        console.log(data);
+        emitter.emit('setNotify', data.text, data.variant, data.origin);
     });
 
     register('cef_set_display_ui', (displayUI: DisplayUI) => {

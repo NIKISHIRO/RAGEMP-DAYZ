@@ -36,19 +36,17 @@ type LoginRegister = {
     password: string;
 };
 
-// Взять предмет на земле.
-register('server_take_inventory_item', (jsonData: string, info: any) => {
-    const data: TakeData = JSON.parse(jsonData);
+// Взять предмет с земли.
+register('server_take_inventory_item', (data: TakeData, info: any) => {
     const player = info.player;
     const plr = new Player(player);
     console.log(' (event)----> server_take_inventory_item');
     return plr.takeItemByServerId(data.serverId, data.amount, 'object');
 });
 
-register('server_drop_inventory_item', (jsonData: string, info: any) => {
+register('server_drop_inventory_item', (data: DropData, info: any) => {
     const player = info.player;
     const plr = new Player(player);
-    const data: DropData = JSON.parse(jsonData);
     // return plr.dropItem(data.itemKey, data.amount);
 });
 
@@ -135,7 +133,7 @@ register('server_get_ammo', (ammo: number, info: any) => {
                 player.giveWeapon(player.weapon, ammo);
                 console.log('Выдали', ammo);
                 player.removeItem(index, ammo)
-            }else{
+            } else {
                 player.giveWeapon(player.weapon, item.amount);
                 console.log('Выдали', item.amount);
                 player.removeItem(index, item.amount)

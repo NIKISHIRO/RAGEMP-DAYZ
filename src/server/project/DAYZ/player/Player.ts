@@ -77,11 +77,12 @@ export class Player {
             return;
         }
 
-        let objHash = 'prop_mb_crate_01a';
+        let objHash = 'bkr_prop_duffel_bag_01a';
 
+        position.z -= .8
         // Создаем объект.
         const object = Loot.createObject(position, objHash);
-        object.setVariable('lootPlayerName', this.player.name)
+        Loot.setLootableObject(object, null, object.id, this.player.name, true);
 
         // Обнуляем инвентарь на серваке и в CEF.
         this.player.setInventory([]);

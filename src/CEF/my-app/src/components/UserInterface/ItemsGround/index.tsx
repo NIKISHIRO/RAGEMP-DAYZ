@@ -15,7 +15,7 @@ const ItemsGround = () => {
     return (
         <div>
             <div className="items-ground">
-                <div className="ui-top">Хранилище/земля</div>
+                <div className="ui-top">Содержимое</div>
                 <div className="items-ground-middle">
                     { state.UI.ground.items.length ? <ItemsGroundCells /> : <div style={cssEmpty}>Пусто</div> }
                 </div>

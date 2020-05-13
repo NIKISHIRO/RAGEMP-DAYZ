@@ -17,12 +17,12 @@ type CharacterType = {
 
 // Подбор предмета с земли.
 async function takeInventoryItemToServer(serverId: string, amount: number): Promise<Result> {
-    return callServer('server_take_inventory_item', JSON.stringify({ serverId, amount }));
+    return callServer('server_take_inventory_item', { serverId, amount });
     return { result: true, text: '"Взять предмет". Заглушка' };
 }
 // Дропает предмет из инвентаря.
 async function dropInventoryItemToServer(itemKey: string, amount: number): Promise<Result> {
-    return callServer('server_drop_inventory_item', JSON.stringify({itemKey, amount}));
+    return callServer('server_drop_inventory_item', {itemKey, amount});
     return { result: true, text: '"Выбосить предмет". Заглушка' };
 }
 // Отправка на сервак serverId чтобы использовать предмет в инвентаре по нему.
