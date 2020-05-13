@@ -117,7 +117,7 @@ register('server_set_hud_prop', ({name, value}: {name: string, value: number}, i
 })
 
 register('server_get_ammo', (ammo: number, info: any) => {
-    const player:PlayerMp = info.player;
+    const player: PlayerMp = info.player;
     console.log(player.weapon);
     console.log(ammo);
     let itemKey;
@@ -141,5 +141,13 @@ register('server_get_ammo', (ammo: number, info: any) => {
                 player.removeItem(index, item.amount)
             }
         }
-    })
+    });
+});
+
+register('server_set_looking_storage', ({name, value}: {name: 'object' | 'vehicle', value: number}, info: any) => {
+    const player: PlayerMp = info.player;
+    const lookingStorage = player.getVariable('lookingStorage');
+    lookingStorage[name] = value;
+    player.setVariable('lookingStorage', lookingStorage);
+    console.log('lookingStorage', player.getVariable('lookingStorage'))
 });

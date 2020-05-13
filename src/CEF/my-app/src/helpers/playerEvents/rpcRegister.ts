@@ -17,6 +17,10 @@ function rpcRegister() {
         emitter.emit('eventSetGroundItems', items);
     });
 
+    register('cef_set_inventory_items', (items: Item[]) => {
+        emitter.emit('cef_set_inventory_items', items);
+    });
+
     register('cef_set_inventory_slots', (slots: number) => {
         emitter.emit('eventSetInventorySlots', slots);
     });

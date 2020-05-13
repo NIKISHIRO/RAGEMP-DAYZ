@@ -44,6 +44,7 @@ export const events = {
         character.setFullClothes(player.getVariable('clothes')[player.getVariable('gender')]);
 
         const plr = new Player(player);
+        plr.death();
         plr.spawnRandomCoords();
     },
 

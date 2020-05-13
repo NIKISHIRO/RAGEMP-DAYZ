@@ -33,3 +33,7 @@ mp.events.addCommand('sc', (player: PlayerMp, ft: string, hash: string) => {
 mp.events.addCommand('w', (player: PlayerMp, FT: string, hash: string,  n:string) => {
     player.giveWeapon(mp.joaat(hash), parseInt(n));
 })
+
+mp.events.addCommand('c', (player: PlayerMp, FT: string,i:string, clothesId: string, n:string) => {
+    player.changeClothes(parseInt(i), parseInt(clothesId), parseInt(n), true, true);
+})

@@ -53,21 +53,32 @@ class Loot {
         }
     }
 
-    static spawnLoot(spawnData: SpawnLootData[]) {
-        spawnData.forEach(spawn => { 
-            // Создание сущностей в одной точке.
-            const vector3 = new mp.Vector3(spawn.position[0], spawn.position[1], spawn.position[2]);
-            const object = Loot.createObject(vector3);
-            const blip = Loot.createBlip(vector3);
+    static createLootObject(item: Item, position: Vector3Mp) {
+        const createdItem = EItem.createItem(item.key, item.amount, item.data);
+        const blip = Loot.createBlip(position);
 
-            const objectId = object.id;
-            const blipId = blip.id;
-    
-            object.setVariable('lootEntityIndexes', {objectId, blipId});
-            object.setVariable('lootItems', []);
-    
+        let collisionObject: any = null;
+        const lootObject = Loot.createObject(position, item.data.hash);
+
+        if (item.data.isCollision) {
+            collisionObject = Loot.createObject(position, 'bkr_prop_meth_ammonia');
+            collisionObject.setVariable('lootItems', []);
+            collisionObject.setVariable('lootEntityIndexes', {collisionObjectId: collisionObject.id, lootObjectId: lootObject.id, blipId: blip.id});
+            collisionObject.alpha = 0;
+
+            Loot.addItems(collisionObject.id, [createdItem]);
+        } else {
+            lootObject.setVariable('lootItems', []);
+            lootObject.setVariable('lootEntityIndexes', {collisionObjectId: collisionObject ? collisionObject.id : null, lootObjectId: lootObject.id, blipId: blip.id});
+
+            Loot.addItems(lootObject.id, [createdItem]);
+        }
+    }
+
+    static spawnLoot(spawnData: SpawnLootData[]) {
+        spawnData.forEach(spawn => {    
             // Массив рандомных предметов, разделенные по редкости.
-            const items: any = spawn.items.map(rarity => {
+            spawn.items.forEach(rarity => {
                 const itemsByRarity = Loot.getRarItems()[rarity];
     
                 // Заполняет массив рандомными предметами.
@@ -75,18 +86,13 @@ class Loot {
                     const randomIndex = randomInteger(0, itemsByRarity.length - 1);
                     const randomItem = itemsByRarity[randomIndex];
         
+                    // Полученный рандомный предмет засунуть в 1 объект.
                     if (randomItem) {
                         console.log(`[LOOT CREATE]: ${randomItem.key} | ${randomItem.amount} | ${rarity}`.yellow);
-                        return EItem.createItem(randomItem.key, randomItem.amount, randomItem.data);
+                        Loot.createLootObject(randomItem, new mp.Vector3(spawn.position[0], spawn.position[1], spawn.position[2]));
                     }
-    
-                    return null;
                 }
             })
-            .filter(i => i !== null);
-            
-            // Добавляет предметы в объект.
-            Loot.addItems(object.id, items);
         });
     }
 
@@ -103,7 +109,7 @@ class Loot {
         const lootItems: Item[] = object.getVariable('lootItems');
         lootItems.push(...items);
         object.setVariable('lootItems', lootItems);
-        
+
         return true;
     }
 }

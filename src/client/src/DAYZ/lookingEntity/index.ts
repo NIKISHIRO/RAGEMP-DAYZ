@@ -24,8 +24,11 @@ mp.events.add('render', () => {
             // Если видимая сущность объект.
             case 'object': {
                 const object = mp.objects.atRemoteId(result.entity.remoteId);
+
+                const lootPlayerName = object.getVariable('lootPlayerName');
+
                 const objPos = object.position;
-                let text = '[E] Loot';
+                let text = lootPlayerName ? `[E] ${lootPlayerName}` : '[E] Loot';
 
                 mp.game.graphics.drawText(text, [objPos.x, objPos.y, objPos.z], {
                     font: 0,

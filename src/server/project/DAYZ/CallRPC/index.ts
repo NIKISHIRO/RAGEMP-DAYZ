@@ -17,6 +17,11 @@ class CallRPC {
         .catch(e => console.log('server -> cef_set_ground_items -> e'.red, e));
     }
 
+    public cefSetInventoryItems(items: Item[]) {
+        callBrowsers(this.player, 'cef_set_inventory_items', items)
+        .catch(e => console.log('server -> cef_set_inventory_items -> e'.red, e));
+    }
+
     // Отображает или скрывает части в UI.
     public setDisplayUI(displayUI: DisplayUI) {
         callBrowsers(this.player, 'cef_set_display_ui', displayUI)

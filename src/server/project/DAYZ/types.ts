@@ -25,6 +25,7 @@ export enum ItemType {
 
 export enum ItemKey {
     ITEM_WEAPON_AK47 = 'ITEM_WEAPON_AK47',
+    ITEM_WEAPON_PUMP_SHOTGUN = 'ITEM_WEAPON_PUMP_SHOTGUN',
     ITEM_ARMOR = 'ITEM_ARMOR',
     ITEM_AMMO_SHOTGUN = 'ITEM_AMMO_SHOTGUN',
     ITEM_AMMO_AK47 = 'ITEM_AMMO_AK47',
@@ -97,6 +98,7 @@ export type CharacterFace = {
 
 /* ОПИСАНИЕ ПРЕДМЕТА */
 export type ItemData = {
+    hash: string;
     type: ItemType;
     rarity: ItemRarity;
     name: string; // Название предмета.
@@ -106,6 +108,7 @@ export type ItemData = {
     serverId: string;
     weight: number;
     isDelete: boolean; // Удалить после использования?
+    isCollision: boolean; // Создавать коллизионный объект?
 };
 
 export interface BodyArmourData extends ItemData {

@@ -30,6 +30,10 @@ class CallRPC {
     public serverSetHudProp(name: string, value: number) {
         callServer('server_set_hud_prop', {name, value});
     }
+
+    public serverSetLookingStorage(name: 'object' | 'vehicle', value: number) {
+        return callServer('server_set_looking_storage', {name, value});
+    }
 }
 
 const callRPC = new CallRPC;

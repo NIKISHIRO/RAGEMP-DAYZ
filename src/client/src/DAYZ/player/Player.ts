@@ -35,11 +35,20 @@ class Player {
                 ACTION: 0x45, // E.
                 OPEN_INVENTORY: 0x09 // TAB.
             },
+            
+            lookingStorage: { // ид хранилища которое просматривает игрок.
+                object: null,
+                vehicle: null,
+            }
         };
         mp.players.local['customData'] = customData;
 
         this.setHunger(100);
         this.setDehydration(100);
+    }
+
+    public setLookingStorage(name: 'object' | 'vehicle', remoteId: number) {
+        callRPC.serverSetLookingStorage(name, remoteId);
     }
 
     public getSettingsKeyCode(name: KeysSettings) {
@@ -195,4 +204,5 @@ const playerInstance = new Player(mp.players.local);
 
 export {
     playerInstance,
+    Player
 }

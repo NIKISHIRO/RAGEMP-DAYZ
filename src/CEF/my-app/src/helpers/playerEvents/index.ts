@@ -1,7 +1,7 @@
 import { push } from 'connected-react-router';
 import { emitter } from '../emitter';
 import { Item } from '../../types';
-import { setGroundItems, setInventorySlots } from '../../actions/inventoryActions';
+import { setGroundItems, setInventorySlots, setInventoryItems } from '../../actions/inventoryActions';
 import { enqueueSnackbar } from '../../actions/notificationActions';
 import { NotifyOrigin } from '../../actions/notificationActions';
 import { DisplayUI } from '../../reducers/UIReducer';
@@ -23,6 +23,10 @@ function PlayerEvents(dispatch, getState) {
 
     emitter.on('eventSetGroundItems', (items: Item[]) => {
         dispatch(setGroundItems(items));
+    });
+
+    emitter.on('cef_set_inventory_items', (items: Item[]) => {
+        dispatch(setInventoryItems(items));
     });
 
     emitter.on('setNotify', (msg: string, variant: string, origin: NotifyOrigin) => {
