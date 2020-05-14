@@ -18,4 +18,4 @@ ReactDOM.render(
 serviceWorker.unregister();
 
 // Регистрация всех RPC события для RAGEMP.
-// rpcRegister();
+rpcRegister(); 

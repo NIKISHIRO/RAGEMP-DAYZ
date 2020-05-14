@@ -118,7 +118,7 @@ const initialState: UIState = {
         isBleeding: true,
     },
     displayUI: {
-        huds: true,
+        huds: false,
     },
     notifications: [],
     inventory: {

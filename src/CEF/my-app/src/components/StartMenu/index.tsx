@@ -12,8 +12,6 @@ function StartMenu() {
         <Bounce in={ true }>
             <div className='start-menu'>
                 <div className="start-menu__interface">
-                    <div className="start-menu__item" onClick={ () => dispatch(push('/auth')) }>Авторизация/Регистрация</div>
-                    <div className="start-menu__item" onClick={ () => dispatch(push('/character')) }>Создание персонажа</div>
                 </div>
             </div>
         </Bounce>

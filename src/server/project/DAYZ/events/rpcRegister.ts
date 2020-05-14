@@ -36,18 +36,18 @@ type LoginRegister = {
     password: string;
 };
 
-register('server_take_inventory_item', (jsonData: string, info: any) => {
-    const data: TakeData = JSON.parse(jsonData);
+// Взять предмет с земли.
+register('server_take_inventory_item', (data: TakeData, info: any) => {
     const player = info.player;
     const plr = new Player(player);
-    return plr.takeItemByServerId(data.serverId, data.amount);
+    console.log(' (event)----> server_take_inventory_item');
+    return plr.takeItemByServerId(data.serverId, data.amount, 'object');
 });
 
-register('server_drop_inventory_item', (jsonData: string, info: any) => {
+register('server_drop_inventory_item', (data: DropData, info: any) => {
     const player = info.player;
     const plr = new Player(player);
-    const data: DropData = JSON.parse(jsonData);
-    return plr.dropItem(data.itemKey, data.amount);
+    // return plr.dropItem(data.itemKey, data.amount);
 });
 
 register('server_set_display', (jsonData: string, info: any) => {
@@ -66,6 +66,9 @@ register('server_change_UI', (name: string, info: any) => {
 register('server_use_item_by_serverid', (serverId: string, info: any) => {
     const player = info.player;
     const plr = new Player(player);
+
+    console.log('server_use_item_by_serverid', serverId);
+
     return plr.useItemByServerId(serverId);
 });
 
@@ -78,17 +81,41 @@ register('server_set_health', (health: number, info: any) => {
 register('server_register', (data: ServerRegister, info: any) => {
     const player = info.player;
     const auth = new Auth(player);
-    auth.register(data.login, data.email, data.password);
+    return auth.register(data.login, data.email, data.password);
 });
 
 register('server_login', (data: LoginRegister, info: any) => {
     const player = info.player;
     const auth = new Auth(player);
-    auth.login(data.login, data.password);
+    return auth.login(data.login, data.password);
 });
 
+register('server_check_login', (login: string, info: any) => {
+    const player = info.player;
+    const auth = new Auth(player);
+    return auth.checkLogin(login);
+});
+
+register('server_character_ready', ({login, email, password}: {login: string; email: string; password: string}, info: any) => {
+    const player = info.player;
+    
+    // Создание перса после регистрации.
+    if (!player.getVariable('isAuth')) {
+        const auth = new Auth(player);
+        auth.register(login, email, password);
+    }
+});
+
+register('server_set_hud_prop', ({name, value}: {name: string, value: number}, info) => {
+    const player: any = info.player;
+
+    if (name == 'hunger' || name == 'dehydration' || name === 'temperature') {
+        player.setVariable(name, value);
+    }
+})
+
 register('server_get_ammo', (ammo: number, info: any) => {
-    const player:PlayerMp = info.player;
+    const player: PlayerMp = info.player;
     console.log(player.weapon);
     console.log(ammo);
     let itemKey;
@@ -106,11 +133,19 @@ register('server_get_ammo', (ammo: number, info: any) => {
                 player.giveWeapon(player.weapon, ammo);
                 console.log('Выдали', ammo);
                 player.removeItem(index, ammo)
-            }else{
+            } else {
                 player.giveWeapon(player.weapon, item.amount);
                 console.log('Выдали', item.amount);
                 player.removeItem(index, item.amount)
             }
         }
-    })
+    });
+});
+
+register('server_set_looking_storage', ({name, value}: {name: 'object' | 'vehicle', value: number}, info: any) => {
+    const player: PlayerMp = info.player;
+    const lookingStorage = player.getVariable('lookingStorage');
+    lookingStorage[name] = value;
+    player.setVariable('lookingStorage', lookingStorage);
+    console.log('lookingStorage', player.getVariable('lookingStorage'))
 });

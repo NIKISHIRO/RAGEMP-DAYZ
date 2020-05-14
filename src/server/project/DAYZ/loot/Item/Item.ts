@@ -6,8 +6,9 @@ export class EItem {
         return {key, amount, data: {...data, shortid: shortid.generate()}};
     }
 
-    static createSimpleItem(key: ItemKey, rarity: ItemRarity, name: string, description: string, weight: number, msc: number, amount: number, isDelete: boolean): Item {
+    static createSimpleItem(key: ItemKey, hash: string, rarity: ItemRarity, name: string, description: string, weight: number, msc: number, amount: number, isDelete: boolean, isCollision: boolean): Item {
         const data: ItemData = {
+            hash,
             type: ItemType.COMMON,
             rarity: rarity,
             name: name,
@@ -17,13 +18,15 @@ export class EItem {
             serverId: shortid.generate(),
             shortid: shortid.generate(),
             isDelete,
+            isCollision,
         };
 
         return EItem.createItem(ItemKey[key], amount, data);
     }
 
-    static createClothesItem(key: ItemKey, rarity: ItemRarity, name: string, description: string, addSlots: number, weight: number, amount: number, cId: number, dr: number, isDelete: boolean) {
+    static createClothesItem(key: ItemKey, hash: string, rarity: ItemRarity, name: string, description: string, addSlots: number, weight: number, amount: number, cId: number, dr: number, isDelete: boolean, isCollision: boolean) {
         const data: ClothesData = {
+            hash,
             type: ItemType.CLOTHES,
             rarity: rarity,
             name: name,
@@ -36,13 +39,15 @@ export class EItem {
             serverId: shortid.generate(),
             shortid: shortid.generate(),
             isDelete,
+            isCollision,
         };
         
         return EItem.createItem(ItemKey[key], amount, data);
     }
 
-    static createWeaponItem(key: ItemKey, rarity: ItemRarity, name: string, description: string, weight: number, amount: number, isDelete: boolean): Item {
+    static createWeaponItem(key: ItemKey, hash: string, rarity: ItemRarity, name: string, description: string, weight: number, amount: number, isDelete: boolean, isCollision: boolean): Item {
         const data: WeaponData = {
+            hash,
             type: ItemType.WEAPON,
             rarity: rarity,
             name: name,
@@ -52,14 +57,16 @@ export class EItem {
             serverId: shortid.generate(),
             shortid: shortid.generate(),
             isDelete,
+            isCollision,
         };
         
         return EItem.createItem(ItemKey[key], amount, data);
     }
     
-    static createBodyArmorItem(key: ItemKey, rarity: ItemRarity, name: string, description: string, weight: number, defence: number, amount: number, isDelete: boolean): Item {
+    static createBodyArmorItem(key: ItemKey, hash: string, rarity: ItemRarity, name: string, description: string, weight: number, defence: number, amount: number, isDelete: boolean, isCollision: boolean): Item {
         const data: BodyArmourData = {
             type: ItemType.ARMOR,
+            hash,
             rarity,
             defence,
             name,
@@ -69,6 +76,7 @@ export class EItem {
             serverId: shortid.generate(),
             shortid: shortid.generate(),
             isDelete,
+            isCollision,
         };
     
         return EItem.createItem(ItemKey[key], amount, data);

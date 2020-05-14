@@ -7,8 +7,7 @@ module.exports = {
     },
     output: {
         path: path.join(__dirname, "../../../client_packages"),
-        filename: "[name].js",
-        sourceMapFilename: '[name].map'
+        filename: "[name].js"
     },
     resolve: {
         extensions: ['.ts', '.js']

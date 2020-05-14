@@ -9,6 +9,7 @@ import { enqueueSnackbar, NotifyVariant } from "../../actions/notificationAction
 import { useSelector, useDispatch } from "react-redux";
 import { UIState } from "../../reducers/UIReducer";
 import { takeInventoryItemToServer, dropInventoryItemToServer } from "../../helpers/playerEvents/rpcCall";
+import { State } from "../../reducers";
 
 const move = (source, destination, droppableSource, droppableDestination): any => {
     const sourceClone = Array.from(source);
@@ -140,6 +141,8 @@ function ItemsUI(props) {
     const onDragStart = (data) => {
         console.log('onDragStart data', data);  
     }
+
+    const state = useSelector((state: State) => state || []);
 
     return (
         <div className='UI'> 

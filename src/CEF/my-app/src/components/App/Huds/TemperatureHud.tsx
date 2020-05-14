@@ -1,4 +1,4 @@
-import React from "react"
+import React, { CSSProperties } from "react"
 
 import img_icon_100 from '../../../assets/huds/temperature/100.svg';
 import img_icon_80 from '../../../assets/huds/temperature/80.svg';
@@ -9,6 +9,7 @@ import img_icon_empty from '../../../assets/huds/temperature/empty.svg';
 
 type Props = {
     temperature: number;
+
 }
 function TemperatureHud(props: Props) {
     const { temperature } = props;
@@ -17,23 +18,18 @@ function TemperatureHud(props: Props) {
     let imgIcon = img_icon_100;
     if (temperature < 80) {
         imgIcon = img_icon_80;
-        styles = {filter: 'hue-rotate(45deg)'};
     }    
     if (temperature < 60) {
         imgIcon = img_icon_60;
-        styles = {filter: 'hue-rotate(60deg)'};
     }
     if (temperature < 40) {
         imgIcon = img_icon_40;
-        styles = {filter: 'hue-rotate(75deg)'};
     }
     if (temperature < 20) {
         imgIcon = img_icon_20;
-        styles = {filter: 'hue-rotate(90deg)'};
     }
     if (temperature < 1) {
         imgIcon = img_icon_empty;
-        styles = {filter: 'hue-rotate(100deg)'};
     }
 
     return (

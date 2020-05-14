@@ -1,6 +1,10 @@
-import { serverSetHealth } from "./CallServer";
 import { constants } from "../constants";
-import { Browser } from "../CEF/browser";
+import { callRPC } from "../CallRPC";
+
+export enum KeysSettings {
+    ACTION = 'ACTION',
+    OPEN_INVENTORY = 'OPEN_INVENTORY',
+};
 
 class Player {
     private player: PlayerMp;
@@ -24,16 +28,63 @@ class Player {
                     data: [], // для LootCreate класса.
                 }
             },
-            character: {
-                gender: null,
-                face: [],
-                eyes: 0, // 0 - 31;
+            character: {},
+            lookingAtEntity: null, // Entity || null.
+
+            settings: { // KEYS:
+                ACTION: 0x45, // E.
+                OPEN_INVENTORY: 0x09 // TAB.
             },
+            
+            lookingStorage: { // ид хранилища которое просматривает игрок.
+                object: null,
+                vehicle: null,
+            }
         };
         mp.players.local['customData'] = customData;
 
         this.setHunger(100);
         this.setDehydration(100);
+    }
+
+    public setLookingStorage(name: 'object' | 'vehicle', remoteId: number) {
+        callRPC.serverSetLookingStorage(name, remoteId);
+    }
+
+    public getSettingsKeyCode(name: KeysSettings) {
+        return this.player.customData.settings[name];
+    }
+
+    public getLookingAtEntity(distance: number = 1000): RaycastResult | null {
+        let startPosition = this.player.getBoneCoords(12844, 0.5, 0, 0);
+        let res = mp.game.graphics.getScreenActiveResolution(1, 1);
+        let endPosition = mp.game.graphics.screen2dToWorld3d(new mp.Vector3(res.x / 2, res.y / 2, 0));
+    
+        if (!endPosition) return null;
+        
+        const result = mp.raycasting.testPointToPoint(startPosition, endPosition, this.player);
+    
+        if (result) {
+            let entPos = result.entity.position;
+            let plrPos = this.player.position;
+
+            if (!entPos) return null;
+
+            if (mp.game.gameplay.getDistanceBetweenCoords(entPos.x, entPos.y, entPos.z, plrPos.x, plrPos.y, plrPos.z, true) > distance) {
+                return null;
+            }
+    
+            return result;
+        }
+        return null;
+    }
+
+    public getLookingData(): EntityMp | null {
+        return this.player.customData.lookingAtEntity;
+    }
+
+    public setLookingData(entity: EntityMp | null) {
+        this.player.customData.lookingAtEntity = entity;
     }
 
     public dehydrationInit() {
@@ -50,12 +101,13 @@ class Player {
                     self.dehydrationDecrementIntervalId = setInterval(() => {
                         const currentHealth = self.player.getHealth();
                         const newHealth = currentHealth - constants.DECREMENT_DEHYDRATION_HEALTH;
-                        serverSetHealth(newHealth);
+                        callRPC.serverSetHealth(newHealth);
                     }, constants.DECREMENT_TIME);
                 }
             }
 
             self.setDehydration(newDehydration);
+            callRPC.serverSetHudProp('dehydration', newDehydration);
         }, constants.CHECK_TIME);
     }
 
@@ -104,12 +156,13 @@ class Player {
                     self.hungerDecrementIntervalId = setInterval(() => {
                         const currentHealth = self.player.getHealth();
                         const newHealth = currentHealth - constants.DECREMENT_HUNGER_HEALTH;
-                        serverSetHealth(newHealth);
+                        callRPC.serverSetHealth(newHealth);
                     }, constants.DECREMENT_DEHYDRATION_TIME);
                 } 
             }
 
             self.setHunger(newHunger);
+            callRPC.serverSetHudProp('hunger', newHunger);
             mp.gui.chat.push(`self.getHunger(): ${self.getHunger()}`);
         }, constants.CHECK_DEHYDRATION_TIME);
     }
@@ -151,4 +204,5 @@ const playerInstance = new Player(mp.players.local);
 
 export {
     playerInstance,
+    Player
 }

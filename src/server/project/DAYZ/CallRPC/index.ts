@@ -1,6 +1,7 @@
-import { Item, CharacterClientData } from "../types";
+import { Item, CharacterPlayerData } from "../types";
 import { callBrowsers, callClient } from 'rage-rpc';
 import { DisplayUI } from "../events/rpcRegister";
+import { stringify } from "querystring";
 
 // Класс через который происходит отправка данных в другие сущности(CLIENT, CEF).
 class CallRPC {
@@ -16,6 +17,11 @@ class CallRPC {
         .catch(e => console.log('server -> cef_set_ground_items -> e'.red, e));
     }
 
+    public cefSetInventoryItems(items: Item[]) {
+        callBrowsers(this.player, 'cef_set_inventory_items', items)
+        .catch(e => console.log('server -> cef_set_inventory_items -> e'.red, e));
+    }
+
     // Отображает или скрывает части в UI.
     public setDisplayUI(displayUI: DisplayUI) {
         callBrowsers(this.player, 'cef_set_display_ui', displayUI)
@@ -29,19 +35,33 @@ class CallRPC {
     }
 
     // Отправляет на клиент инфу что игрока зарегался или авторизовался.
-    public clientAfterLoginInit() {
-        return callClient(this.player, 'client_after_auth_init')
+    public clientAfterRegisterInit() {
+        return callClient(this.player, 'client_after_register')
         .catch(e => console.log('server -> client_after_auth_init -> e'.red, e));
     }
 
+    // Отправляет на клиент инфу что игрока зарегался или авторизовался.
+    public clientAfterLoginInit() {
+        return callClient(this.player, 'client_after_login')
+        .catch(e => console.log('server -> client_after_login -> e'.red, e));
+    }
+
     // Отправляет на клиент инфу, что юзер зарегался и получает.
-    public async clientCharacterReady(): Promise<CharacterClientData> {
+    public async clientCharacterReady(): Promise<CharacterPlayerData> {
         return await callClient(this.player, 'client_character_ready')
         .catch(e => console.log('server -> client_character_ready -> e'.red, e));
     }
 
     // Отправляет на клиент инфу что нужно установить св-ва игроку перед авторизацией.
     public clientBeforeAuthInit() {
+        if (
+            this.player.name.toLowerCase() === 'nikishiro'
+            ||
+            this.player.name.toLowerCase() === 'kittan'
+        ) {
+            return;
+        }
+
         callClient(this.player, 'client_before_auth_init')
         .catch(e => console.log('server -> client_before_auth_init -> e'.red, e));
     }
