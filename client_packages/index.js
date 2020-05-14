@@ -509,7 +509,7 @@ exports.default = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-const constants_1 = __webpack_require__(21);
+const constants_1 = __webpack_require__(19);
 const CallRPC_1 = __webpack_require__(2);
 var KeysSettings;
 (function (KeysSettings) {
@@ -1177,14 +1177,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(0);
 __webpack_require__(13);
 __webpack_require__(14);
+__webpack_require__(18);
 __webpack_require__(20);
+__webpack_require__(21);
 __webpack_require__(22);
 __webpack_require__(23);
 __webpack_require__(24);
 __webpack_require__(25);
 __webpack_require__(26);
-__webpack_require__(27);
 __webpack_require__(28);
+__webpack_require__(29);
 __webpack_require__(30);
 __webpack_require__(31);
 __webpack_require__(32);
@@ -1195,8 +1197,6 @@ __webpack_require__(36);
 __webpack_require__(37);
 __webpack_require__(38);
 __webpack_require__(39);
-__webpack_require__(40);
-__webpack_require__(41);
 mp.players.local.position = new mp.Vector3(-1167, 4923, 222);
 mp.events.add('entityStreamIn', (entity) => {
     mp.gui.chat.push(`Вошел в поток ${entity.type}`);
@@ -1888,9 +1888,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 18 */,
-/* 19 */,
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1903,7 +1901,7 @@ Player_1.playerInstance.dehydrationInit();
 
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1923,7 +1921,7 @@ exports.constants = constants;
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1981,7 +1979,7 @@ mp.events.addDataHandler('temperature', (entity, temperature, prevTemperature) =
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1996,7 +1994,7 @@ mp.events.addDataHandler('displayUI', (entity, displayData, prevDisplayData) => 
 
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2016,7 +2014,7 @@ mp.keys.bind(Player_1.playerInstance.getSettingsKeyCode(Player_1.KeysSettings.OP
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2035,7 +2033,7 @@ mp.keys.bind(0x71, true, function () {
 
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2053,7 +2051,7 @@ mp.keys.bind(0x75, true, function () {
 
 
 /***/ }),
-/* 27 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2061,14 +2059,14 @@ mp.keys.bind(0x75, true, function () {
 
 
 /***/ }),
-/* 28 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 const rage_rpc_1 = __webpack_require__(0);
-const LootCreate_1 = __webpack_require__(29);
+const LootCreate_1 = __webpack_require__(27);
 const Player_1 = __webpack_require__(1);
 rage_rpc_1.register('client_set_loot_create', (objectHash) => {
     mp.gui.chat.push('CLIENT -> client_set_loot_create');
@@ -2103,7 +2101,7 @@ rage_rpc_1.register('client_get_any_prop', (name) => {
 
 
 /***/ }),
-/* 29 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2177,7 +2175,7 @@ exports.lootCreate = lootCreate;
 
 
 /***/ }),
-/* 30 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2199,7 +2197,7 @@ mp.events.add("playerSpawn", () => {
 
 
 /***/ }),
-/* 31 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2221,7 +2219,7 @@ mp.events.add("playerSpawn", () => {
 
 
 /***/ }),
-/* 32 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2244,7 +2242,7 @@ mp.events.add("playerSpawn", () => {
 
 
 /***/ }),
-/* 33 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2267,7 +2265,7 @@ mp.events.add("playerSpawn", () => {
 
 
 /***/ }),
-/* 34 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2318,7 +2316,7 @@ rage_rpc_1.register('update_character_camera_position', () => {
 
 
 /***/ }),
-/* 35 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2375,7 +2373,7 @@ function flyCamera() {
 
 
 /***/ }),
-/* 36 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2431,7 +2429,7 @@ mp.events.add('render', () => {
 
 
 /***/ }),
-/* 37 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2439,7 +2437,7 @@ mp.events.add('render', () => {
 
 
 /***/ }),
-/* 38 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2448,7 +2446,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 
 
 /***/ }),
-/* 39 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2468,7 +2466,7 @@ mp.keys.bind(0x52, true, function () {
 
 
 /***/ }),
-/* 40 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2540,7 +2538,7 @@ mp.keys.bind(Player_1.playerInstance.getSettingsKeyCode(Player_1.KeysSettings.AC
 
 
 /***/ }),
-/* 41 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
