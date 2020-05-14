@@ -2,7 +2,7 @@ import './rage-rpc';
 
 // Библиотеки расширяющие функционал.
 import './syncedPlayerComponent';
-import './modules/_rage-console';
+import './_rage-console';
 
 import './DAYZ/player';
 import './DAYZ/player/events';

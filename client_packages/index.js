@@ -1785,6 +1785,8 @@ function runClearTimeout(marker) {
             // Some versions of I.E. have different rules for clearTimeout vs setTimeout
             return cachedClearTimeout.call(this, marker);
         }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
     }
 
 

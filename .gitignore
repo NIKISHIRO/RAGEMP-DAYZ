@@ -10,7 +10,8 @@ bt.dat
 /dotnet
 SOS_DEADME.md
 ragemp-server.exe
-src/server/project/DAYZ/db/knexfile.ts
-client_packages/game_resources/
-ragemp-server.exe.old.tmp
+*.gz
+*.tmp
 *.exe
+src/server/project/DAYZ/db/knexfile.ts
+client_packages/game_resources
