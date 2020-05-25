@@ -1,0 +1,116 @@
+/* 1 - скроллбар */
+.inventory-cells::-webkit-scrollbar {
+    background-color: rgba(0, 0, 0, 1);
+    width: 1px;
+}
+/* 2 - кнопка */
+.inventory-cells::-webkit-scrollbar-button {
+    height: 5px;
+    background-color: rgba(0, 0, 0, 1);
+}
+.inventory-cells::-webkit-scrollbar-track { 
+    width: 1px;
+    background-color: rgba(0, 0, 0, .1);
+ }
+/* 5 - ползунок */
+.inventory-cells::-webkit-scrollbar-thumb {
+    background-color: gold;    
+    width: 1px;
+}
+
+.inventory-container {
+    background-color: transparent;
+    width: 100%;
+    height: 100%;
+}
+
+.inventory {
+    color: #fff;
+    background-color: rgba(0, 0, 0, .6);
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    justify-content: space-around;
+}
+
+.inventory-clothes { /* CLOTHES */
+    width: 20rem;
+}
+
+.inventory-items { /* ITEMS */
+    position: relative;
+    width: 30rem;
+    background: rgba(0, 0, 0, .1);
+}
+
+.inventory-items__descr {
+    height: 15rem;
+    padding: 1rem;
+}
+
+.inventory-storage { /* STORAGE */
+    width: 30rem;
+}
+
+.inventory-cells {
+    position: relative;
+    display: block;
+    padding: .1rem;
+    overflow: auto;
+    height: 29.5rem;
+    transition: all .2s;
+}
+
+.inventory-cells:hover {
+    box-shadow: 0px 0px 44px 0px rgba(0, 0, 0, .2);
+}
+
+.inventory-cell {
+    position: relative;
+    vertical-align: top;
+    display: inline-block;
+    margin: .2rem;
+    background-color: rgba(255, 255, 255, .2);
+}
+
+.inventory-cell:hover {
+    background-color: rgba(255, 255, 255, .1);
+}
+
+.inventory-items__descr-title {
+    font-size: 1.4rem;
+}
+
+.inventory-cell_inner-amount {
+    position: absolute;
+    right: -.1rem;
+    bottom: -.3rem;
+}
+
+.inventory-items-bottom {
+    margin-top: 1rem;
+    margin-left: .5rem;
+} 
+
+.inventory-items-bottom__slots {
+    font-size: 1.2rem;
+}
+
+.inventory-items__descr-image {
+    margin-top: 0.5rem;
+}
+
+.inventory-items__descr-descr {
+    margin-top: 0.5rem;
+}
+
+.inventory-items__title {
+    font-size: 1.4rem;
+    margin-left: 0.5rem;
+}
+
+.ground-items__title {
+    font-size: 1.4rem;
+    margin-left: 0.5rem;
+}
