@@ -1,146 +1,103 @@
+import { State } from "../reducers";
 import { Item } from "../types";
-import shortid from 'shortid';
 
-export const SET_INVENTORY_ITEMS = 'SET_INVENTORY_ITEMS';
-export const SET_GROUND_ITEMS = 'SET_GROUND_ITEMS';
 export const SET_INVENTORY_SLOTS = 'SET_INVENTORY_SLOTS';
-export const SET_SNACKBAR = 'SET_SNACKBAR';
-export const GET_INVENTORY_ITEMS = 'GET_INVENTORY_ITEMS';
+export const SWAP_ITEMS = 'SWAP_ITEMS';
+export const STACK_INVENTORY_ITEMS = 'STACK_INVENTORY_ITEMS';
+export const SELECT_INVENTORY_ITEM = 'SELECT_INVENTORY_ITEM';
+export const SWAP_INV_AND_GRND_ITEMS = 'SWAP_INV_AND_GRND_ITEMS';
+export const SET_INVENTORY_ITEMS = 'SET_INVENTORY_ITEMS';
+export const SET_ITEMS = 'SET_ITEMS';
 
-const deleteInventoryItemById = (id: number) => {
+export type ItemsType = 'inventoryItems' | 'groundItems';
+
+function setItems(itemsType: ItemsType, items: Item[]) {
     return (dispatch, getState) => {
-        if (id === -1) {
-            return;
-        }
-
-        const { UI } = getState();
-        const { inventory } = UI;
-        const { items: inventoryItems } = inventory;
-        const invItems = [...inventoryItems];
-
-        invItems.splice(id, 1);
-        dispatch(
-            setInventoryItems(invItems)
-        );
+        dispatch({
+            type: SET_ITEMS,
+            itemsType,
+            items,
+        });
     };
-};
+}
 
-const addInventoryItem = () => {
+function selectInvItem(item: Item | null) {
     return (dispatch, getState) => {
-        console.log('addInventoryItem getState', getState());
+        dispatch({
+            type: SELECT_INVENTORY_ITEM,
+            item,
+        });
     };
-};
+}
 
-const stackItems = (currentItemIndex: number, nextItemIndex: number) => {
+// Работа с 2 дроп зонами.
+function swapInvAndGroundItems(invId: number, groundId: number) {
     return (dispatch, getState) => {
-        const { UI } = getState();
-        const { inventory } = UI;
-        const { items } = inventory;
-        const invItems = [...items];
+        dispatch({
+            type: SWAP_INV_AND_GRND_ITEMS,
+            invId,
+            groundId,
+        });
+    };
+}
 
-        if (currentItemIndex === -1 || nextItemIndex === -1) {
+// Работа в пределах одной ДРОП-ЗОНЫ.
+function swapItems(dragId: number, dropId: number, itemsType: ItemsType) {
+    return (dispatch, getState) => {
+        const state: State = getState();
+        const items: any = [...state.inventory[itemsType]];
+
+        const isInventoryItems = itemsType === 'inventoryItems';
+
+        // Перенос на пустую ячейку.
+        if (items[dropId] === null) {
+            dispatch({
+                type: SWAP_ITEMS,
+                dragId,
+                dropId,
+                itemsType,
+            });
             return;
         }
-
-        const currentItem = {...items[currentItemIndex]};
-        const nextItem = {...items[nextItemIndex]};
-
-        if (currentItem.key !== nextItem.key) {
-            return;
-        }
-
-        const maxStackCount = currentItem.data.maxStackCount;
-        const sum = currentItem.amount + nextItem.amount;
-
-        console.log('maxStackCount', maxStackCount);
-        console.log('sum', sum);
-
-        if (sum > maxStackCount) {
-            const amount = sum - maxStackCount;
-            currentItem.amount = amount;
-            nextItem.amount = maxStackCount;
-            invItems.splice(currentItemIndex, 1, currentItem);
-            invItems.splice(nextItemIndex, 1, nextItem);
-        } else {
-            nextItem.amount = sum; 
-            invItems.splice(currentItemIndex, 1, nextItem);
-            invItems.splice(nextItemIndex, 1);
+        
+        // Перенос на НЕ пустую ячейку.
+        if (isInventoryItems) {
+            if (items[dropId] !== null && items[dragId] !== null) {
+                // Если два предмета одного типа и их макс. стак > 1.
+                if (items[dragId].key == items[dropId].key && items[dragId].data.maxStackCount > 1) {
+                    dispatch({
+                        type: STACK_INVENTORY_ITEMS,
+                        dragId,
+                        dropId,
+                        itemsType,
+                    });                
+                    return;
+                }
+            }
         }
 
         dispatch({
-            type: SET_INVENTORY_ITEMS,
-            payload: invItems,
+            type: SWAP_ITEMS,
+            dragId,
+            dropId,
+            itemsType,
         });
     };
-};
+}
 
-const setInventorySlots = (slots: number) => {
+function setInventorySlots(slots: number) {
     return (dispatch, getState) => {
         dispatch({
             type: SET_INVENTORY_SLOTS,
-            payload: slots,
-        })
+            slots
+        });
     };
-};
-
-const setInventoryItems = (items: Item[]) => {
-    return (dispatch, getState) => {
-        dispatch({
-            type: SET_INVENTORY_ITEMS,
-            payload: items,
-        })
-    };
-};
-
-// Разделяет предметы в инвентаре.
-const splitInventoryItemByIndex = (itemId: number, splitCount: number) => {
-    return (dispatch, getState) => {
-        if (!Number.isInteger(splitCount)) {
-            return;
-        }
-
-        if (splitCount <= 0) {
-            return;
-        }
-
-        const { UI } = getState();
-        const { inventory } = UI;
-        const { items } = inventory;
-        const invItems = [...items];
-        const findItem = JSON.parse(JSON.stringify(invItems[itemId]));
-        const newItem = JSON.parse(JSON.stringify(findItem));
-        const item = invItems[itemId];
-
-        if (item.amount <= splitCount) {
-            return;
-        }
-
-        const amount = item.amount - splitCount;
-        findItem.amount = amount;
-        newItem.data.shortid = `__newItem${shortid.generate()}`;
-        newItem.amount = splitCount;
-    
-        invItems.splice(itemId, 1);
-        invItems.splice(itemId, 0, findItem, newItem);
-        dispatch(setInventoryItems(invItems));
-    };
-};
-
-const setGroundItems = (items: Item[]) => {
-    return (dispatch, getState) => {
-        dispatch({
-            type: SET_GROUND_ITEMS,
-            payload: items,
-        })
-    };
-};
+}
 
 export {
-    addInventoryItem,
-    setInventoryItems,
+    setItems,
+    selectInvItem,
+    swapInvAndGroundItems,
+    swapItems,
     setInventorySlots,
-    setGroundItems,
-    stackItems,
-    splitInventoryItemByIndex,
-    deleteInventoryItemById,
 }

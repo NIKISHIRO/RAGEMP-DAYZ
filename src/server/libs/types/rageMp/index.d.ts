@@ -19,6 +19,10 @@ type Array4d = [ number, number, number, number ];
 // -------------------------------------------------------------------------
 
 type Mp = {
+	Vehicle: any;
+	Player: any;
+	Object: any;
+
 	blips: BlipMpPool;
 	checkpoints: CheckpointMpPool;
 	colshapes: ColshapeMpPool;
@@ -363,6 +367,7 @@ interface EntityMpPool<TEntity> {
 	at(index: number): TEntity;
 	exists(entity: TEntity | number): boolean;
 	forEach(fn: (entity: TEntity) => void): void;
+	forEachFast(fn: (entity: TEntity) => void): void;
 	forEachInRange(position: Vector3Mp, range: number, fn: (entity: TEntity) => void): void;
 	forEachInRange(position: Vector3Mp, range: number, dimension: number, fn: (entity: TEntity) => void): void;
 	forEachInDimension(dimension: number, fn: (entity: TEntity) => void): void;

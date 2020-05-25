@@ -19,7 +19,7 @@ mp.events.add('render', () => {
     if (result.entity) {
         // Устанавливаем игроку инфу о том на какую сущность он смотрит.
         playerInstance.setLookingData(result.entity);
-
+        
         switch (result.entity.type) {
             // Если видимая сущность объект.
             case 'object': {
@@ -28,12 +28,9 @@ mp.events.add('render', () => {
 
                 if (!lootItems) return;
 
-                const lootItemName = object.getVariable('lootItemName');
-                const isOpeningStorage = object.getVariable('isOpeningStorage');
+                const itemName = object.getVariable('itemName');
                 const objPos = object.position;
-                let text = `[E] ${lootItemName}`;
-
-                text += ` (${isOpeningStorage})`;
+                let text = `[E] ${itemName}`;
 
                 mp.game.graphics.drawText(text, [objPos.x, objPos.y, objPos.z], {
                     font: 0,

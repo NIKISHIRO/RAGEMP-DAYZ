@@ -1,5 +1,5 @@
 import { Item, CharacterPlayerData } from "../types";
-import { callBrowsers, callClient } from 'rage-rpc';
+import { callBrowsers, callClient, callBrowser } from 'rage-rpc';
 import { DisplayUI } from "../events/rpcRegister";
 import { stringify } from "querystring";
 
@@ -9,6 +9,12 @@ class CallRPC {
 
     constructor(player: PlayerMp) {
         this.player = player;
+    }
+
+    // Добавить предмет в иинвентарь
+    public cefAddInventoryItem(item: Item): Promise<any> {
+        return callBrowsers(this.player, 'cef_add_inventory_item', item)
+        .catch(e => console.log('server -> cef_add_inventory_item -> e'.red, e));
     }
 
     // CEF - устанавливает предметы лежащие на земле около игрока в UI.
@@ -76,6 +82,10 @@ class CallRPC {
     public cefSetInventoryWeight(weight: number): Promise<any> {
         return callBrowsers(this.player, 'cef_set_inventory_weight', weight)
         .catch(e => console.log('server -> cef_set_inventory_weight -> e'.red, e));
+    }
+
+    public clientGetGroundCoordZ(pos: Vector3Mp) {
+        return callClient(this.player, 'client_get_ground_z', pos);
     }
 }
 

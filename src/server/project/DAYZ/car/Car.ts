@@ -4,14 +4,14 @@ import { postgres } from "../db";
 
 export class Car {
     static async spawnCar(id?:number){
-        let data
+        let data;
         if(!id){
             data = await postgres<VehicleData>('vehiclespawn').select('*');
         }else{
             data = await postgres<VehicleData>('vehiclespawn').select('*').where({id:id});
         }
         data.map(car => {
-            console.log(car)
+            console.log(car);
             const pos = new mp.Vector3(car.defaultposition.x,car.defaultposition.y,car.defaultposition.z);
             let veh: VehicleMp = mp.vehicles.new(mp.joaat(car.hash), pos);
             const items: Item[] = [];
@@ -26,10 +26,10 @@ export class Car {
             veh.rotation = new mp.Vector3(car.rotation.x, car.rotation.y, car.rotation.z)
             veh.setColorRGB(car.color[0], car.color[1], car.color[2], car.color[3], car.color[4], car.color[5]);
 
-            veh.setVariable('lootItems', items);
             veh.setVariable('isExplode', false);
-            veh.setVariable('id', car.id)
-        })
+            veh.setVariable('id', car.id);
+            veh.setVariable('slots', 16);
+        });
     }
     
     // Добавляет объект машины в файл vehicleCoords.json.
@@ -37,11 +37,17 @@ export class Car {
 
         if(!rotation.x) rotation.x = 0;
         if(!rotation.y) rotation.x = 0;
-        if(!rotation.z) rotation.z = Car.random(1,360)
+        if(!rotation.z) rotation.z = Car.random(1, 360)
+
         color.map((n, i) => {
-            if(isNaN(n)) color[i] = Car.random(1,255)
-        })
-        if(!description) description = "Машина была добавлена без описания";
+            if(isNaN(n)) {
+                color[i] = Car.random(1, 255);
+            }
+        });
+
+        if(!description) {
+            description = "Машина была добавлена без описания";
+        }
 
         await postgres<VehicleData>('vehiclespawn').insert({ 
             hash: hash,
@@ -64,6 +70,7 @@ export class Car {
             },
             isExplode: false
         });
+
         player.outputChatBox('Машина успешно сохранена')
     }
 

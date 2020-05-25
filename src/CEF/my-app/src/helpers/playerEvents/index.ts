@@ -1,12 +1,12 @@
 import { push } from 'connected-react-router';
 import { emitter } from '../emitter';
 import { Item } from '../../types';
-import { setGroundItems, setInventorySlots, setInventoryItems } from '../../actions/inventoryActions';
 import { enqueueSnackbar } from '../../actions/notificationActions';
 import { NotifyOrigin } from '../../actions/notificationActions';
 import { DisplayUI } from '../../reducers/UIReducer';
 import { setDisplayUI } from '../../actions/displayUIActions';
 import { setHudsData, HudType } from '../../actions/hudsDataActions';
+import { setItems } from '../../actions/inventoryActions';
 
 function PlayerEvents(dispatch, getState) {
     emitter.on('goToClear', () => {
@@ -19,14 +19,6 @@ function PlayerEvents(dispatch, getState) {
 
     emitter.on('goToEntityCreate', () => {
         dispatch(push('/goToEntityCreate'));
-    });
-
-    emitter.on('eventSetGroundItems', (items: Item[]) => {
-        dispatch(setGroundItems(items));
-    });
-
-    emitter.on('cef_set_inventory_items', (items: Item[]) => {
-        dispatch(setInventoryItems(items));
     });
 
     emitter.on('setNotify', (msg: string, variant: string, origin: NotifyOrigin) => {
@@ -75,10 +67,12 @@ function PlayerEvents(dispatch, getState) {
         );
     });
 
-    emitter.on('cef_set_inventory_weight', (weight: number) => {
-        dispatch(
-            setInventorySlots(weight)
-        );
+    emitter.on('set_inventory_items', (items: Item[]) => {
+        dispatch(setItems('inventoryItems', items));
+    });
+
+    emitter.on('set_ground_items', (items: Item[]) => {
+        dispatch(setItems('groundItems', items));
     });
 }
 

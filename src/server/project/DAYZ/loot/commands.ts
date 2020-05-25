@@ -3,13 +3,10 @@ import { Item } from '../types';
 
 // Выводит инвентарь игрока.
 mp.events.addCommand('inv', (player: PlayerMp, ft: string) => {
-    const inventory: Item[] = player.getInventory();
-
-    player.outputChatBox(`!{#20db63}INVENTORY: [${inventory.length}]`);
-    inventory.forEach((v, idx) => {
-        player.outputChatBox(`!{#20db63}-> (${idx}): ${v.key} | ${v.amount}`);
-    });
-    player.outputChatBox(`!{#20db63}---------------------------`);
+    const inventory: Item[] = player.getStorage();
+    const plr = new Player(player);
+    player.outputChatBox(`!{#20db63}INVENTORY: [${player.getEmptySlots()}]`);
+    player.outputChatBox(JSON.stringify(inventory));
 });
 
 // Использует предмет в инвентаре по ИД.

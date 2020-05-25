@@ -4,8 +4,10 @@ import { ClothesReducer, ClothesState } from "./clothesReducer";
 import { connectRouter } from 'connected-react-router'
 import { characterReducer, CharacterState } from "./characterReducer";
 import { authReducer, AuthState } from "./authReducer";
+import { InventoryState, InventoryReducer } from "./InventoryReducer";
 
 export type State = {
+    inventory: InventoryState;
     character: CharacterState;
     UI: UIState;
     clothes: ClothesState;
@@ -13,6 +15,7 @@ export type State = {
 }
 
 const createRootReducer = (history) => combineReducers({
+    inventory: InventoryReducer,
     auth: authReducer,
     character: characterReducer,
     UI: UIReducer,

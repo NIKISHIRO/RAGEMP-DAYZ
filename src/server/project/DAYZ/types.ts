@@ -106,17 +106,16 @@ export type ItemData = {
     maxStackCount: number; // Максимальный стак предмета.
     shortid: string;
     serverId: string;
-    weight: number;
     isDelete: boolean; // Удалить после использования?
     isCollision: boolean; // Создавать коллизионный объект?
 };
 
 export interface BodyArmourData extends ItemData {
-    defence?: number;
+    defence: number;
 };
 
 export interface WeaponData extends ItemData {
-    clip?: number;
+    clip: number;
 };
 
 export interface ClothesData extends ItemData {

@@ -38,7 +38,7 @@ class InventoryScript extends EventEmitter {
             description: description,
             onUse: onUse,
             nameFunc: nameFunc,
-            descFunc: descFunc
+            descFunc: descFunc,
         };
 
         this.emit("itemDefined", key, name, description);
@@ -146,7 +146,10 @@ mp.Player.prototype.hasItemWithData = function(itemKey, data) {
  * @return {number}         Index of the item, -1 if not found.
  */
 mp.Player.prototype.getItemIndex = function(itemKey) {
-    return this._inventory.findIndex(i => i.key === itemKey);
+    return this._inventory.findIndex(i => {
+        if (!i) return;
+        return i.key === itemKey;
+    });
 };
 
 /**
@@ -190,6 +193,27 @@ mp.Player.prototype.getTotalItemAmount = function() {
     return this._inventory.reduce((total, item) => {
         return total + item.amount;
     }, 0);
+};
+
+mp.Player.prototype.putItem = function(item, putIdx) {
+    if (inventoryScript.hasItem(itemKey) && Number.isInteger(amount) && amount > 0) {
+        const itemIdx = this.getItemIndex(itemKey);
+
+        if (itemIdx !== -1) {
+            this._inventory[itemIdx].amount += amount;
+        } else {
+            this._inventory.push({
+                key: itemKey,
+                amount: amount,
+                data: data
+            });
+        }
+
+        inventoryScript.emit("itemAdded", this, itemKey, amount, data);
+        return true;
+    } else {
+        return false;
+    }
 };
 
 /**

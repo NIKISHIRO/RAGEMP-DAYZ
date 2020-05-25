@@ -1,4 +1,4 @@
-import { DisplayUI } from "../displayUI";
+import { DisplayUI } from "../../CallRPC";
 
 // Отлавливает изменения св-ва displayUI у игрока и отправляет
 mp.events.addDataHandler('displayUI', (entity: PlayerMp, displayData: DisplayUI, prevDisplayData: DisplayUI) => {

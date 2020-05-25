@@ -52,20 +52,23 @@ class Loot {
             [ItemRarity.RARITY_4]: itemInfo.map(i => i.data.rarity === ItemRarity.RARITY_4 ? i : null).filter(i => i !== null) as Item[],
         }
     }
-
+    
     static setLootableObject(
-        object: ObjectMp, 
-        collisionId: number | null, 
-        blipId: number, 
-        lootItemName: string, 
-        isOpeningStorage: boolean) 
+        object: ObjectMp,
+        collisionId: number | null,
+        skinObjectId: number | null,
+        blipId: number,
+        itemName: string,
+        lootType: 'item' | 'storage')
     {
         object.setVariable('lootItems', []);
-        object.setVariable('lootCollisionId', collisionId);
-        object.setVariable('lootObjectId', object.id);
-        object.setVariable('lootBlipId', blipId);
-        object.setVariable('lootItemName', lootItemName);
-        object.setVariable('isOpeningStorage', isOpeningStorage);
+        object.setVariable('collisionId', collisionId);
+        object.setVariable('objectId', object.id);
+        object.setVariable('skinObjectId', skinObjectId);
+        object.setVariable('blipId', blipId);
+        object.setVariable('itemName', itemName);
+        object.setVariable('lootItems', []);
+        object.setVariable('lootType', lootType);
     }
 
     static createLootObject(item: Item, position: Vector3Mp) {
@@ -73,18 +76,18 @@ class Loot {
         const blip = Loot.createBlip(position);
 
         let collisionObject: any = null;
-        const object = Loot.createObject(position, item.data.hash);
+        const skinObject = Loot.createObject(position, item.data.hash);
 
         if (item.data.isCollision) { // Предмет с коллизией.
             collisionObject = Loot.createObject(position, 'p_ld_am_ball_01');
             collisionObject.alpha = 50;
-            Loot.setLootableObject(collisionObject, collisionObject.id, blip.id, createdItem.data.name, false);
-
+            Loot.setLootableObject(collisionObject, collisionObject.id, skinObject.id, blip.id, createdItem.data.name, 'item');
+            
             Loot.addItems(collisionObject.id, [createdItem]);
         } else { // Если предмет без коллизии.
-            Loot.setLootableObject(object, null, blip.id, createdItem.data.name, false);
+            Loot.setLootableObject(skinObject, null, skinObject.id, blip.id, createdItem.data.name, 'item');
 
-            Loot.addItems(object.id, [createdItem]);
+            Loot.addItems(skinObject.id, [createdItem]);
         }
     }
 
@@ -93,19 +96,14 @@ class Loot {
             // Массив рандомных предметов, разделенные по редкости.
             spawn.items.forEach(rarity => {
                 const itemsByRarity = Loot.getRarItems()[rarity];
-    
                 // Заполняет массив рандомными предметами.
-                for (let i = 0; i < spawn.items.length; i++) {
-                    const randomIndex = randomInteger(0, itemsByRarity.length - 1);
-                    const randomItem = itemsByRarity[randomIndex];
-        
-                    // Полученный рандомный предмет засунуть в 1 объект.
-                    if (randomItem) {
-                        console.log(`[LOOT CREATE]: ${randomItem.key} | ${randomItem.amount} | ${rarity}`.yellow);
-                        Loot.createLootObject(randomItem, new mp.Vector3(spawn.position[0], spawn.position[1], spawn.position[2]));
-                    }
+                const randomIndex = randomInteger(0, itemsByRarity.length - 1);
+                const randomItem = itemsByRarity[randomIndex];
+                if (randomItem) {
+                    console.log(`[LOOT CREATE]: ${randomItem.key} | ${randomItem.amount} | ${rarity}`.yellow);
+                    Loot.createLootObject(randomItem, new mp.Vector3(spawn.position[0], spawn.position[1], spawn.position[2]));
                 }
-            })
+            });
         });
     }
 

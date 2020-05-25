@@ -31,18 +31,34 @@ export enum NotifyVariant {
     INFO = 'info',
 }
 
+export type DisplayUI = {
+    huds: boolean;
+}
+
+export enum CEFRoute {
+    ADMININTERFACE = 'AdminInterface',
+    UIITEMS = 'UIItems',
+    CLEAR = 'clear',
+    START_MENU = 'StartMenu',
+    CHARACTER = 'CHARACTER',
+}
+
 class CallRPC {
-    public cefSetHudsValue(type: HudsType, value: number): any {
-        callBrowser(Browser.getBrowser(), type, value);
-    }
-    
-    public cefSendLootCreateData(data: any[]): any {
-        callBrowser(Browser.getBrowser(), 'cef_set_loot_create_data', data);
+    public changeUI(route: CEFRoute) {
+        callServer('server_change_UI', route);
     }
 
+    public cefSetHudsValue(type: HudsType, value: number): any {
+        callBrowser(Browser.getBrowser(), type, value)
+    }
+    
     // Отправка предметов лежащих на земле в CEF.
     public cefSendLootItemsGround(items: Item[]) {
         return callBrowser(Browser.getBrowser(), 'cef_set_ground_items', items);
+    }
+
+    public setDisplayInterface(name: string, bool: boolean) {
+        callServer('server_set_display', JSON.stringify({name, bool}));
     }
 
     public serverNotify(text: string, variant: NotifyVariant, origin: NotifyOrigin) {
@@ -57,12 +73,20 @@ class CallRPC {
         callServer('server_set_hud_prop', {name, value});
     }
 
-    public serverSetLookingStorage(name: 'object' | 'vehicle', value: number) {
-        return callServer('server_set_looking_storage', {name, value});
+    public serverSetLookingStorage(name, remoteId) {
+        return callServer('server_set_looking_storage', {name, remoteId});
     }
 
-    public serverTakeItem(serverId: string, amount: number): Promise<{result: boolean; text: string}> {
-        return callServer('server_take_inventory_item', {serverId, amount});
+    public serverRenderGroundUI(remoteID: number) {
+        return callServer('server_render_ground_ui', remoteID);
+    }
+
+    public serverSetStorageData(type: string, id: number) {
+        return callServer('server_set_storage_data', {type, id});
+    }
+    
+    public serverTakeItem(itemKey: string, amount: number) {
+        return callServer('server_take_inventory_item', {itemKey, amount});
     }
 }
 

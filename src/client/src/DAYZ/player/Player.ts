@@ -8,7 +8,7 @@ export enum KeysSettings {
 
 class Player {
     private player: PlayerMp;
-
+    
     public hungerDecrementIntervalId: any = null;// Счетчик вычитания здоровья по голоду.
     public checkHungerIntervalId: any = null;// Счетчик вычитания здоровья по голоду.
     public checkDehydrationIntervalId: any = null;
@@ -24,31 +24,24 @@ class Player {
             hunger: 100,
             dehydration: 0,
             admin: {
-                lootCreate: {
-                    data: [], // для LootCreate класса.
-                }
             },
-            character: {},
+            character: {
+            },
             lookingAtEntity: null, // Entity || null.
-
-            settings: { // KEYS:
+            settings: { // KEYS.
                 ACTION: 0x45, // E.
                 OPEN_INVENTORY: 0x09 // TAB.
             },
-            
-            lookingStorage: { // ид хранилища которое просматривает игрок.
-                object: null,
-                vehicle: null,
-            }
         };
+
         mp.players.local['customData'] = customData;
 
         this.setHunger(100);
         this.setDehydration(100);
     }
 
-    public setLookingStorage(name: 'object' | 'vehicle', remoteId: number) {
-        callRPC.serverSetLookingStorage(name, remoteId);
+    public setStorageData(type, id) {
+        return callRPC.serverSetStorageData(type, id);
     }
 
     public getSettingsKeyCode(name: KeysSettings) {
@@ -79,7 +72,7 @@ class Player {
         return null;
     }
 
-    public getLookingData(): EntityMp | null {
+    public getLookingAtEntityData(): EntityMp | null {
         return this.player.customData.lookingAtEntity;
     }
 

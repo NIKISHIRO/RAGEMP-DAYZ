@@ -4,7 +4,6 @@ import { PlayerData, CharacterPlayerData } from "../types";
 import { Player } from "../player/Player";
 import bcrypt from 'bcryptjs';
 import { Character } from "../character/Character";
-import { pluralize } from "mongoose";
 
 class Auth {
     player: PlayerMp;

@@ -31,7 +31,6 @@ export class Player {
         this.player.setVariable('gender', 'male');
         this.player.setVariable('isAuth', true);
         this.player.setVariable('admin', 1);
-        this.player.setVariable('lookingStorage', {vehicle: null, object: null});
         this.setInventorySlots(10); // Устанавливает макс. кол-во слотов игроку.
         this.player.setVariable('displayUI', { // Отображение частей в CEF.
             huds: false,
@@ -69,43 +68,206 @@ export class Player {
         this.player.setVariable('clothes', {male, female});
     }
 
-    public death() {
-        const inventory = this.player.getInventory();
-        const position = this.player.position;
+    public async dropItem(itemKey: string, amount: number, putId: number | undefined = undefined) {
+        const self = this;
+        const storageData: {type: string, id: number} = self.player.getVariable('storageData');
+        const inventory = [...self.player.getInventory()];
+        let rest = 0;        
+        let isRemoved = false;
 
-        if (!inventory.length) {
-            return;
+        console.log('dropItem storageData', storageData);
+        console.log('dropItem itemKey', itemKey);
+        console.log('dropItem amount', amount);
+
+        const idx = self.player.getItemIndex(itemKey);
+        if (idx == -1) {
+            return {result: false, text: 'В инвентаре нет такого предмета.'};
         }
 
-        let objHash = 'bkr_prop_duffel_bag_01a';
-
-        position.z -= .8
-        // Создаем объект.
-        const object = Loot.createObject(position, objHash);
-        Loot.setLootableObject(object, null, object.id, this.player.name, true);
-
-        // Обнуляем инвентарь на серваке и в CEF.
-        this.player.setInventory([]);
-        this.callRpc.cefSetInventoryItems([]);
-
-        // Кладем в труп лут игрока.
-        object.setVariable('lootItems', inventory);
-    }
-
-    public dropItem() {
+        const takingItem = JSON.parse(JSON.stringify(inventory[idx]));
         
+        if (takingItem.amount < amount) {
+            return {result: false, text: 'В инвентаре нет столько предметов.'};
+        }
+
+        const pos = self.player.position;
+
+        // Положить предмет на землю/машину/хранилище.
+        if (storageData.type == null) {
+            const groundZ = await self.callRpc.clientGetGroundCoordZ(pos);
+            pos.z = groundZ;
+            // const createdItem = EItem.createItem(takingItem.key, amount, takingItem.data);
+            Loot.createLootObject(takingItem, pos);
+            rest = amount;
+        }
+        else if (storageData.type == 'vehicle') {
+            if (!mp.vehicles.exists(storageData.id)) {
+                return {result: false, text: `${storageData.type} с ИД = ${storageData.id}`};
+            }
+        
+            const vehicle = mp.vehicles.at(storageData.id);
+            const distance = pos.subtract(vehicle.position).length();
+            
+            if (distance > 10) {
+                return {result: false, text: 'Вы находитесь слишком далеко от машины.'};
+            }
+
+            self.player.outputChatBox('distance ' + distance);
+            
+            const lootItems = vehicle.getVariable('lootItems');
+
+            if (!putId) {
+                return {result: false, text: 'Не указан putId, либо такой ячейки нет.'};
+            }
+
+            if (lootItems[putId]) {
+                const putItem = lootItems[putId];
+                // Если ячейка в которую кладем не NULL.
+                if (putItem !== null && putItem.key == takingItem.key) {
+                    const msc = takingItem.data.maxStackCount;
+                    const sum = takingItem.amount + putItem.amount;
+
+                    if (sum > msc) {
+                        rest = sum - msc;
+                        putItem.amount = msc;
+                    }
+                    else if (sum == msc) {
+                        rest = 0;
+                    }
+                    else if (sum < msc) {
+                        rest = 0;
+                    }
+
+                    if (rest < 1) {
+                        lootItems.splice(putId, 1);
+                    }
+                }
+                lootItems.splice(putId, 1, takingItem);
+            }
+
+            self.player.removeItem(idx, rest) && (isRemoved = true);
+    
+            if (!isRemoved) {
+                return {result: false, text: 'Вы инвентаре нет такого кол-ва этого предмета.'};
+            }
+
+            vehicle.setVariable('lootItems', lootItems);
+        }
+
+        return {result: true, text: `-${amount} ${takingItem.data.name}`}
     }
 
-    public takeItemByServerId(serverId: string, amount: number, typeEntity: 'object' | 'vehicle'): { result: boolean; text: string } {
+    public async takeItem(itemKey: string, amount: number): Promise<ServerResult> {
         const self = this;
-    }  
+        const storageData: {type: string, id: number} = self.player.getVariable('storageData');
+
+        console.log('takeItem - storageData', storageData);
+        console.log('takeItem - itemKey', itemKey);
+        console.log('takeItem - amount', amount);
+
+        if (!storageData) {
+            return { result: false, text: 'Хранилище не установлено!' };
+        }
+
+        const emptySltosIdx = self.player.getFirstEmptySlotIndex();
+        if (emptySltosIdx == -1) {
+            return {result: false, text: 'В инвентаре нет свободного места.'};
+        }
+
+        let entity: EntityMp | null = null;
+
+        // Предмет.
+        if (storageData.type == 'item') {
+            if (mp.objects.exists(storageData.id)) {
+                entity = mp.objects.at(storageData.id);
+            }
+        }
+
+        // ТС.
+        if (storageData.type == 'vehicle') {
+            if (mp.vehicles.exists(storageData.id)) {
+                entity = mp.vehicles.at(storageData.id);
+            }
+        }
+
+        // Обычные объекты.
+        if (storageData.type == null) {
+            mp.objects.forEachInRange(self.player.position, 10, (object) => {
+                const lootItems: Item[] = object.getVariable('lootItems');
+                if (!lootItems || !lootItems.length) {
+                    return;
+                }
+                const item = lootItems.find(i => i.key === itemKey && i.amount === amount);
+                if (item) {
+                    entity = object;
+                }
+            });
+        }
+
+        if (!entity) {
+            return {result: false, text: 'Такого предмета здесь нет.'};
+        }
+
+        console.log('takeItem - entity', entity.getVariable('lootItems'));
+        const lootItems = entity.getVariable('lootItems');
+        const idx = lootItems.findIndex(i => i.key === itemKey && i.amount === amount);
+        const takingItem = {...lootItems[idx], data: {...lootItems[idx].data}};
+
+        if (takingItem.amount < amount) {
+            return {result: false, text: 'Здесь нет столько предметов.'};
+        }
+        if (takingItem.amount == amount) {
+            lootItems.splice(idx, 1);
+        }
+        if (takingItem.amount > amount) {
+            lootItems[idx].amount -= amount;
+        }
+
+        entity.setVariable('lootItems', lootItems);
+        console.log('takeItem - entity', entity.getVariable('lootItems'));
+
+        if (lootItems.length < 1) {
+            // Если хранилище не установлено (значит предмет берется через UI)
+            // ИЛИ берется 1 предмет.
+            if (storageData.type == null || storageData.type == 'item') {
+                const skinObjectId = entity.getVariable('skinObjectId');
+                const collisionId = entity.getVariable('collisionId');
+                // Удаляем коллизионный и обычный объекты.
+                if (collisionId != null) {
+                    if (mp.objects.exists(collisionId)) {
+                        const object = mp.objects.at(collisionId);
+                        object.destroy();
+                    }
+                } 
+                if (skinObjectId != null) {
+                    if (mp.objects.exists(skinObjectId)) {
+                        const object = mp.objects.at(skinObjectId);
+                        object.destroy();
+                    }
+                }
+            } 
+            if (storageData.type == 'vehicle') {
+                // entity.destroy();
+            }
+        }
+
+        const newItem = EItem.createItem(takingItem.key, amount, takingItem.data);
+
+        if (self.player.putItem(newItem, emptySltosIdx).result) {
+            await self.callRpc.cefAddInventoryItem(takingItem);
+            return {result: true, text: `+${amount} ${takingItem.data.name}`};
+        }
+
+        return {result: false, text: 'Такой предмет не зарегистрирован, либо не верное кол-во.'};
+    }
+
     // Устанавливает слоты и отправляет в CEF.
     public setInventorySlots(slots: number) {
         this.player.setVariable('invMaxWeight', slots); // Макс. вес для предметов игрока.
         this.callRpc.cefSetInventoryWeight(slots);
     }
 
-    // вес для предметов игрока.
+    // макс. допустимый вес инвент. игрока.
     public getInventorySlots(): number {
         return this.player.getVariable('invMaxWeight'); 
     }

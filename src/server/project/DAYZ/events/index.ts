@@ -42,30 +42,9 @@ export const events = {
         
         const character = new Character(player);
         character.setFullClothes(player.getVariable('clothes')[player.getVariable('gender')]);
-
+        
         const plr = new Player(player);
-        plr.death();
+        // plr.death();
         plr.spawnRandomCoords();
     },
-
-    "keypress:G": (player: PlayerMp) => {
-        player.outputChatBox('-> G');
-        
-        const vehicles: VehicleMp[] = [];
-        mp.vehicles.forEachInRange(player.position, 5,
-            (vehicle) => {
-                vehicles.push(vehicle);
-            }
-        );
-        
-        player.outputChatBox(vehicles.length.toString());
-
-        if (!vehicles.length) {
-            player.outputChatBox('Около вас нет машины!');
-            return;
-        }
-
-        const currentVeh = vehicles[0];
-        const vehInventory = currentVeh.getVariable('vehInventory');
-    }
 }

@@ -3288,6 +3288,7 @@ interface EntityMpPool<TEntity> {
 	forEachInRange(position: Vector3Mp, range: number, fn: (entity: TEntity) => void): void;
 	forEachInDimension(position: Vector3Mp, range: number, dimension: number, fn: (entity: TEntity) => void): void;
 	forEachInStreamRange(fn: (entity: TEntity) => void): void;
+	forEachFast(fn: (entity: TEntity) => void): void;
 	toArray(): TEntity[];
 }
 

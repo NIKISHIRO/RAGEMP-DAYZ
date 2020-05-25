@@ -1,84 +1,113 @@
 import shortid from 'shortid';
 import { ItemKey, ItemData, Item, WeaponData, ItemType, BodyArmourData, ClothesData, ItemRarity } from '../../types';
 
-export class EItem {
+class EItem {
     static createItem(key: ItemKey, amount: number, data: ItemData): Item {
         return {key, amount, data: {...data, shortid: shortid.generate()}};
     }
+}
 
-    static createSimpleItem(key: ItemKey, hash: string, rarity: ItemRarity, name: string, description: string, weight: number, msc: number, amount: number, isDelete: boolean, isCollision: boolean): Item {
-        const data: ItemData = {
-            hash,
-            type: ItemType.COMMON,
+class CommonItem<I> {
+    public key: ItemKey;
+    public amount: number;
+    public data: I;
+
+    constructor(
+        itemKey: ItemKey,
+        amount: number,
+        type: ItemType,
+        rarity: ItemRarity,
+        maxStackCount: number,
+        name: string,
+        description: string,
+        hash: string,
+        isDelete: boolean,
+        isCollision: boolean,
+    )
+    {
+        this.key = itemKey;
+        this.amount = amount;
+
+        this.data = {
+            type: type,
             rarity: rarity,
+            maxStackCount: maxStackCount,
             name: name,
-            weight: weight,
             description: description,
-            maxStackCount: msc,
+            hash: hash,
+            isDelete: isDelete,
+            isCollision: isCollision,
             serverId: shortid.generate(),
             shortid: shortid.generate(),
-            isDelete,
-            isCollision,
         };
+    }
+}
 
-        return EItem.createItem(ItemKey[key], amount, data);
-    }
+class ClothesItem extends CommonItem<ClothesData> {
+    public addSlots: number;
+    public componentId: number;
+    public drawableId: number;
 
-    static createClothesItem(key: ItemKey, hash: string, rarity: ItemRarity, name: string, description: string, addSlots: number, weight: number, amount: number, cId: number, dr: number, isDelete: boolean, isCollision: boolean) {
-        const data: ClothesData = {
-            hash,
-            type: ItemType.CLOTHES,
-            rarity: rarity,
-            name: name,
-            weight: weight,
-            addSlots: addSlots,
-            componentId: cId,
-            drawable: dr,
-            description: description,
-            maxStackCount: 1,
-            serverId: shortid.generate(),
-            shortid: shortid.generate(),
-            isDelete,
-            isCollision,
-        };
-        
-        return EItem.createItem(ItemKey[key], amount, data);
-    }
+    constructor(
+        itemKey: ItemKey,
+        amount: number,
+        rarity: ItemRarity,
+        maxStackCount: number, 
+        name: string, 
+        description: string, 
+        hash: string, 
+        isDelete: boolean, 
+        isCollision: boolean,
+        addSlots: number,
+        componentId: number,
+        drawable: number,
+    ) {
+        super(itemKey, amount, ItemType.CLOTHES, rarity, maxStackCount, name, description, hash, isDelete, isCollision);
 
-    static createWeaponItem(key: ItemKey, hash: string, rarity: ItemRarity, name: string, description: string, weight: number, amount: number, isDelete: boolean, isCollision: boolean): Item {
-        const data: WeaponData = {
-            hash,
-            type: ItemType.WEAPON,
-            rarity: rarity,
-            name: name,
-            weight: weight,
-            description: description,
-            maxStackCount: 1,
-            serverId: shortid.generate(),
-            shortid: shortid.generate(),
-            isDelete,
-            isCollision,
-        };
-        
-        return EItem.createItem(ItemKey[key], amount, data);
+        this.data.addSlots = addSlots;
+        this.data.componentId = componentId;
+        this.data.drawable = drawable;
     }
-    
-    static createBodyArmorItem(key: ItemKey, hash: string, rarity: ItemRarity, name: string, description: string, weight: number, defence: number, amount: number, isDelete: boolean, isCollision: boolean): Item {
-        const data: BodyArmourData = {
-            type: ItemType.ARMOR,
-            hash,
-            rarity,
-            defence,
-            name,
-            weight,
-            description,
-            maxStackCount: 1,
-            serverId: shortid.generate(),
-            shortid: shortid.generate(),
-            isDelete,
-            isCollision,
-        };
-    
-        return EItem.createItem(ItemKey[key], amount, data);
+}
+
+class WeaponItem extends CommonItem<WeaponData> {
+    constructor(
+        itemKey: ItemKey,
+        amount: number,
+        rarity: ItemRarity, 
+        maxStackCount: number,
+        name: string,
+        description: string, 
+        hash: string,
+        isDelete: boolean, 
+        isCollision: boolean,
+    ) 
+    {
+        super(itemKey, amount, ItemType.WEAPON, rarity, maxStackCount, name, description, hash, isDelete, isCollision);
     }
+}
+
+class BodyArmorItem extends CommonItem<BodyArmourData> {
+    constructor(
+        itemKey: ItemKey,
+        amount: number,
+        rarity: ItemRarity,
+        maxStackCount: number, 
+        name: string,
+        description: string, 
+        hash: string, 
+        isDelete: boolean,
+        isCollision: boolean,
+    ) 
+    {
+        super(itemKey, amount, ItemType.ARMOR, rarity, maxStackCount, name, description, hash, isDelete, isCollision);
+    }
+}
+
+export {
+    CommonItem,
+    ClothesItem,
+    WeaponItem,
+    BodyArmorItem,
+    EItem,
 }

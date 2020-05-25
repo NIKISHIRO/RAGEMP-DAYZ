@@ -11,6 +11,22 @@ type NotifyData = {
 };
 
 function rpcRegister() {
+    register('set_inventory_items', (items: Item[]) => {
+        emitter.emit('set_inventory_items', items)
+    });
+
+    register('set_ground_items', (items: Item[]) => {
+        emitter.emit('set_ground_items', items)
+    });
+
+    register('set_ground_display', (b: boolean) => {
+        emitter.emit('set_ground_display', b);
+    });
+
+    register('cef_add_inventory_item', (item: Item) => {
+        emitter.emit('cef_add_inventory_item', item);
+    });
+    
     register('cef_set_ground_items', (items: Item[]) => {
         emitter.emit('eventSetGroundItems', items);
     });
@@ -24,9 +40,6 @@ function rpcRegister() {
     });
 
     register('cef_set_notify', (data: NotifyData) => {
-        console.log('----------------------------------');
-        console.log('----------------------------------');
-        console.log(data);
         emitter.emit('setNotify', data.text, data.variant, data.origin);
     });
 

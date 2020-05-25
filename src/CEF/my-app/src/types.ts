@@ -37,7 +37,6 @@ export type ItemData = {
     name: string; // Название предмета.
     description: string;
     maxStackCount: number; // Максимальный стак предмета.
-    weight: number; // Вес предмета (1 шт).
     serverId: string;
     shortid: string;
     isDelete: boolean; // Удалить после использования?

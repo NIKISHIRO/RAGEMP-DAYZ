@@ -1,7 +1,6 @@
 import React from "react";
 import { Switch, Route, Redirect } from 'react-router-dom';
 import './styles.css';
-import { ItemsUI } from "../UserInterface";
 import { emitter } from "../../helpers/emitter";
 import { NotifyComp } from "./NotifyComp";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,6 +11,7 @@ import { AdminInterface } from "../AdminInterface";
 import { Auth } from "../StartMenu/Auth";
 import { Character } from "../StartMenu/Character";
 import { StartMenu } from "../StartMenu";
+import { Inventory } from "../Inventory";
 
 function RoutesComp() {
   const dispatch = useDispatch();
@@ -47,13 +47,13 @@ function App() {
       <NotifyComp />
       <Switch>
         <Route exact path='/clear' component={ Clear } />
-        <Route exact path='/UIItems' component={ ItemsUI } />
+        <Route exact path='/Inventory' component={ Inventory } />
         <Route exact path='/AdminInterface' component={ AdminInterface } />
         <Route exact path='/auth' component={ Auth } />
         <Route exact path='/character' component={ Character } />
         <Route exact path='/StartMenu' component={ StartMenu } />
       </Switch>
-      <Redirect to="/UIItems" />
+      <Redirect to="/Inventory" />
       {/* <RoutesComp /> */}
     </div>
   );

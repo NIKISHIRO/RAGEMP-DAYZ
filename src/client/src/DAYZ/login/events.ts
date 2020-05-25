@@ -1,8 +1,7 @@
 import { register } from "../../rage-rpc";
 import { PlayerCamera } from "../Camera/Camera";
-import { changeUI, CEFRoute } from "../CEF/changeUI";
 import { character } from "../character/Character";
-import { setDisplayInterface } from "../CEF/displayUI";
+import { callRPC, CEFRoute } from "../CallRPC";
 
 const playerLocal = mp.players.local;
 
@@ -59,9 +58,9 @@ register('client_after_login', () => {
 });
 
 function init() {
-    changeUI(CEFRoute.CLEAR);
+    callRPC.changeUI(CEFRoute.CLEAR);
     PlayerCamera.render('character', false);
-    setDisplayInterface('huds', true);
+    callRPC.setDisplayInterface('huds', true);
     mp.players.local.freezePosition(false);
     mp.gui.cursor.show(false, false);
     mp.gui.cursor.visible = false;

@@ -1,4 +1,4 @@
-import { setDisplayInterface } from "../../displayUI";
+import { callRPC } from "../../../CallRPC";
 
 // F6
 let flag = true;
@@ -7,5 +7,5 @@ mp.keys.bind(0x75, true, function() {
 
     flag = !flag;
     mp.gui.chat.push(JSON.stringify(flag));
-    setDisplayInterface('huds', flag);
+    callRPC.setDisplayInterface('huds', flag);
 });

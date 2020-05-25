@@ -1,6 +1,7 @@
 export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR';
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR';
 export const REMOVE_SNACKBAR = 'REMOVE_SNACKBAR';
+export const SET_SNACKBAR = 'SET_SNACKBAR';
 
 export enum NotifyVariant {
     DEFAULT = 'default',
@@ -24,6 +25,24 @@ enum NotifyHorizontal {
 export type NotifyOrigin = {
     horizontal: NotifyHorizontal;
     vertical: NotifyVertical;
+}
+
+function Notify(text: string, variant: NotifyVariant, horizontal: 'left' | 'center' | 'right', vertical: 'top' | 'bottom') {
+    return (dispatch, getState) => {
+        dispatch(
+            enqueueSnackbar({
+                message: text,
+                    options: {
+                        key: new Date().getTime() + Math.random(),
+                        variant,
+                        anchorOrigin: {
+                            horizontal,
+                            vertical,
+                        }
+                },
+            })
+        );
+    };
 }
 
 const enqueueSnackbar = (notification) => {
@@ -50,6 +69,7 @@ const removeSnackbar = key => ({
 });
 
 export {
+    Notify,
     enqueueSnackbar,
     closeSnackbar,
     removeSnackbar,

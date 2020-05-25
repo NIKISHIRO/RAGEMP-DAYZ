@@ -1,4 +1,4 @@
-import { register } from 'rage-rpc';
+import { register, ProcedureListenerInfo } from 'rage-rpc';
 import { Player } from '../player/Player';
 import { CallRPC } from '../CallRPC';
 import { Hash } from 'crypto';
@@ -7,17 +7,20 @@ import { Item } from '../types';
 import { WeaponData } from './../types';
 
 type TakeData = {
-    serverId: string;
+    itemKey: string;
     amount: number;
 };
 
 type DropData = {
     itemKey: string;
     amount: number;
+    putId: number;
 };
 
 export type DisplayUI = {
     huds: boolean;
+    inventory: boolean;
+    ground: boolean;
 };
 
 type DisplayData = {
@@ -36,18 +39,27 @@ type LoginRegister = {
     password: string;
 };
 
+register('set_open_storage_data', ({type, id}: {type: string; id: number;}, info: any) => {
+    const player = info.player;
+    player.setVariable('openStorageData', {type, id});
+    return true;
+});
+
 // Взять предмет с земли.
 register('server_take_inventory_item', (data: TakeData, info: any) => {
     const player = info.player;
     const plr = new Player(player);
-    console.log(' (event)----> server_take_inventory_item');
-    return plr.takeItemByServerId(data.serverId, data.amount, 'object');
+    console.log(' (event) ----> server_take_inventory_item');
+    const takeResult = plr.takeItem(data.itemKey, data.amount);
+    console.log('takeResult', takeResult);
+    return takeResult;
 });
 
 register('server_drop_inventory_item', (data: DropData, info: any) => {
     const player = info.player;
     const plr = new Player(player);
-    // return plr.dropItem(data.itemKey, data.amount);
+    console.log('(event) ----> server_drop_inventory_item', data);
+    return plr.dropItem(data.itemKey, data.amount, data.putId);
 });
 
 register('server_set_display', (jsonData: string, info: any) => {
@@ -127,7 +139,7 @@ register('server_get_ammo', (ammo: number, info: any) => {
     inventory.forEach(item => {
         console.log(itemKey);
         console.log(item.key);
-        if(item.key == itemKey){
+        if(item.key == itemKey) {
             let index = player.getItemIndex(itemKey)
             if(item.amount >= ammo){
                 player.giveWeapon(player.weapon, ammo);
@@ -142,10 +154,7 @@ register('server_get_ammo', (ammo: number, info: any) => {
     });
 });
 
-register('server_set_looking_storage', ({name, value}: {name: 'object' | 'vehicle', value: number}, info: any) => {
+register('server_set_storage_data', (data: {type: string, id: number}, info: any) => {
     const player: PlayerMp = info.player;
-    const lookingStorage = player.getVariable('lookingStorage');
-    lookingStorage[name] = value;
-    player.setVariable('lookingStorage', lookingStorage);
-    console.log('lookingStorage', player.getVariable('lookingStorage'))
+    player.setVariable('storageData', data);
 });
